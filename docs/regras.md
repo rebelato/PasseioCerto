@@ -143,3 +143,13 @@ Esta mudança substitui a decisão inicial de não ter vidas. Ainda não está i
 - Persistir vidas, estado de derrota e versão da sessão junto da partida; reabrir não restaura vidas. Migrar sessões antigas para 3 vidas. Integrar com PC-013.
 - Tutorial PC-017 explica quais erros custam vida; feedback textual e acessível acompanha os corações. Testar débito único, derrota, reinício, restauração, consulta indeterminada e retorno assíncrono obsoleto.
 - Validar fora da MainActor; enquanto houver consulta pendente, não aceitar nova jogada. Resultados antigos/cancelados após reinício ou troca de fase não podem descontar vidas.
+
+## Geração determinística · PC-007
+
+`PuzzleGenerator.generate(seed:)` cria caminhadas simples 5×5, deriva pistas e adiciona obstáculos fora da rota. Aceita um candidato somente após solução única certificada pelo solver e conclusão integral pelo motor lógico. Não publica resultados indeterminados.
+
+PRNG LCG com aritmética UInt64 wrapping e ordenação fixa, versão 1. Identidade `generated-v1-<seed>-<índice do candidato>`: mudar orçamento nunca atribui duas grades ao mesmo ID. Mesmo seed, versão e orçamento produzem o mesmo resultado. Limites padrão: 80 candidatos, 20.000 nós por consulta; limites máximos defensivos: 1.000 candidatos e 1.000.000 nós. Cancelamento retorna sem fase; integração assíncrona e descarte de respostas de pedidos substituídos pertencem à PC-015.
+
+Ao esgotar o orçamento, usa a fixture aprovada com sua identidade própria `approved-5x5-v1`, certificada pelos testes de ambos os motores. O catálogo por dificuldade será expandido na PC-008. Geração ainda não está ligada à tela de jogo.
+
+Corpus seeds 0...49: 50 fases geradas, zero fallbacks, 671 candidatos avaliados; 105 rejeitados pelo solver e 516 pelo motor lógico. Testes adicionais cobrem orçamento nulo/negativo, solver indeterminado, cancelamento e seeds UInt64 extremos. Total: 30 testes passando; build iPhone Simulator aprovado. A qualidade/dificuldade e o desempenho no iPhone ainda serão calibrados na PC-008.
