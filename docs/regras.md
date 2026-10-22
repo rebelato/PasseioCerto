@@ -121,3 +121,13 @@ Verificação: 18 testes passando, incluindo duas soluções com mesma ocupaçã
 Aceita prefixo conectado e conjunto de exclusões para consultar o estado do jogador. O resultado é condicionado a essas hipóteses; não torna × uma dedução comprovada. Prefixos estruturalmente inválidos não possuem continuação. O callback de cancelamento é consultado a cada nó; a integração assíncrona fora da interface é PC-015.
 
 Classificações confirmadas: conceito aprovado e perímetro têm solução única; grade desconectada não tem solução; fixture ambígua tem múltiplas rotas. Testes comparam o solver com enumeração independente de todas as rotas simples 3×3 a partir do canto superior esquerdo para cada destino, incluindo exclusões. Total atual: 22 testes passando; build iPhone Simulator aprovado. Isso ainda não comprova resolução por deduções humanas: PC-006 cobre essa etapa.
+
+## Motor lógico · PC-006
+
+`LogicEngine.analyze` propaga fatos por pistas completas, casas restantes obrigatórias, alcance a partir da ponta e continuação única. Cada dedução registra ação, célula, motivo e explicação em português. Casas obrigatórias distantes não viram segmentos: só `extend` acrescenta uma aresta à ponta.
+
+O motor não chama o solver exato, não lê rotas de referência e não testa hipóteses. Retorna `solved`, `stalled` (repertório insuficiente) ou contradição com explicação. O caminho retornado é uma simulação de análise; o motor não altera a partida da interface. A integração do botão Dica pertence à PC-014.
+
+Conclusões são condicionadas ao prefixo e às marcações fornecidos; `assumedMarks` mantém explícitas as hipóteses da pessoa. Uma contradição orienta revisão/desfazer, sem atribuir culpa a uma célula sem prova. Conectividade usa alcance potencial sem repetir trechos e sem atravessar a casa; falta de ligação a uma casa obrigatória é conflito comprovado.
+
+A fase inicial e o perímetro são resolvidos sem chute. A fase ambígua retorna `stalled`, mesmo após deduzir células obrigatórias. Testes comparam todos os fatos e segmentos com todas as rotas compatíveis obtidas por enumeração independente em grades 3×3, com prefixos e exclusões. Total: 26 testes passando e build iPhone Simulator aprovado. Essa cobertura não implica resolver todo puzzle único; o gerador deverá rejeitar candidatos nos quais o motor parar.
