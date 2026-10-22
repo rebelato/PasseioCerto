@@ -113,3 +113,11 @@ A casa encerra a rota, mas só representa vitória com todas as pistas atendidas
 `incomplete` significa apenas ausência de violação detectada: não prova que existe solução. Análise global de continuidade possível depende do solver de PC-005. Marcações × livres continuam sendo hipóteses do jogador.
 
 Verificação: 18 testes passando, incluindo duas soluções com mesma ocupação e arestas diferentes; build iPhone Simulator aprovado. A mensagem de chegada incompleta foi compilada, mas ainda não revisada visualmente em aparelho.
+
+## Solver exato · PC-005
+
+`ExactSolver.solve` faz busca determinística por rotas ordenadas, interrompendo após a segunda solução. Retorna `noSolution`, `unique`, `multiple` ou `indeterminate`, até duas rotas testemunhas e o número de nós avaliados. Cada prefixo avaliado consome um nó; o limite padrão é 100.000. Limite esgotado ou cancelamento nunca certificam unicidade, mesmo quando uma solução já foi encontrada.
+
+Aceita prefixo conectado e conjunto de exclusões para consultar o estado do jogador. O resultado é condicionado a essas hipóteses; não torna × uma dedução comprovada. Prefixos estruturalmente inválidos não possuem continuação. O callback de cancelamento é consultado a cada nó; a integração assíncrona fora da interface é PC-015.
+
+Classificações confirmadas: conceito aprovado e perímetro têm solução única; grade desconectada não tem solução; fixture ambígua tem múltiplas rotas. Testes comparam o solver com enumeração independente de todas as rotas simples 3×3 a partir do canto superior esquerdo para cada destino, incluindo exclusões. Total atual: 22 testes passando; build iPhone Simulator aprovado. Isso ainda não comprova resolução por deduções humanas: PC-006 cobre essa etapa.
