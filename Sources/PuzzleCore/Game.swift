@@ -16,9 +16,10 @@ public struct Game: Codable, Sendable {
     public init(puzzle: Puzzle) { self.puzzle = puzzle; path = [puzzle.start] }
     public init() { self.init(puzzle: try! PuzzleFixtures.approved.makePuzzle()) }
     public var occupied: Set<Cell> { Set(path).union([goal]) }
-    public var rowCounts: [Int] { rows.indices.map { r in occupied.filter { $0.row == r }.count } }
-    public var columnCounts: [Int] { columns.indices.map { c in occupied.filter { $0.col == c }.count } }
-    public var won: Bool { path.last == goal && rowCounts == rows && columnCounts == columns }
+    public var rowCounts: [Int] { RouteValidator.counts(puzzle: puzzle, path: path).rows }
+    public var columnCounts: [Int] { RouteValidator.counts(puzzle: puzzle, path: path).columns }
+    public var status: RouteStatus { RouteValidator.evaluate(puzzle: puzzle, path: path, marks: marks) }
+    public var won: Bool { status == .complete }
     public var canUndo: Bool { !history.isEmpty }
     @discardableResult public mutating func play(_ cell: Cell, marking: Bool = false) -> Bool {
         guard puzzle.contains(cell), !puzzle.obstacles.contains(cell), !won else { return false }
@@ -51,13 +52,9 @@ extension Game {
         guard valid(path, marks), history.allSatisfy({ valid($0.path, $0.marks) }) else { throw PuzzleError.invalidSession }
     }
     private func valid(_ route: [Cell], _ excluded: Set<Cell>) -> Bool {
-        guard route.first == start, Set(route).count == route.count,
-              route.allSatisfy({ puzzle.contains($0) && !puzzle.obstacles.contains($0) }),
-              !route.dropLast().contains(goal),
-              zip(route, route.dropFirst()).allSatisfy({ abs($0.row-$1.row)+abs($0.col-$1.col) == 1 }),
-              excluded.allSatisfy({ puzzle.contains($0) && !puzzle.obstacles.contains($0) && $0 != goal && !route.contains($0) }) else { return false }
-        let occupied = Set(route).union([goal])
-        return rows.indices.allSatisfy { r in occupied.filter { $0.row == r }.count <= rows[r] }
-            && columns.indices.allSatisfy { c in occupied.filter { $0.col == c }.count <= columns[c] }
+        switch RouteValidator.evaluate(puzzle: puzzle, path: route, marks: excluded) {
+        case .incomplete, .complete, .contradiction(.arrivedBeforeClues): return true
+        default: return false
+        }
     }
 }

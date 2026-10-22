@@ -105,3 +105,11 @@ Vários animais, portais, chaves, pistas de palavras ou operações matemáticas
 Um toque válido é uma transação. Um arraste será uma única transação de histórico, mesmo passando por várias células: Desfazer restaura o estado anterior ao gesto inteiro. Recuar para a penúltima célula remove o último segmento. Soltar encerra a transação; cancelar/interromper restaura o estado anterior ao gesto. Sair da grade não acrescenta células; movimentos diagonais ou saltos não inventam segmentos intermediários. Esse contrato será implementado em PC-011/PC-012; a versão atual oferece toque.
 
 A casa encerra a rota, mas só representa vitória com todas as pistas atendidas. Uma chegada incompleta permite recuar/desfazer. Nenhuma ferramenta pode marcar × sobre endpoints, obstáculos ou caminho. Pistas satisfeitas mostram a contagem alcançada, sem garantir que exista continuação.
+
+## Validador central · PC-004
+
+`RouteValidator` diferencia `incomplete`, `contradiction(motivo)` e `complete`. Valida início, limites, obstáculos, repetição/ciclos, conexões ortogonais, continuação após a casa, conflito de × e excesso nas pistas. Uma chegada que não satisfaz todas as pistas é contradição explícita, preservada no salvamento para permitir revisão e desfazer.
+
+`incomplete` significa apenas ausência de violação detectada: não prova que existe solução. Análise global de continuidade possível depende do solver de PC-005. Marcações × livres continuam sendo hipóteses do jogador.
+
+Verificação: 18 testes passando, incluindo duas soluções com mesma ocupação e arestas diferentes; build iPhone Simulator aprovado. A mensagem de chegada incompleta foi compilada, mas ainda não revisada visualmente em aparelho.

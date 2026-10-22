@@ -70,7 +70,13 @@ struct GameView: View {
                     let cell = Cell(i/5, i%5)
                     Button {
                         if !game.play(cell, marking: marking) { message = "Use uma casa vizinha livre, sem ultrapassar as pistas." }
-                        else { message = game.won ? "Todas as pistas foram atendidas. Muito bem!" : "Continue seguindo as pistas das linhas e colunas." }
+                        else {
+                            switch game.status {
+                            case .complete: message = "Todas as pistas foram atendidas. Muito bem!"
+                            case .contradiction(.arrivedBeforeClues): message = "Chegou à casa, mas ainda faltam casas nas pistas. Volte um trecho ou use Desfazer."
+                            default: message = "Continue seguindo as pistas das linhas e colunas."
+                            }
+                        }
                     } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 10).fill(.white.opacity(0.85))
