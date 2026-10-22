@@ -1,0 +1,818 @@
+{
+  "schemaVersion": 1,
+  "board": "https://trello.com/b/5ryzhOIc/passeio-certo",
+  "overview": "https://trello.com/c/51U1atPn",
+  "tasks": [
+    {
+      "n": 1,
+      "title": "Preparar o projeto iOS em SwiftUI",
+      "area": "Base",
+      "milestone": "M1 · Primeira partida",
+      "depends": [],
+      "scope": "Criar um app nativo pequeno, com domínio independente da interface, sem backend ou IA no runtime.",
+      "accept": [
+        "Projeto abre no Xcode e executa em simulador de iPhone; definir iOS mínimo (proposta: iOS 17) e orientação retrato.",
+        "Separar PuzzleCore (Swift puro), GameFeature (sessão/SwiftUI), DesignSystem e persistência, sem criar módulos vazios sem uso.",
+        "Previews e testes usam fases locais determinísticas; não exigem rede, credenciais nem serviços externos.",
+        "README informa Xcode/SDK efetivamente usados, comando de build/teste, bundle ID e passos de assinatura no aparelho."
+      ],
+      "id": "PC-001",
+      "stage": "Pronto para começar",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988d5ec8bb9f79eaf71f9",
+        "url": "https://trello.com/c/DTdqCQ67",
+        "name": "[PC-001] Preparar o projeto iOS em SwiftUI"
+      }
+    },
+    {
+      "n": 2,
+      "title": "Fechar as regras e criar fases de referência",
+      "area": "Produto / Regras",
+      "milestone": "M1 · Primeira partida",
+      "depends": [],
+      "scope": "Transformar o conceito aprovado em uma especificação testável antes de implementar o gerador.",
+      "accept": [
+        "Uma grade 5×5, um cachorro e uma casa distintos; movimento ortogonal sem repetir células; não é necessário preencher toda a grade.",
+        "Partida e chegada contam nas pistas; documentar caminho parcial, célula com ×, obstáculos e momento da vitória.",
+        "Trechos não consecutivos podem ficar lado a lado, mas só se conectam por arestas desenhadas; não há conexão automática pela cor das células.",
+        "Definir como marcar casa/partida, apagar o último trecho, encerrar um gesto e lidar com pistas satisfeitas sem revelar gabarito.",
+        "Conjunto de fixtures inclui o esboço aprovado (linhas 3,1,3,1,1 e colunas 1,1,3,1,3), mais casos válidos, impossíveis e ambíguos; confirmar classificações com solver quando disponível."
+      ],
+      "id": "PC-002",
+      "stage": "Pronto para começar",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988eca8ff63af4aea69ec",
+        "url": "https://trello.com/c/jSJI6UTs",
+        "name": "[PC-002] Fechar as regras e criar fases de referência"
+      }
+    },
+    {
+      "n": 3,
+      "title": "Modelar puzzle, caminho e sessão em Swift puro",
+      "area": "Núcleo",
+      "milestone": "M1 · Primeira partida",
+      "depends": [
+        2
+      ],
+      "scope": "Definir tipos de valor serializáveis que possam ser testados sem SwiftUI.",
+      "accept": [
+        "Tipos para coordenada, dimensões, obstáculos, endpoints, pistas de linhas/colunas e rota ordenada com suas conexões explícitas.",
+        "Separar a definição imutável da fase do caminho/×/histórico do jogador; início e fim são informações conhecidas desde o começo.",
+        "Formato Codable com puzzleID, schemaVersion, generatorVersion e seed quando aplicável; rejeitar dados fora dos limites.",
+        "Fixtures disponíveis para previews, testes e tutorial; regras não dependem de cores, pixels ou da ilustração."
+      ],
+      "id": "PC-003",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988f04294417eca1012f6",
+        "url": "https://trello.com/c/e7wbM5Ot",
+        "name": "[PC-003] Modelar puzzle, caminho e sessão em Swift puro"
+      }
+    },
+    {
+      "n": 4,
+      "title": "Validar jogadas, contagens e vitória",
+      "area": "Núcleo",
+      "milestone": "M1 · Primeira partida",
+      "depends": [
+        3
+      ],
+      "scope": "Aceitar vitórias pelo cumprimento das regras, e não por comparação com uma imagem ou solução guardada.",
+      "accept": [
+        "Validar limites, obstáculos, adjacência ortogonal, repetição, continuidade cão→casa e todas as contagens, incluindo endpoints.",
+        "Diferenciar incompleto, contradição comprovada e solução completa; não chamar um prefixo de errado apenas por divergir do gabarito.",
+        "Contagem da ocupação conhecida inclui endpoints uma única vez; distinguir o endpoint isolado da rota conectada.",
+        "Testes cobrem rota desconectada, ciclos, extremos, pista excedida, soma incompatível e diferentes conexões com as mesmas células."
+      ],
+      "id": "PC-004",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988f2167bfb31eb862fdc",
+        "url": "https://trello.com/c/0APdSmtj",
+        "name": "[PC-004] Validar jogadas, contagens e vitória"
+      }
+    },
+    {
+      "n": 5,
+      "title": "Implementar solver exato e prova de unicidade",
+      "area": "Núcleo",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        4
+      ],
+      "scope": "Contar soluções reais até duas e produzir uma referência confiável para validar o gerador.",
+      "accept": [
+        "API retorna sem solução, solução única ou múltiplas; pode interromper após encontrar a segunda.",
+        "Unicidade considera a rota/arestas, não apenas o conjunto de células; ordem é fixada a partir do cão, sem duplicar a rota invertida.",
+        "Aceitar restrições do estado atual para consultar existência de continuação, sem usar solução conhecida como oráculo de erro.",
+        "Comparar resultados em grades pequenas com enumeração independente; cobrir fixtures de PC-002.",
+        "Busca cancelável com limites de operações/nós; atingir o limite retorna indeterminado, nunca aprova unicidade."
+      ],
+      "id": "PC-005",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988f328ddccdfaa56ca75",
+        "url": "https://trello.com/c/4DBUFk9s",
+        "name": "[PC-005] Implementar solver exato e prova de unicidade"
+      }
+    },
+    {
+      "n": 6,
+      "title": "Criar motor de deduções e justificativas",
+      "area": "Núcleo",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        5
+      ],
+      "scope": "Resolver e explicar o puzzle por regras lógicas, sem adivinhar ou consultar a resposta pronta.",
+      "accept": [
+        "Implementar regras sólidas de pista completa, casas restantes obrigatórias, conectividade e continuidade; registrar células, pistas e motivo de cada dedução.",
+        "Distinguir fato deduzido, marcação do jogador e segmento conectado; uma célula obrigatória distante pode ser destacada sem desenhar uma conexão fictícia.",
+        "Confrontar deduções com todas as soluções compatíveis nas fixtures: nenhuma regra elimina uma solução válida.",
+        "Quando não houver dedução suportada, retornar isso explicitamente; não apresentar resultado de backtracking como uma explicação lógica.",
+        "Estado contraditório não gera uma dica inventada: explicar o conflito comprovável ou orientar revisão/desfazer."
+      ],
+      "id": "PC-006",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988f51fcc4acad29b20c3",
+        "url": "https://trello.com/c/MLcANDlc",
+        "name": "[PC-006] Criar motor de deduções e justificativas"
+      }
+    },
+    {
+      "n": 7,
+      "title": "Gerar fases 5×5 com seed e validação dupla",
+      "area": "Núcleo",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        5,
+        6
+      ],
+      "scope": "Gerar fases automaticamente no aparelho com garantias explícitas de qualidade.",
+      "accept": [
+        "Criar caminho candidato, endpoints, pistas e obstáculos; só publicar após unicidade exata e resolução integral pelo repertório lógico.",
+        "Seed e versão produzem a mesma fase entre execuções; usar PRNG/hash estáveis, nunca hashValue/Hasher do Swift para identidade.",
+        "Limitar candidatos e operações, suportar cancelamento e descartar resultados de pedidos antigos.",
+        "Ao esgotar o orçamento, usar fase previamente validada com identidade própria; não atribuir duas grades ao mesmo puzzleID.",
+        "Corpus automatizado registra taxa de aceitação/rejeição e inclui casos patológicos; nenhuma fase é aceita quando o solver fica indeterminado."
+      ],
+      "id": "PC-007",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988f7b8c0a8d174e0e050",
+        "url": "https://trello.com/c/5bOYLHfH",
+        "name": "[PC-007] Gerar fases 5×5 com seed e validação dupla"
+      }
+    },
+    {
+      "n": 8,
+      "title": "Calibrar dificuldade, desempenho e catálogo de fallback",
+      "area": "Núcleo / Qualidade",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        7
+      ],
+      "scope": "Definir níveis de desafio usando deduções e validar que o gerador funciona de forma confortável no iPhone.",
+      "accept": [
+        "Classificar inicialmente Tranquilo e Desafiador conforme regras, cadeias e passos lógicos; dificuldade por tamanho não é suficiente.",
+        "Revisar jogando uma amostra identificável por seed/versão; tratar os limites iniciais como provisórios.",
+        "Medir tempo, memória, nós e taxa de rejeição em hardware disponível, registrando dispositivo e build; definir limites com base nas medições.",
+        "Preparar catálogo pequeno de fases verificadas por dificuldade para uso offline; carregamento e geração ficam fora da MainActor.",
+        "Grades maiores ficam desabilitadas até terem validação própria."
+      ],
+      "id": "PC-008",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988f8448d43a435f9e6f3",
+        "url": "https://trello.com/c/k1aXoXht",
+        "name": "[PC-008] Calibrar dificuldade, desempenho e catálogo de fallback"
+      }
+    },
+    {
+      "n": 9,
+      "title": "Criar o DesignSystem a partir do esboço aprovado",
+      "area": "Design",
+      "milestone": "M1 · Primeira partida",
+      "depends": [],
+      "scope": "Traduzir o conceito em componentes SwiftUI legíveis e reutilizáveis, sem transformar a imagem em interface.",
+      "accept": [
+        "Paleta marfim/sálvia/verde-escuro, escala tipográfica com Dynamic Type, espaçamentos, cantos, ícones e estados definidos em tokens.",
+        "Componentes para pistas, ferramentas Caminho/Marcar ×, Desfazer, Dica e notas explicativas.",
+        "Definir aparência de cão, casa, obstáculo, célula livre, descartada, caminho e pista atendida/excedida; informação não depende apenas de cor.",
+        "Revisar contraste e composição em iPhone pequeno; tabuleiro tem prioridade sobre decoração.",
+        "Registrar o mockup como referência visual; texto, pistas e grade são renderizados por código."
+      ],
+      "id": "PC-009",
+      "stage": "Pronto para começar",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988fb04c476c485b2360a",
+        "url": "https://trello.com/c/j97mpHNp",
+        "name": "[PC-009] Criar o DesignSystem a partir do esboço aprovado"
+      }
+    },
+    {
+      "n": 10,
+      "title": "Renderizar tabuleiro responsivo e pistas",
+      "area": "SwiftUI",
+      "milestone": "M1 · Primeira partida",
+      "depends": [
+        3,
+        9
+      ],
+      "scope": "Desenhar uma fase real, com conexões precisas e alinhamento consistente das pistas.",
+      "accept": [
+        "Grade 5×5 com pistas alinhadas a cada linha/coluna, cão e casa nas coordenadas corretas.",
+        "Desenhar ligações entre centros, sem unir automaticamente trechos apenas adjacentes; evitar cobrir números com arte.",
+        "Estados do tabuleiro consomem modelos do núcleo; fixtures incluem o caminho parcial do conceito.",
+        "Safe areas, controles inferiores e rolagem respeitados; conteúdo não passa sob relógio ou botões.",
+        "Cada célula tem identificação estável e descrição acessível de posição e estado."
+      ],
+      "id": "PC-010",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988fc457a2b5b4513c350",
+        "url": "https://trello.com/c/KExv7Ab7",
+        "name": "[PC-010] Renderizar tabuleiro responsivo e pistas"
+      }
+    },
+    {
+      "n": 11,
+      "title": "Implementar desenho por arraste, toque e marcação ×",
+      "area": "SwiftUI / Interação",
+      "milestone": "M1 · Primeira partida",
+      "depends": [
+        4,
+        10
+      ],
+      "scope": "Permitir resolver o puzzle sem exigir precisão motora nem gestos ocultos.",
+      "accept": [
+        "Arrastar estende um prefixo conectado ao cão; recuar sobre o último segmento desfaz o trecho correspondente.",
+        "Toque em célula vizinha é alternativa ao arraste; modo Marcar × permite marcar/desmarcar exclusões sem desenhar conexões.",
+        "Células de partida/casa não podem ser descartadas; rota e × não ocupam a mesma célula sem uma resolução de conflito explícita.",
+        "Tratar saída da grade, movimento rápido/diagonal, interrupção e cancelamento do gesto sem criar saltos ou estado corrompido.",
+        "Acessibilidade oferece ações equivalentes sem arrastar; mudanças de ferramenta têm rótulo e estado selecionado claros."
+      ],
+      "id": "PC-011",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988fea22de83595c7ba83",
+        "url": "https://trello.com/c/BHFyMBT5",
+        "name": "[PC-011] Implementar desenho por arraste, toque e marcação ×"
+      }
+    },
+    {
+      "n": 12,
+      "title": "Criar sessão de jogo com desfazer e reiniciar",
+      "area": "Sessão",
+      "milestone": "M1 · Primeira partida",
+      "depends": [
+        11
+      ],
+      "scope": "Consolidar ações em um GameViewModel previsível, independente da animação e da persistência.",
+      "accept": [
+        "Um gesto finalizado ou uma ação por toque corresponde a uma transação de histórico; desfazer restaura caminho e marcações.",
+        "Reiniciar pede confirmação e não altera o puzzleID; troca de fase não mistura históricos.",
+        "Contagens são derivadas do estado atual e do modelo, nunca de variáveis duplicadas na View.",
+        "Teste partida fixa completa com desenhar, descartar, desfazer, reiniciar e ganhar.",
+        "Sem vidas, cronômetro obrigatório ou penalidade por experimentar; refazer é opcional e só entra se o histórico ficar consistente."
+      ],
+      "id": "PC-012",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988ff83a41beb32afb6e9",
+        "url": "https://trello.com/c/yW64AjLB",
+        "name": "[PC-012] Criar sessão de jogo com desfazer e reiniciar"
+      }
+    },
+    {
+      "n": 13,
+      "title": "Persistir e restaurar partidas e preferências",
+      "area": "Dados locais",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        3,
+        12
+      ],
+      "scope": "Manter o progresso offline e sobreviver a interrupções do iPhone.",
+      "accept": [
+        "Salvar fase, rota, ×, posição no tutorial, preferências e progresso em formato versionado e com escrita atômica.",
+        "Restaurar partida sem gerar outra grade para a mesma identidade, inclusive após encerramento/reabertura.",
+        "Dados corrompidos ou incompatíveis oferecem recuperação explícita, sem apagar silenciosamente progresso válido.",
+        "Salvar em momentos seguros e na mudança de scenePhase; navegação e efeitos não duplicam vitórias.",
+        "Testes de round-trip, versão incompatível, falha de escrita e interrupção durante salvamento."
+      ],
+      "id": "PC-013",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98901408cf608dc09a200",
+        "url": "https://trello.com/c/ZQVqZB8x",
+        "name": "[PC-013] Persistir e restaurar partidas e preferências"
+      }
+    },
+    {
+      "n": 14,
+      "title": "Integrar contadores e dicas explicadas à tela de jogo",
+      "area": "SwiftUI / Lógica",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        6,
+        12
+      ],
+      "scope": "Fazer o feedback ajudar no raciocínio sem revelar automaticamente a solução.",
+      "accept": [
+        "Pistas exibem pendente, atendida ou excedida com distinção de símbolo/texto; atendida não significa caminho globalmente correto.",
+        "Botão Dica mostra uma dedução real com linha/coluna/células destacadas e linguagem curta em português.",
+        "Dicas respeitam o estado atual, × e conexões; conflito comprovado tem mensagem própria.",
+        "Dica não aplica silenciosamente movimentos nem usa o gabarito para afirmar que uma célula está errada.",
+        "Explicação, destaque e ações são acessíveis e podem ser fechados sem alterar a partida."
+      ],
+      "id": "PC-014",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9890c69776db777777e2d",
+        "url": "https://trello.com/c/Woxa065h",
+        "name": "[PC-014] Integrar contadores e dicas explicadas à tela de jogo"
+      }
+    },
+    {
+      "n": 15,
+      "title": "Integrar geração assíncrona, cancelamento e fallback",
+      "area": "Integração",
+      "milestone": "M2 · Fases automáticas",
+      "depends": [
+        8,
+        13,
+        14
+      ],
+      "scope": "Conectar o motor de geração à experiência do jogo sem bloquear a interface.",
+      "accept": [
+        "Nova fase usa gerador local e a dificuldade escolhida; UI permanece responsiva.",
+        "Carregamento mostra andamento verdadeiro quando houver dados; oferece cancelar e não inventa percentuais.",
+        "Token/identidade da sessão impede resposta antiga de substituir uma fase nova; cancelar ao sair ou trocar pedido.",
+        "Fallback é validado, preserva identidade e informa indisponibilidade de geração quando relevante.",
+        "Testar erros, orçamento excedido, cancelamento, background e troca rápida de fases sem chamadas de rede."
+      ],
+      "id": "PC-015",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9890ee129aeda9cdca75d",
+        "url": "https://trello.com/c/VFTALnFu",
+        "name": "[PC-015] Integrar geração assíncrona, cancelamento e fallback"
+      }
+    },
+    {
+      "n": 16,
+      "title": "Animar a chegada do cachorro e registrar a conclusão",
+      "area": "SwiftUI / Recompensa",
+      "milestone": "M1 · Primeira partida",
+      "depends": [
+        4,
+        12
+      ],
+      "scope": "Entregar o momento afetivo do conceito, acionado apenas por uma solução válida.",
+      "accept": [
+        "Após validação completa, congelar a rota e animar o cão por seus segmentos até a casa.",
+        "Conclusão oferece próxima fase, jogar novamente e voltar ao início; uma animação não controla a validade da vitória.",
+        "Registrar a vitória uma única vez mesmo com taps repetidos, reaparecimento da View ou interrupção.",
+        "Reduce Motion usa transição simples; o jogador pode pular a animação.",
+        "Retomar após background não duplica recompensas nem deixa a tela travada."
+      ],
+      "id": "PC-016",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9890ff83c32aebfdad4b6",
+        "url": "https://trello.com/c/RQSxdrQ2",
+        "name": "[PC-016] Animar a chegada do cachorro e registrar a conclusão"
+      }
+    },
+    {
+      "n": 17,
+      "title": "Criar tutorial curto e jogável",
+      "area": "Produto / SwiftUI",
+      "milestone": "M3 · Experiência pessoal",
+      "depends": [
+        11,
+        14,
+        16
+      ],
+      "scope": "Ensinar jogando, sem um onboarding de slides longo.",
+      "accept": [
+        "Pequenas fases fixas ensinam contagens incluindo endpoints, caminho ortogonal, ×, desfazer e dica.",
+        "Uma ação e uma explicação curta por momento; a pessoa executa a regra antes de avançar.",
+        "Pode pular, repetir e reabrir em Ajustes; progresso salvo.",
+        "Não exige arrastar nem ignora Dynamic Type/VoiceOver.",
+        "Ao terminar, abre uma partida normal e não mistura regras especiais do tutorial com o validador real."
+      ],
+      "id": "PC-017",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad989108421e9a7c243e4fa",
+        "url": "https://trello.com/c/od9emsh1",
+        "name": "[PC-017] Criar tutorial curto e jogável"
+      }
+    },
+    {
+      "n": 18,
+      "title": "Criar início, escolha de dificuldade e desafio diário",
+      "area": "Produto / SwiftUI",
+      "milestone": "M3 · Experiência pessoal",
+      "depends": [
+        13,
+        15
+      ],
+      "scope": "Dar um ponto de entrada simples para jogar e continuar sem menus excessivos.",
+      "accept": [
+        "Tela inicial oferece Continuar, Novo passeio e Desafio do dia; o caminho até a partida é curto.",
+        "Dificuldades vêm da classificação real; não apresentar opção que o gerador/catálogo ainda não suporta.",
+        "Diário tem chave estável de data civil e versão, com política de fuso documentada; nunca sobrescreve uma partida aberta.",
+        "Mudança do relógio/data ou atualização não substitui grade já persistida sob o mesmo ID.",
+        "Tudo funciona offline; um puzzle diário tem identidade única e pode ser retomado."
+      ],
+      "id": "PC-018",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98912ccd43a1c28651598",
+        "url": "https://trello.com/c/JWDEL6xZ",
+        "name": "[PC-018] Criar início, escolha de dificuldade e desafio diário"
+      }
+    },
+    {
+      "n": 19,
+      "title": "Personalizar Bento e criar progresso mínimo",
+      "area": "Produto / Dados",
+      "milestone": "M3 · Experiência pessoal",
+      "depends": [
+        13,
+        16
+      ],
+      "scope": "Tornar o jogo dela sem criar uma administração de abrigo ou economia paralela.",
+      "accept": [
+        "Permitir nomear o cachorro, com fallback Bento; nome aparece no início, na partida e na conclusão.",
+        "Persistir nome e preferências; testar nomes longos, caracteres especiais e acessibilidade.",
+        "Mostrar contagem de passeios concluídos e uma pequena coleção preparada para expansão, sem inventar desbloqueios não implementados.",
+        "Vitórias/recompensas são idempotentes por partida; repetir fase não gera duplicação acidental.",
+        "Primeiro marco usa um cachorro e uma praça; coleção extensa fica para pós-MVP."
+      ],
+      "id": "PC-019",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98913ece49e8daaf877ab",
+        "url": "https://trello.com/c/a8bxpXkT",
+        "name": "[PC-019] Personalizar Bento e criar progresso mínimo"
+      }
+    },
+    {
+      "n": 20,
+      "title": "Adicionar ajustes, sons e hápticos discretos",
+      "area": "Experiência",
+      "milestone": "M3 · Experiência pessoal",
+      "depends": [
+        12,
+        16
+      ],
+      "scope": "Oferecer resposta tátil/sonora opcional sem atrapalhar a dedução.",
+      "accept": [
+        "Ajustes de som e hápticos persistem e podem ser alterados sem sair/perder a partida.",
+        "Sinais discretos para ação válida, conflito de regra e conclusão; sem latido repetitivo obrigatório.",
+        "Não interromper áudio de outros apps sem intenção explícita; respeitar comportamento esperado do aparelho.",
+        "Ajustes permitem reabrir tutorial e consultar regras.",
+        "Ausência de som/háptico não remove informação necessária para resolver ou entender o jogo."
+      ],
+      "id": "PC-020",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9891538b2382de8d718f7",
+        "url": "https://trello.com/c/gfNeyHwO",
+        "name": "[PC-020] Adicionar ajustes, sons e hápticos discretos"
+      }
+    },
+    {
+      "n": 21,
+      "title": "Revisar acessibilidade, português e conforto visual",
+      "area": "Qualidade / Acessibilidade",
+      "milestone": "M3 · Experiência pessoal",
+      "depends": [
+        10,
+        11,
+        14,
+        17,
+        18
+      ],
+      "scope": "Consolidar requisitos acessíveis presentes desde o tabuleiro, não remendar só no lançamento.",
+      "accept": [
+        "VoiceOver anuncia coordenada, estado, pistas e ações equivalentes para desenho/exclusão; foco previsível em dica e vitória.",
+        "Texto ampliado, contraste, modo de marcação e alvos de toque são verificados em iPhone pequeno/grande; não depender só de cor.",
+        "Reduce Motion e interrupções não quebram conclusão nem navegação; tabuleiro mantém prioridade e legibilidade.",
+        "Interface completa em pt-BR com String Catalog e unidades/textos consistentes; preparar localização sem forçar idiomas novos no MVP.",
+        "Revisar safe areas e evitar informação escondida por barras, teclado, notas ou botões fixos."
+      ],
+      "id": "PC-021",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98918457a2b5b4513e773",
+        "url": "https://trello.com/c/zZvTLxaL",
+        "name": "[PC-021] Revisar acessibilidade, português e conforto visual"
+      }
+    },
+    {
+      "n": 22,
+      "title": "Finalizar arte, ícone e animações do Bento",
+      "area": "Design / Assets",
+      "milestone": "M3 · Experiência pessoal",
+      "depends": [
+        9,
+        16,
+        19
+      ],
+      "scope": "Trocar arte provisória por um conjunto pequeno coerente com o conceito aprovado.",
+      "accept": [
+        "Cão, casa, praça/obstáculo e ícone final em formatos/resoluções adequados ao iPhone, com proveniência documentada.",
+        "Estados necessários à caminhada e à chegada definidos; arte não cobre pistas, células ou conexões.",
+        "Telas continuam legíveis com animação reduzida e símbolos substitutos; nenhuma regra depende da anatomia/pose de uma imagem.",
+        "Assets organizados no catálogo e usados por componentes; não embutir a imagem inteira do mockup como tela.",
+        "Revisar em tamanho real de dispositivo; nomes e textos permanecem nativos/localizáveis."
+      ],
+      "id": "PC-022",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98919000dfeed12313534",
+        "url": "https://trello.com/c/pDZoW3Hv",
+        "name": "[PC-022] Finalizar arte, ícone e animações do Bento"
+      }
+    },
+    {
+      "n": 23,
+      "title": "Configurar CI e verificações reproduzíveis",
+      "area": "Engenharia",
+      "milestone": "M4 · Beta no iPhone",
+      "depends": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "scope": "Garantir que mudanças de UI ou gerador não quebrem regras e builds sem ser percebidas.",
+      "accept": [
+        "Workflow GitHub Actions executa testes do núcleo e build/testes iOS compatíveis com runner e SDK fixados/documentados.",
+        "CI inclui fixtures de unicidade, deduções e seeds de regressão; falhas não são contornadas desativando testes.",
+        "Build de verificação sem assinatura e sem credenciais pessoais; segredos de distribuição separados se forem necessários depois.",
+        "README explica como reproduzir os checks localmente e quais dependem de simulador/hardware.",
+        "Executar o pipeline real e registrar resultado antes de marcar concluído; especificar limites do corpus para manter custo previsível."
+      ],
+      "id": "PC-023",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9891be22691f0ab627e90",
+        "url": "https://trello.com/c/X0nJpRsH",
+        "name": "[PC-023] Configurar CI e verificações reproduzíveis"
+      }
+    },
+    {
+      "n": 24,
+      "title": "Validar o MVP integrado e desempenho no aparelho",
+      "area": "Qualidade",
+      "milestone": "M4 · Beta no iPhone",
+      "depends": [
+        15,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23
+      ],
+      "scope": "Verificar a experiência completa com os dados, solver e UI reais.",
+      "accept": [
+        "Cobrir início→tutorial→fase→dica→desfazer→retomar→vitória e diário, incluindo app encerrado/background durante geração ou animação.",
+        "Revisão visual em iPhone pequeno/grande, texto ampliado e configurações acessíveis; screenshots/snapshots só atualizados após inspeção.",
+        "Lote reproduzível de fases confirma validade, unicidade, conclusão lógica e classificação; registrar seeds que falharem.",
+        "Medir geração e fluidez no hardware disponível, registrar resultados e corrigir gargalos materiais.",
+        "Checklist de privacidade e funcionamento offline corresponde ao código; não adicionar analytics, anúncios ou coleta sem decisão de produto."
+      ],
+      "id": "PC-024",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9891c69397556e9e61fad",
+        "url": "https://trello.com/c/I3Z8JV5h",
+        "name": "[PC-024] Validar o MVP integrado e desempenho no aparelho"
+      }
+    },
+    {
+      "n": 25,
+      "title": "Fazer uma rodada de playtest com ela e ajustar o desafio",
+      "area": "Produto / Validação",
+      "milestone": "M4 · Beta no iPhone",
+      "depends": [
+        24
+      ],
+      "scope": "Confirmar que as regras são entendidas e que ela quer jogar a próxima fase.",
+      "accept": [
+        "Preparar pequena sequência de fases fáceis/intermediárias identificadas por seed e observações, sem coletar dados pessoais automaticamente.",
+        "Observar compreensão de endpoints, contagens, × e caminho por toque/arraste; registrar onde precisou de explicação.",
+        "Checar se a classificação corresponde à percepção e se as dicas ensinam sem estragar a descoberta.",
+        "Transformar problemas observados em ajustes/correções verificáveis; priorizar clareza e prazer do puzzle.",
+        "Playtest é etapa humana: não inventar resultados nem marcar aprovado sem a sessão real."
+      ],
+      "id": "PC-025",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9891ea599b11937293b60",
+        "url": "https://trello.com/c/llcRNHJd",
+        "name": "[PC-025] Fazer uma rodada de playtest com ela e ajustar o desafio"
+      }
+    },
+    {
+      "n": 26,
+      "title": "Preparar assinatura e distribuir beta no TestFlight",
+      "area": "Distribuição",
+      "milestone": "M4 · Beta no iPhone",
+      "depends": [
+        25
+      ],
+      "scope": "Instalar a primeira versão nela pelo caminho oficial de beta, usando a conta Apple do projeto.",
+      "accept": [
+        "Confirmar equipe Apple Developer, bundle ID, capabilities, nome, ícone, versões e idiomas efetivamente disponíveis.",
+        "Archive Release e validação no App Store Connect bem-sucedidos; configurações de privacidade/exportação refletem o código.",
+        "Definir beta interno/externo conforme a conta, com textos de teste e revisão da Apple quando exigida.",
+        "Upload e convite só com acesso/autorização efetivos; não compartilhar senhas ou certificados no repo.",
+        "Confirmar instalação e abertura no iPhone dela e registrar a build; instruções de renovação do beta documentadas."
+      ],
+      "id": "PC-026",
+      "stage": "Backlog MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98920e8cb921c90e46302",
+        "url": "https://trello.com/c/N3sm5MLT",
+        "name": "[PC-026] Preparar assinatura e distribuir beta no TestFlight"
+      }
+    },
+    {
+      "n": 27,
+      "title": "Explorar grades 6×6/7×7 e novas dificuldades",
+      "area": "Pós-MVP",
+      "milestone": "Depois do primeiro beta",
+      "depends": [
+        8,
+        25
+      ],
+      "scope": "Expandir apenas quando o gerador e a interação pequenos estiverem validados.",
+      "accept": [
+        "Medir custo e taxa de aceitação para cada tamanho, sem inferir desempenho a partir de 5×5.",
+        "Garantir unicidade de rota e conclusão lógica pelo repertório suportado.",
+        "Validar toque, leitura e acessibilidade em tela pequena antes de liberar.",
+        "Atualizar catálogo/fallback e classificador com corpus revisado."
+      ],
+      "id": "PC-027",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad989371bd5706fa605da3b",
+        "url": "https://trello.com/c/sR9QSUBn",
+        "name": "[PC-027] Explorar grades 6×6/7×7 e novas dificuldades"
+      }
+    },
+    {
+      "n": 28,
+      "title": "Expandir animais, coleção e cenários",
+      "area": "Pós-MVP",
+      "milestone": "Depois do primeiro beta",
+      "depends": [
+        19,
+        22,
+        25
+      ],
+      "scope": "Adicionar cachorros e depois outros bichos como variações afetivas, mantendo regras claras.",
+      "accept": [
+        "Definir espécies/visuais e ambientes a partir do que ela gostar no playtest.",
+        "Desbloqueios têm condição explícita e salvamento versionado.",
+        "Arte nova preserva leitura de coordenadas, endpoints e caminho.",
+        "Evitar transformar a coleção em manutenção obrigatória ou punição por ficar sem jogar."
+      ],
+      "id": "PC-028",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad989395c12edc25c645cd6",
+        "url": "https://trello.com/c/CzcPwvG6",
+        "name": "[PC-028] Expandir animais, coleção e cenários"
+      }
+    },
+    {
+      "n": 29,
+      "title": "Projetar fases com mais de um animal",
+      "area": "Pós-MVP",
+      "milestone": "Experimento de regras",
+      "depends": [
+        5,
+        6,
+        25
+      ],
+      "scope": "Tratar como uma variante real do puzzle, com custo e regras próprios.",
+      "accept": [
+        "Especificar pareamento animal–destino, contagem agregada e restrições de cruzamento/compartilhamento.",
+        "Atualizar validador, solver exato e motor lógico; unicidade deve incluir cada rota e pareamento.",
+        "Cores têm símbolos/nome como alternativa; interface mostra claramente qual animal está sendo movido.",
+        "Validar diversão e geração antes de integrar à progressão normal."
+      ],
+      "id": "PC-029",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9893b40bde5a99b9c5161",
+        "url": "https://trello.com/c/nMGy1gmE",
+        "name": "[PC-029] Projetar fases com mais de um animal"
+      }
+    },
+    {
+      "n": 30,
+      "title": "Explorar um modo de matemática ou palavras",
+      "area": "Pós-MVP",
+      "milestone": "Experimento de produto",
+      "depends": [
+        25
+      ],
+      "scope": "Investigar o interesse por outras mecânicas sem diluir a experiência principal.",
+      "accept": [
+        "Escolher uma única hipótese para prototipar a partir do feedback dela: pistas aritméticas OU associações de palavras.",
+        "Especificar regras, entradas válidas, solução e como evitar ambiguidades antes de codar.",
+        "Para palavras, usar conteúdo revisado e critérios verificáveis; não confiar em associações arbitrárias geradas ao vivo.",
+        "Testar o protótipo separado antes de acrescentar modos e menus ao jogo principal."
+      ],
+      "id": "PC-030",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9893ce83f482679567144",
+        "url": "https://trello.com/c/dF2WPu8T",
+        "name": "[PC-030] Explorar um modo de matemática ou palavras"
+      }
+    },
+    {
+      "n": 31,
+      "title": "Avaliar sincronização iCloud entre aparelhos",
+      "area": "Pós-MVP",
+      "milestone": "Expansão opcional",
+      "depends": [
+        13,
+        25
+      ],
+      "scope": "Só adicionar sincronização se existir uma necessidade real de trocar de aparelho.",
+      "accept": [
+        "Definir política de conflito para sessão em andamento, vitórias e preferências.",
+        "App continua jogável sem login/conexão; indisponibilidade de sync não apaga dados locais.",
+        "Migração e recuperação de conflitos testadas com diferentes versões do formato.",
+        "Habilitar capacidades e atualizar declaração de privacidade conforme o que for implementado."
+      ],
+      "id": "PC-031",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9893e09ab70a963289688",
+        "url": "https://trello.com/c/cQMMOpxc",
+        "name": "[PC-031] Avaliar sincronização iCloud entre aparelhos"
+      }
+    },
+    {
+      "n": 32,
+      "title": "Adicionar inglês e revisar localização completa",
+      "area": "Pós-MVP",
+      "milestone": "Expansão opcional",
+      "depends": [
+        21,
+        25
+      ],
+      "scope": "Expandir o idioma mantendo português e personalidade do jogo.",
+      "accept": [
+        "Traduzir interface, tutorial, dicas e pluralização usando o String Catalog.",
+        "Testar textos longos, formatação de datas e VoiceOver por idioma.",
+        "Nomes do cachorro escolhidos pela pessoa são preservados.",
+        "Revisar screenshots e metadados apenas para idiomas realmente suportados."
+      ],
+      "id": "PC-032",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9893f69905693957bf2d4",
+        "url": "https://trello.com/c/WUKePV2S",
+        "name": "[PC-032] Adicionar inglês e revisar localização completa"
+      }
+    },
+    {
+      "n": 33,
+      "title": "Avaliar publicação pública na App Store",
+      "area": "Pós-MVP",
+      "milestone": "Lançamento opcional",
+      "depends": [
+        26
+      ],
+      "scope": "Decidir se o presente vira um produto público depois do beta.",
+      "accept": [
+        "Revisar escopo de suporte, posicionamento, classificação etária e dados de privacidade reais.",
+        "Preparar descrição, screenshots e política de privacidade coerentes com a versão.",
+        "Modelo comercial, se existir, é uma decisão separada; sem anúncios/moedas adicionados automaticamente.",
+        "Submeter somente após decisão explícita de publicar e com a conta Apple configurada."
+      ],
+      "id": "PC-033",
+      "stage": "Pós-MVP",
+      "trello": {
+        "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98941d61c7ec41b8141a6",
+        "url": "https://trello.com/c/55a3aEQ9",
+        "name": "[PC-033] Avaliar publicação pública na App Store"
+      }
+    }
+  ]
+}
