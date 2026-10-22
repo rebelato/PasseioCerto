@@ -20,7 +20,13 @@ O plano tem **26 tarefas para o primeiro beta** e **7 ideias pós-MVP**. As prim
 
 ## Estado atual
 
-Este primeiro commit contém **planejamento e referência visual**. O projeto executável SwiftUI começa em PC-001; ainda não há um app ou gerador implementado neste repositório. Os critérios de aceite dos cartões não significam funcionalidades já prontas.
+Primeira implementação local em SwiftUI: fase fixa 5×5, entrada por toque, pistas calculadas, marcações ×, desfazer, reiniciar com confirmação e vitória validada. Personagem provisório branco e cacheado inspirado na cachorrinha da foto.
+
+Abra `PasseioCerto.xcodeproj` no Xcode e execute o esquema `PasseioCerto` em um iPhone Simulator. Para aparelho físico, selecione sua equipe de assinatura. Requer iOS 17 ou posterior.
+
+Testes do núcleo: `swift test`. Verificação inicial: quatro testes passaram e build para iPhone Simulator concluído. A execução e revisão visual em aparelho ainda estão pendentes.
+
+Ainda faltam arraste, animação de chegada, arte final, persistência, solver, dicas e geração automática. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
 
 ## Primeiro beta
 

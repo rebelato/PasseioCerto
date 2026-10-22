@@ -13,7 +13,7 @@ Um puzzle acolhedor para uma pessoa adulta que gosta de Nonogram, Sudoku e anima
 - Fundo marfim, texto verde-escuro, sálvia/eucalipto e pequenos acentos quentes.
 - Tipografia legível com estilos do sistema e Dynamic Type; testar a personalidade do título sem comprometer leitura.
 - Células claras, cantos suaves e caminho com linha central explícita. Evitar relevo excessivo que confunda os limites.
-- Cão dourado/caramelo, casinha pequena com telhado terracota e vegetação discreta.
+- Cachorrinha branca de pelagem cacheada, orelhas caídas, olhos e focinho escuros, inspirada na foto enviada pelo usuário, casinha pequena com telhado terracota e vegetação discreta.
 - Cinco pistas de colunas e cinco pistas de linhas corretamente alinhadas; sem números ornamentais dentro da grade.
 
 ## Hierarquia da partida
@@ -44,3 +44,5 @@ Som, hápticos e animação são complementos opcionais. Com Reduce Motion, a vi
 ## Assets finais
 
 Não recortar o mockup inteiro para simular uma tela. Grade, pistas, texto, caminho e controles serão nativos. Separar cão, casa, ícone e outros desenhos em arquivos apropriados, com origem/licenciamento documentados e tamanhos verificados no aparelho.
+
+A primeira implementação usa uma ilustração vetorial SwiftUI provisória. A foto pessoal não é incluída no repositório.
