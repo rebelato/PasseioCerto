@@ -110,6 +110,7 @@ struct GardenCell: View {
             .overlay {
                 if obstacle { Image(systemName: "leaf.fill").foregroundStyle(GardenTheme.secondary) }
                 else if excluded { Image(systemName: "xmark").font(.title3).foregroundStyle(GardenTheme.secondary) }
+                else if highlighted { Image(systemName: "lightbulb.fill").font(.caption).foregroundStyle(GardenTheme.accent) }
             }
     }
 }

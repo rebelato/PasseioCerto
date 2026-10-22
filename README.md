@@ -26,7 +26,7 @@ Abra `PasseioCerto.xcodeproj` no Xcode e execute o esquema `PasseioCerto` em um 
 
 Testes do núcleo: `swift test`. Verificação inicial: quatro testes passaram e build para iPhone Simulator concluído. A execução e revisão visual em aparelho ainda estão pendentes.
 
-Ainda faltam validação dos gestos no aparelho, animação de chegada, arte final e integração de dicas e geração automática à tela. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
+Ainda faltam validação dos gestos no aparelho, animação de chegada, arte final e integração de geração automática à tela. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
 
 ## Primeiro beta
 
@@ -65,3 +65,9 @@ Três vidas por tentativa. Jogadas impossíveis custam uma vida e são revertida
 Formato v3 salva grade, rota, ×, histórico, vidas, preferências, posição no tutorial e IDs concluídos. Restaura a mesma grade, migra formatos anteriores e oferece recuperação por backup sem apagar silenciosamente dados inválidos. A ferramenta selecionada é restaurada; telas de som/hápticos e tutorial entram nas tarefas próprias. Gravações são atômicas e uma vitória não conta duas vezes.
 
 57 testes passando e build iOS aprovado. Falta revisar recuperação e interrupção real no iPhone.
+
+### Dicas explicadas (PC-014, em revisão)
+
+O botão Dica apresenta a primeira dedução disponível, com coordenadas, destaque na célula e na pista relacionada. Considera as marcações × como hipóteses e informa conflitos ou ausência de dedução. Não consulta o gabarito, não aplica movimentos e não consome vidas. Jogar, reiniciar ou suspender descarta dicas antigas.
+
+62 testes passando e build iOS aprovado. [Exemplo visual](docs/validation/hint-example.png) renderizado com SwiftUI no macOS; interação, rolagem e foco do VoiceOver ainda precisam de revisão no iPhone.

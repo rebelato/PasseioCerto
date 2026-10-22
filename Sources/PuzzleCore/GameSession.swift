@@ -12,12 +12,15 @@ import Combine
     @Published public private(set) var completedPuzzleIDs: Set<String> = []
     @Published public private(set) var backupAvailable = false
     private var unreadableSave = false
+    @Published public private(set) var hint: HintAdvice?
+    @Published public private(set) var hintChecking = false
+    private var hintWorker: Task<HintAdvice, Never>?
     private var revision = 0
     private var worker: Task<MoveAssessment, Never>?
     private let saveURL: URL?
     private let nodeLimit: Int
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
-    public var canInteract: Bool { !checking && !attempt.defeated && !attempt.game.won }
+    public var canInteract: Bool { !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
     public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, nodeLimit: Int = 100_000) {
         self.attempt = attempt; self.saveURL = saveURL; self.nodeLimit = nodeLimit
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
@@ -34,12 +37,14 @@ import Combine
     }
     public func begin(at cell: Cell, marking: Bool) {
         guard canInteract, stroke == nil else { return }
+        hint = nil
         stroke = GameStroke(game: attempt.game, marking: marking)
         stroke?.move(to: cell)
     }
     public func move(to cell: Cell?) { guard !checking else { return }; stroke?.move(to: cell) }
     public func cancel() {
         revision += 1; worker?.cancel(); worker = nil; stroke = nil; checking = false
+        hintWorker?.cancel(); hintWorker = nil; hint = nil; hintChecking = false
     }
     public func finish(cancelled: Bool = false) async {
         if cancelled { cancel(); return }
@@ -75,7 +80,8 @@ import Combine
         begin(at: cell, marking: marking); await finish()
     }
     public func undo() {
-        guard !checking, stroke == nil, !attempt.defeated, attempt.game.canUndo else { return }
+        guard !checking, !hintChecking, stroke == nil, !attempt.defeated, attempt.game.canUndo else { return }
+        hint = nil
         attempt.game.undo(); message = "Última ação desfeita. Vidas perdidas não são recuperadas."; save()
     }
     public func restart() {
@@ -85,12 +91,26 @@ import Combine
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
     }
+    public func requestHint() async {
+        guard canInteract, stroke == nil else { return }
+        hintChecking = true; hint = nil
+        revision += 1
+        let token = revision
+        let current = attempt.game
+        let task = Task.detached(priority: .userInitiated) { HintProvider.advice(for: current) }
+        hintWorker = task
+        let advice = await withTaskCancellationHandler { await task.value } onCancel: { task.cancel() }
+        guard revision == token else { return }
+        hintChecking = false; hintWorker = nil
+        if !Task.isCancelled && !task.isCancelled { hint = advice }
+    }
+    public func dismissHint() { hint = nil }
     public func setMarking(_ value: Bool) {
-        guard !checking, stroke == nil else { return }
+        guard !checking, !hintChecking, stroke == nil else { return }
         preferences.marking = value; save()
     }
     public func setPreferences(_ value: PlayerPreferences) {
-        guard !checking, stroke == nil else { return }
+        guard !checking, !hintChecking, stroke == nil else { return }
         preferences = value; save()
     }
     public func setTutorialStep(_ step: Int) {

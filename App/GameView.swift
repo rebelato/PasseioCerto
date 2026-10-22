@@ -8,6 +8,7 @@ struct GameView: View {
     private var markingBinding: Binding<Bool> {
         Binding(get: { session.preferences.marking }, set: { session.setMarking($0) })
     }
+    @AccessibilityFocusState private var hintFocused: Bool
     @State private var recovery = false
     @State private var reset = false
     @ScaledMetric(relativeTo: .headline) private var cellMinimum: CGFloat = 48
@@ -35,7 +36,9 @@ struct GameView: View {
                 }.frame(maxWidth: .infinity, alignment: .leading).padding(12)
                     .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
                 ScrollView(.horizontal) {
-                    PuzzleBoard(game: displayedGame, cellSide: side, onSelect: select,
+                    PuzzleBoard(game: displayedGame, cellSide: side,
+                        highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
+                        highlightedColumn: session.hint?.column, onSelect: select,
                         onStrokeStart: { session.begin(at: $0, marking: marking) },
                         onStrokeMove: { session.move(to: $0) },
                         onStrokeEnd: finishStroke)
@@ -43,6 +46,15 @@ struct GameView: View {
                         .accessibilityHidden(session.attempt.defeated)
                 }.frame(height: CGFloat(game.rows.count + 1) * side)
                 GardenNote(text: session.message, symbol: game.won ? "checkmark.circle" : "info.circle")
+                if let hint = session.hint {
+                    VStack(alignment: .leading, spacing: 8) {
+                        GardenNote(text: hint.text, symbol: hint.kind == .conflict ? "exclamationmark.triangle" : "lightbulb")
+                            .accessibilityFocused($hintFocused)
+                        Button("Fechar dica", systemImage: "xmark.circle") { session.dismissHint() }
+                            .buttonStyle(GardenButtonStyle())
+                    }
+                }
+                if session.hintChecking { ProgressView("Preparando dica…") }
                 if session.checking { ProgressView("Verificando jogada…") }
                 if let error = session.storageError {
                     GardenNote(text: error, symbol: "exclamationmark.triangle")
@@ -58,12 +70,16 @@ struct GameView: View {
                     Button("Tentar novamente", systemImage: "arrow.clockwise") { session.restart() }
                         .buttonStyle(GardenButtonStyle())
                 }
-                GardenTools(marking: markingBinding).disabled(session.stroke != nil || session.checking || session.attempt.defeated)
+                GardenTools(marking: markingBinding).disabled(session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
                 HStack {
                     Button("Desfazer", systemImage: "arrow.uturn.backward") { session.undo() }.disabled(!game.canUndo)
-                    Spacer()
+                    Button("Dica", systemImage: "lightbulb") {
+                        Task { await session.requestHint() }
+                    }.disabled(!session.canInteract)
+                }.buttonStyle(GardenButtonStyle()).disabled(session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                HStack {
                     Button("Reiniciar", systemImage: "arrow.clockwise") { reset = true }
-                }.buttonStyle(GardenButtonStyle()).disabled(session.stroke != nil || session.checking || session.attempt.defeated)
+                }.buttonStyle(GardenButtonStyle()).disabled(session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
                 Text("Arraste ou toque nas casas vizinhas. Volte uma casa para apagar. Para rolar, arraste pelas pistas ou fora da grade.").font(.footnote).foregroundStyle(.secondary)
             }.padding(GardenTheme.spacing).frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)
@@ -76,6 +92,7 @@ struct GameView: View {
             Button("Preservar original e salvar esta partida") { session.preserveOriginalAndSaveCurrent() }
         }
         .onChange(of: scenePhase) { _, phase in if phase != .active { session.suspend() } }
+        .onChange(of: session.hint) { _, value in hintFocused = value != nil }
         .onChange(of: marking) { _, _ in finishStroke(true) }
         .onDisappear { session.suspend() }
     }

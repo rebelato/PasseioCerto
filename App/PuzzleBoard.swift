@@ -5,6 +5,8 @@ struct PuzzleBoard: View {
     let game: Game
     let cellSide: CGFloat
     var highlighted: Set<Cell> = []
+    var highlightedRow: Int?
+    var highlightedColumn: Int?
     var onSelect: (Cell) -> Void = { _ in }
     var onStrokeStart: (Cell) -> Void = { _ in }
     var onStrokeMove: (Cell?) -> Void = { _ in }
@@ -20,11 +22,13 @@ struct PuzzleBoard: View {
         ZStack(alignment: .topLeading) {
             ForEach(game.columns.indices, id: \.self) { col in
                 GardenClue(target: game.columns[col], count: game.columnCounts[col], label: "Coluna \(col+1)")
+                    .overlay { if highlightedColumn == col { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.accent, lineWidth: 3) } }
                     .padding(2).frame(width: cellSide, height: cellSide)
                     .offset(x: CGFloat(col+1)*cellSide)
             }
             ForEach(game.rows.indices, id: \.self) { row in
                 GardenClue(target: game.rows[row], count: game.rowCounts[row], label: "Linha \(row+1)")
+                    .overlay { if highlightedRow == row { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.accent, lineWidth: 3) } }
                     .padding(2).frame(width: cellSide, height: cellSide)
                     .offset(y: CGFloat(row+1)*cellSide)
             }
