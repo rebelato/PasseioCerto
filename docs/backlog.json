@@ -655,7 +655,7 @@
     },
     {
       "n": 27,
-      "title": "Explorar grades 6×6/7×7 e novas dificuldades",
+      "title": "Expandir para grades 6×6, 7×7, 10×10 e 15×15",
       "area": "Pós-MVP",
       "milestone": "Depois do primeiro beta",
       "depends": [
@@ -664,17 +664,21 @@
       ],
       "scope": "Expandir apenas quando o gerador e a interação pequenos estiverem validados.",
       "accept": [
-        "Medir custo e taxa de aceitação para cada tamanho, sem inferir desempenho a partir de 5×5.",
-        "Garantir unicidade de rota e conclusão lógica pelo repertório suportado.",
-        "Validar toque, leitura e acessibilidade em tela pequena antes de liberar.",
-        "Atualizar catálogo/fallback e classificador com corpus revisado."
+        "Expandir gradualmente para 6×6, 7×7, 10×10 e 15×15; 15×15 substitui a proposta de 20×20. Liberar cada tamanho somente após validação própria.",
+        "Medir geração, memória, cancelamento e taxa de aceitação em iPhone para cada tamanho; aplicar limites e catálogo de reserva validado quando necessário.",
+        "Manter solução única e resolução integral por deduções suportadas, sem chute; não relaxar essas garantias para viabilizar grades maiores.",
+        "Classificar dificuldade pelas deduções e cadeias exigidas, além do tamanho; calibrar com playtest e corpus identificado por seed/versão.",
+        "Para 10×10 e 15×15, implementar zoom e deslocamento com pistas de linha/coluna visíveis, distinguindo navegação de desenho para evitar erros e perda indevida de vidas.",
+        "Validar leitura, toque, VoiceOver, texto ampliado, seleção de célula e retomada de partida ampliada em iPhone pequeno.",
+        "Ampliar os limites atuais do modelo e revisar serialização, gerador, solver, motor lógico e renderização; testes cobrem limites, cancelamento e restauração.",
+        "Atualizar catálogo de reserva e classificador por tamanho/dificuldade; grades maiores permanecem indisponíveis até aprovadas."
       ],
       "id": "PC-027",
       "stage": "Pós-MVP",
       "trello": {
         "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad989371bd5706fa605da3b",
         "url": "https://trello.com/c/sR9QSUBn",
-        "name": "[PC-027] Explorar grades 6×6/7×7 e novas dificuldades"
+        "name": "[PC-027] Expandir para grades 6×6, 7×7, 10×10 e 15×15"
       }
     },
     {

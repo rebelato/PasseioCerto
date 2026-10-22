@@ -98,7 +98,7 @@ Não foram atribuídos responsáveis nem prazos. Não há estimativa de duraçã
 | [PC-024](https://trello.com/c/I3Z8JV5h) | Validar o MVP integrado e desempenho no aparelho | M4 | [PC-015](https://trello.com/c/VFTALnFu), [PC-017](https://trello.com/c/od9emsh1), [PC-018](https://trello.com/c/JWDEL6xZ), [PC-020](https://trello.com/c/gfNeyHwO), [PC-021](https://trello.com/c/zZvTLxaL), [PC-022](https://trello.com/c/pDZoW3Hv), [PC-023](https://trello.com/c/X0nJpRsH) |
 | [PC-025](https://trello.com/c/llcRNHJd) | Fazer uma rodada de playtest com ela e ajustar o desafio | M4 | [PC-024](https://trello.com/c/I3Z8JV5h) |
 | [PC-026](https://trello.com/c/N3sm5MLT) | Preparar assinatura e distribuir beta no TestFlight | M4 | [PC-025](https://trello.com/c/llcRNHJd) |
-| [PC-027](https://trello.com/c/sR9QSUBn) | Explorar grades 6×6/7×7 e novas dificuldades | Pós-MVP | [PC-008](https://trello.com/c/k1aXoXht), [PC-025](https://trello.com/c/llcRNHJd) |
+| [PC-027](https://trello.com/c/sR9QSUBn) | Expandir para grades 6×6, 7×7, 10×10 e 15×15 | Pós-MVP | [PC-008](https://trello.com/c/k1aXoXht), [PC-025](https://trello.com/c/llcRNHJd) |
 | [PC-028](https://trello.com/c/CzcPwvG6) | Expandir animais, coleção e cenários | Pós-MVP | [PC-019](https://trello.com/c/a8bxpXkT), [PC-022](https://trello.com/c/pDZoW3Hv), [PC-025](https://trello.com/c/llcRNHJd) |
 | [PC-029](https://trello.com/c/nMGy1gmE) | Projetar fases com mais de um animal | Pós-MVP | [PC-005](https://trello.com/c/4DBUFk9s), [PC-006](https://trello.com/c/MLcANDlc), [PC-025](https://trello.com/c/llcRNHJd) |
 | [PC-030](https://trello.com/c/dF2WPu8T) | Explorar um modo de matemática ou palavras | Pós-MVP | [PC-025](https://trello.com/c/llcRNHJd) |
@@ -475,7 +475,7 @@ Dependências: [PC-025](https://trello.com/c/llcRNHJd).
 - [ ] Upload e convite só com acesso/autorização efetivos; não compartilhar senhas ou certificados no repo.
 - [ ] Confirmar instalação e abertura no iPhone dela e registrar a build; instruções de renovação do beta documentadas.
 
-### PC-027 · Explorar grades 6×6/7×7 e novas dificuldades
+### PC-027 · Expandir para grades 6×6, 7×7, 10×10 e 15×15
 
 [Cartão no Trello](https://trello.com/c/sR9QSUBn) · Pós-MVP · Depois do primeiro beta
 
@@ -483,10 +483,14 @@ Expandir apenas quando o gerador e a interação pequenos estiverem validados.
 
 Dependências: [PC-008](https://trello.com/c/k1aXoXht), [PC-025](https://trello.com/c/llcRNHJd).
 
-- [ ] Medir custo e taxa de aceitação para cada tamanho, sem inferir desempenho a partir de 5×5.
-- [ ] Garantir unicidade de rota e conclusão lógica pelo repertório suportado.
-- [ ] Validar toque, leitura e acessibilidade em tela pequena antes de liberar.
-- [ ] Atualizar catálogo/fallback e classificador com corpus revisado.
+- [ ] Expandir gradualmente para 6×6, 7×7, 10×10 e 15×15; 15×15 substitui a proposta de 20×20. Liberar cada tamanho somente após validação própria.
+- [ ] Medir geração, memória, cancelamento e taxa de aceitação em iPhone para cada tamanho; aplicar limites e catálogo de reserva validado quando necessário.
+- [ ] Manter solução única e resolução integral por deduções suportadas, sem chute; não relaxar essas garantias para viabilizar grades maiores.
+- [ ] Classificar dificuldade pelas deduções e cadeias exigidas, além do tamanho; calibrar com playtest e corpus identificado por seed/versão.
+- [ ] Para 10×10 e 15×15, implementar zoom e deslocamento com pistas de linha/coluna visíveis, distinguindo navegação de desenho para evitar erros e perda indevida de vidas.
+- [ ] Validar leitura, toque, VoiceOver, texto ampliado, seleção de célula e retomada de partida ampliada em iPhone pequeno.
+- [ ] Ampliar os limites atuais do modelo e revisar serialização, gerador, solver, motor lógico e renderização; testes cobrem limites, cancelamento e restauração.
+- [ ] Atualizar catálogo de reserva e classificador por tamanho/dificuldade; grades maiores permanecem indisponíveis até aprovadas.
 
 ### PC-028 · Expandir animais, coleção e cenários
 

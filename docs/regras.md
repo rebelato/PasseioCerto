@@ -153,3 +153,7 @@ PRNG LCG com aritmética UInt64 wrapping e ordenação fixa, versão 1. Identida
 Ao esgotar o orçamento, usa a fixture aprovada com sua identidade própria `approved-5x5-v1`, certificada pelos testes de ambos os motores. O catálogo por dificuldade será expandido na PC-008. Geração ainda não está ligada à tela de jogo.
 
 Corpus seeds 0...49: 50 fases geradas, zero fallbacks, 671 candidatos avaliados; 105 rejeitados pelo solver e 516 pelo motor lógico. Testes adicionais cobrem orçamento nulo/negativo, solver indeterminado, cancelamento e seeds UInt64 extremos. Total: 30 testes passando; build iPhone Simulator aprovado. A qualidade/dificuldade e o desempenho no iPhone ainda serão calibrados na PC-008.
+
+## Expansão de tamanhos · planejada em PC-027
+
+Após o beta: 6×6, 7×7, 10×10 e 15×15. O limite planejado é 15×15; 20×20 fica fora do escopo. Cada tamanho requer validação de unicidade, resolução lógica, desempenho e interação. Grades 10×10/15×15 terão zoom e deslocamento com pistas visíveis e gestos separados do desenho. Tamanho e dificuldade lógica são critérios distintos. O modelo atual continua limitado a 7×7 e o gerador a 5×5 até a implementação dessa tarefa.
