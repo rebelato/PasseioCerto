@@ -39,7 +39,7 @@ Som, hápticos e animação são complementos opcionais. Com Reduce Motion, a vi
 - Não exigir precisão motora para demonstrar que a pessoa entendeu a dedução.
 - Pista atendida não é selo de acerto global. × é marcação do jogador.
 - Dica explica um próximo fato; não resolve silenciosamente a fase.
-- Sem cronômetro obrigatório, vidas, anúncios ou bloqueio por moedas no primeiro beta.
+- Três corações indicam vidas por tentativa, com texto acessível e feedback de erro além da cor. Ao zerar, oferecer Tentar novamente. Sem cronômetro obrigatório, anúncios ou bloqueio por moedas.
 
 ## Assets finais
 

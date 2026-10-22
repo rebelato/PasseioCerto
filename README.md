@@ -34,7 +34,7 @@ Um cachorro, uma praça e grades 5×5. Desenhar o caminho, marcar ×, desfazer, 
 
 Cada fase gerada precisa passar por duas verificações: **solução única** e **resolução por deduções suportadas, sem chute**. Uma não substitui a outra.
 
-Sem servidor, chamadas de IA, anúncios ou vidas no MVP. O primeiro objetivo de distribuição é TestFlight; publicação pública é uma decisão posterior.
+Sem servidor, chamadas de IA ou anúncios no MVP. O plano agora inclui 3 vidas por tentativa (PC-012); ainda não implementadas. O primeiro objetivo de distribuição é TestFlight; publicação pública é uma decisão posterior.
 
 ## Conceito visual aprovado
 

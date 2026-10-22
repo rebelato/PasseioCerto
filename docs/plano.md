@@ -14,7 +14,7 @@ Um puzzle tranquilo de pistas numéricas para iPhone. A pessoa desenha um caminh
 - Progresso local, arte, sons/hápticos opcionais, acessibilidade e interface em português.
 - Testes, playtest real com ela e TestFlight quando a conta Apple estiver disponível.
 
-Sem backend, chamadas de IA, anúncios, vidas ou economia virtual no MVP. A ilustração aprovada é referência visual, não um tabuleiro pronto para usar como imagem.
+O MVP inclui 3 vidas por tentativa (planejadas em PC-012). Sem backend, chamadas de IA, anúncios ou economia virtual. A ilustração aprovada é referência visual, não um tabuleiro pronto para usar como imagem.
 
 ## Arquitetura proposta
 
@@ -265,13 +265,19 @@ Dependências: [PC-004](https://trello.com/c/0APdSmtj), [PC-010](https://trello.
 
 Consolidar ações em um GameViewModel previsível, independente da animação e da persistência.
 
-Dependências: [PC-011](https://trello.com/c/BHFyMBT5).
+Dependências: [PC-011](https://trello.com/c/BHFyMBT5), [PC-005](https://trello.com/c/4DBUFk9s).
 
 - [ ] Um gesto finalizado ou uma ação por toque corresponde a uma transação de histórico; desfazer restaura caminho e marcações.
 - [ ] Reiniciar pede confirmação e não altera o puzzleID; troca de fase não mistura históricos.
 - [ ] Contagens são derivadas do estado atual e do modelo, nunca de variáveis duplicadas na View.
 - [ ] Teste partida fixa completa com desenhar, descartar, desfazer, reiniciar e ganhar.
-- [ ] Sem vidas, cronômetro obrigatório ou penalidade por experimentar; refazer é opcional e só entra se o histórico ficar consistente.
+- [ ] Cada tentativa começa com 3 vidas, exibidas como corações e com rótulo acessível.
+- [ ] Perder 1 vida ao confirmar extensão ortogonal que excede uma pista, chega à casa sem cumprir as pistas ou torna impossível concluir a rota. Para este último caso, o solver deve comprovar continuação antes da jogada e ausência dela depois, ignorando marcações ×; indeterminado/cancelado nunca desconta vida.
+- [ ] Uma ação por toque ou gesto inteiro desconta no máximo 1 vida e reverte o caminho ao estado anterior em caso de erro; eventos repetidos do arraste não descontam novamente. Diagonal, salto, toque fora, obstáculo, ferramenta ×, desfazer e gesto cancelado não descontam vidas.
+- [ ] Desfazer não recupera vidas perdidas. Ao zerar, bloquear novas jogadas e oferecer Tentar novamente: mesma fase, caminho/×/histórico limpos e 3 vidas, sem espera, anúncio ou pagamento. Reinício manual pede confirmação.
+- [ ] Persistir vidas, estado de derrota e versão da sessão junto da partida; reabrir não restaura vidas. Migrar sessões antigas para 3 vidas. Integrar com PC-013.
+- [ ] Tutorial PC-017 explica quais erros custam vida; feedback textual e acessível acompanha os corações. Testar débito único, derrota, reinício, restauração, consulta indeterminada e retorno assíncrono obsoleto.
+- [ ] Validar fora da MainActor; enquanto houver consulta pendente, não aceitar nova jogada. Resultados antigos/cancelados após reinício ou troca de fase não podem descontar vidas.
 
 ### PC-013 · Persistir e restaurar partidas e preferências
 

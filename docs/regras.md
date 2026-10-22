@@ -131,3 +131,15 @@ O motor não chama o solver exato, não lê rotas de referência e não testa hi
 Conclusões são condicionadas ao prefixo e às marcações fornecidos; `assumedMarks` mantém explícitas as hipóteses da pessoa. Uma contradição orienta revisão/desfazer, sem atribuir culpa a uma célula sem prova. Conectividade usa alcance potencial sem repetir trechos e sem atravessar a casa; falta de ligação a uma casa obrigatória é conflito comprovado.
 
 A fase inicial e o perímetro são resolvidos sem chute. A fase ambígua retorna `stalled`, mesmo após deduzir células obrigatórias. Testes comparam todos os fatos e segmentos com todas as rotas compatíveis obtidas por enumeração independente em grades 3×3, com prefixos e exclusões. Total: 26 testes passando e build iPhone Simulator aprovado. Essa cobertura não implica resolver todo puzzle único; o gerador deverá rejeitar candidatos nos quais o motor parar.
+
+## Vidas por tentativa · planejado em PC-012
+
+Esta mudança substitui a decisão inicial de não ter vidas. Ainda não está implementada.
+
+- Cada tentativa começa com 3 vidas, exibidas como corações e com rótulo acessível.
+- Perder 1 vida ao confirmar extensão ortogonal que excede uma pista, chega à casa sem cumprir as pistas ou torna impossível concluir a rota. Para este último caso, o solver deve comprovar continuação antes da jogada e ausência dela depois, ignorando marcações ×; indeterminado/cancelado nunca desconta vida.
+- Uma ação por toque ou gesto inteiro desconta no máximo 1 vida e reverte o caminho ao estado anterior em caso de erro; eventos repetidos do arraste não descontam novamente. Diagonal, salto, toque fora, obstáculo, ferramenta ×, desfazer e gesto cancelado não descontam vidas.
+- Desfazer não recupera vidas perdidas. Ao zerar, bloquear novas jogadas e oferecer Tentar novamente: mesma fase, caminho/×/histórico limpos e 3 vidas, sem espera, anúncio ou pagamento. Reinício manual pede confirmação.
+- Persistir vidas, estado de derrota e versão da sessão junto da partida; reabrir não restaura vidas. Migrar sessões antigas para 3 vidas. Integrar com PC-013.
+- Tutorial PC-017 explica quais erros custam vida; feedback textual e acessível acompanha os corações. Testar débito único, derrota, reinício, restauração, consulta indeterminada e retorno assíncrono obsoleto.
+- Validar fora da MainActor; enquanto houver consulta pendente, não aceitar nova jogada. Resultados antigos/cancelados após reinício ou troca de fase não podem descontar vidas.
