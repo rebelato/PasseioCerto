@@ -285,7 +285,7 @@
         "Validar fora da MainActor; enquanto houver consulta pendente, não aceitar nova jogada. Resultados antigos/cancelados após reinício ou troca de fase não podem descontar vidas."
       ],
       "id": "PC-012",
-      "stage": "Backlog MVP",
+      "stage": "Em revisão",
       "trello": {
         "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad988ff83a41beb32afb6e9",
         "url": "https://trello.com/c/yW64AjLB",

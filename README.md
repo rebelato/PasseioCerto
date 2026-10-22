@@ -26,7 +26,7 @@ Abra `PasseioCerto.xcodeproj` no Xcode e execute o esquema `PasseioCerto` em um 
 
 Testes do núcleo: `swift test`. Verificação inicial: quatro testes passaram e build para iPhone Simulator concluído. A execução e revisão visual em aparelho ainda estão pendentes.
 
-Ainda faltam validação dos gestos no aparelho, animação de chegada, arte final, persistência, solver, dicas e geração automática. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
+Ainda faltam validação dos gestos no aparelho, animação de chegada, arte final e integração de dicas e geração automática à tela. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
 
 ## Primeiro beta
 
@@ -34,7 +34,7 @@ Um cachorro, uma praça e grades 5×5. Desenhar o caminho, marcar ×, desfazer, 
 
 Cada fase gerada precisa passar por duas verificações: **solução única** e **resolução por deduções suportadas, sem chute**. Uma não substitui a outra.
 
-Sem servidor, chamadas de IA ou anúncios no MVP. O plano agora inclui 3 vidas por tentativa (PC-012); ainda não implementadas. O primeiro objetivo de distribuição é TestFlight; publicação pública é uma decisão posterior.
+Sem servidor, chamadas de IA ou anúncios no MVP. A partida tem 3 vidas por tentativa, com salvamento local (PC-012). O primeiro objetivo de distribuição é TestFlight; publicação pública é uma decisão posterior.
 
 ## Conceito visual aprovado
 
@@ -53,3 +53,9 @@ Validação deste incremento: 12 testes passaram e build de iPhone Simulator apr
 O gerador aceita `difficulty: .relaxed` ou `.challenging` e tem duas fases de reserva verificadas por nível. A classificação é provisória. `generateAsync` executa a geração fora da MainActor com cancelamento; a ligação à tela permanece na PC-015.
 
 [Relatório local e pendências da calibração](docs/validation/pc008.md). Medições reproduzíveis: `swift run -c release Calibration`. Verificação atual: 34 testes passando e build iOS aprovado. Ainda faltam playtest e medição em iPhone.
+
+### Sessão e vidas (PC-012, em revisão)
+
+Três vidas por tentativa. Jogadas impossíveis custam uma vida e são revertidas; ×, desfazer e erros de gesto não custam. Ao zerar, Tentar novamente limpa a partida mantendo a fase. O salvamento local atômico preserva vidas e derrota entre aberturas; falhas de leitura/escrita são informadas. Dicas e preferências ainda terão integração de persistência na PC-013.
+
+50 testes passando e build iOS aprovado. Falta validação manual de gesto→erro→derrota→reinício e VoiceOver no iPhone.

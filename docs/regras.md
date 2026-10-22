@@ -132,9 +132,9 @@ Conclusões são condicionadas ao prefixo e às marcações fornecidos; `assumed
 
 A fase inicial e o perímetro são resolvidos sem chute. A fase ambígua retorna `stalled`, mesmo após deduzir células obrigatórias. Testes comparam todos os fatos e segmentos com todas as rotas compatíveis obtidas por enumeração independente em grades 3×3, com prefixos e exclusões. Total: 26 testes passando e build iPhone Simulator aprovado. Essa cobertura não implica resolver todo puzzle único; o gerador deverá rejeitar candidatos nos quais o motor parar.
 
-## Vidas por tentativa · planejado em PC-012
+## Vidas por tentativa · PC-012
 
-Esta mudança substitui a decisão inicial de não ter vidas. Ainda não está implementada.
+Esta mudança substitui a decisão inicial de não ter vidas. Implementada na PC-012, aguardando revisão no aparelho.
 
 - Cada tentativa começa com 3 vidas, exibidas como corações e com rótulo acessível.
 - Perder 1 vida ao confirmar extensão ortogonal que excede uma pista, chega à casa sem cumprir as pistas ou torna impossível concluir a rota. Para este último caso, o solver deve comprovar continuação antes da jogada e ausência dela depois, ignorando marcações ×; indeterminado/cancelado nunca desconta vida.
@@ -164,4 +164,12 @@ Após o beta: 6×6, 7×7, 10×10 e 15×15. O limite planejado é 15×15; 20×20 
 
 `BoardHitTest` converte coordenadas da grade, excluindo pistas e limites externos. SwiftUI usa o mesmo fluxo para toque e arraste; ações de acessibilidade permitem ativar células sem arrastar. A perda do gesto, saída da tela ou mudança de scenePhase cancela o rascunho. Desfazer/reiniciar/ferramenta ficam bloqueados durante um gesto. Para rolar, usar as pistas ou a área fora das células.
 
-40 testes passaram e build iOS aprovado. Falta verificar a disputa entre recognizer e ScrollView, interrupção real e VoiceOver no iPhone, pois CoreSimulatorService está indisponível. PC-011 permanece em revisão. Vidas continuam apenas planejadas na PC-012.
+40 testes passaram e build iOS aprovado. Falta verificar a disputa entre recognizer e ScrollView, interrupção real e VoiceOver no iPhone, pois CoreSimulatorService está indisponível. PC-011 permanece em revisão. Vidas foram implementadas posteriormente na PC-012.
+
+## Sessão com vidas · implementação PC-012
+
+GameSession coordena rascunho, consulta assíncrona, desfazer, reinício e salvamento. GameAttempt v2 contém Game e vidas (0...3); derrota é derivada. Histórico não inclui vidas. Formato antigo de Game migra para 3 vidas. Salvamento usa Application Support/PasseioCerto/attempt.json e gravação atômica. Arquivo ilegível é preservado e um aviso impede prometer recuperação; gerenciamento/recuperação ampliados ficam na PC-013.
+
+Extensão ortogonal que excede pistas ou chega cedo à casa registra um único erro no gesto. Demais impasses só descontam quando o solver prova continuação antes e ausência dela depois, ignorando ×. Resultado indeterminado/cancelado reverte sem desconto. Revisão de pedido impede que resultados de antes do reinício/troca de fase alterem a nova sessão. Consultas rodam em Task.detached e bloqueiam novas jogadas enquanto pendentes.
+
+50 testes passaram, incluindo derrota, restauração em disco, migração, cancelamento, impasse sem violação local, vitória por gesto e desfazer. Build iOS aprovado. A interação real e VoiceOver ainda precisam ser revisados no iPhone; PC-012 permanece em revisão.
