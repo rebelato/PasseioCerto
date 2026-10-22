@@ -41,3 +41,9 @@ Sem servidor, chamadas de IA, anúncios ou vidas no MVP. O primeiro objetivo de 
 ![Esboço inicial de Passeio Certo](docs/assets/conceito-inicial.png)
 
 O esboço orienta a aparência. Tabuleiro, números, caminho e controles serão nativos e calculados por código; a imagem não será usada como uma tela pronta.
+
+### Núcleo versionado (PC-003)
+
+`Puzzle` guarda definição imutável, identidade, versões e seed opcional. `Game(puzzle:)` mantém rota ordenada, marcações e histórico separados. Ambos têm formato Codable; carregamento valida limites, versões, conexões e ocupação. Persistência em disco será implementada em PC-013.
+
+Validação deste incremento: 12 testes passaram e build de iPhone Simulator aprovado. Fixtures válidas, impossível e ambígua estão em `PuzzleFixtures`. O projeto segue sem solver/gerador.
