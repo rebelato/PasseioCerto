@@ -88,3 +88,20 @@ Esta fixture é introdutória. Não representa toda a dificuldade ou a variedade
 ## Fora do primeiro conjunto de regras
 
 Vários animais, portais, chaves, pistas de palavras ou operações matemáticas novas. Cada variante exige desenho, solver e testes próprios antes de entrar na progressão.
+
+## Fixtures executáveis · PC-002
+
+`Sources/PuzzleCore/PuzzleFixtures.swift` contém quatro grades 5×5:
+
+- `approved-5x5-v1`: conceito aprovado, com rota testemunha válida.
+- `perimeter-5x5-v1`: rota pelo perímetro e obstáculo explícito no centro.
+- `disconnected-5x5-v1`: somas compatíveis, mas uma linha inteira de obstáculos separa os endpoints. Busca de conectividade no teste comprova impossibilidade.
+- `ambiguous-5x5-v1`: duas rotas válidas com a mesma ocupação no bloco superior 3×3, mas com arestas diferentes. Demonstra por que unicidade não pode comparar só células.
+
+“Válida” significa que existe uma rota comprovada; não afirma unicidade. PC-005 verificará as classificações pelo solver exato. Os testemunhos são dados de teste/referência, nunca um oráculo de erro ou dica na interface.
+
+### Contrato dos gestos
+
+Um toque válido é uma transação. Um arraste será uma única transação de histórico, mesmo passando por várias células: Desfazer restaura o estado anterior ao gesto inteiro. Recuar para a penúltima célula remove o último segmento. Soltar encerra a transação; cancelar/interromper restaura o estado anterior ao gesto. Sair da grade não acrescenta células; movimentos diagonais ou saltos não inventam segmentos intermediários. Esse contrato será implementado em PC-011/PC-012; a versão atual oferece toque.
+
+A casa encerra a rota, mas só representa vitória com todas as pistas atendidas. Uma chegada incompleta permite recuar/desfazer. Nenhuma ferramenta pode marcar × sobre endpoints, obstáculos ou caminho. Pistas satisfeitas mostram a contagem alcançada, sem garantir que exista continuação.

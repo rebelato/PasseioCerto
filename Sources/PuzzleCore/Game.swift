@@ -4,11 +4,11 @@ public struct Cell: Hashable, Sendable {
     public init(_ row: Int, _ col: Int) { self.row = row; self.col = col }
 }
 public struct Game: Sendable {
-    public let rows = [3, 1, 3, 1, 1]
-    public let columns = [1, 1, 3, 1, 3]
-    public let start = Cell(0, 0)
-    public let goal = Cell(4, 4)
-    public private(set) var path = [Cell(0, 0)]
+    public let rows = PuzzleFixtures.approved.rows
+    public let columns = PuzzleFixtures.approved.columns
+    public let start = PuzzleFixtures.approved.start
+    public let goal = PuzzleFixtures.approved.goal
+    public private(set) var path = [PuzzleFixtures.approved.start]
     public private(set) var marks: Set<Cell> = []
     private var history: [([Cell], Set<Cell>)] = []
     public init() {}
