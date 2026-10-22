@@ -157,3 +157,11 @@ Corpus seeds 0...49: 50 fases geradas, zero fallbacks, 671 candidatos avaliados;
 ## Expansão de tamanhos · planejada em PC-027
 
 Após o beta: 6×6, 7×7, 10×10 e 15×15. O limite planejado é 15×15; 20×20 fica fora do escopo. Cada tamanho requer validação de unicidade, resolução lógica, desempenho e interação. Grades 10×10/15×15 terão zoom e deslocamento com pistas visíveis e gestos separados do desenho. Tamanho e dificuldade lógica são critérios distintos. O modelo atual continua limitado a 7×7 e o gerador a 5×5 até a implementação dessa tarefa.
+
+## Entrada por gestos · PC-011
+
+`GameStroke` mantém um rascunho separado da partida e fixa a ferramenta no início do gesto. `finish` aplica uma transação única de histórico; cancelamento descarta tudo. Eventos repetidos da mesma casa são ignorados; × alterna no máximo uma vez por casa por gesto. Recuar para a penúltima casa apaga o trecho. Diagonais, saltos, obstáculos, pistas excedidas e conflitos com × são rejeitados sem interpolação automática.
+
+`BoardHitTest` converte coordenadas da grade, excluindo pistas e limites externos. SwiftUI usa o mesmo fluxo para toque e arraste; ações de acessibilidade permitem ativar células sem arrastar. A perda do gesto, saída da tela ou mudança de scenePhase cancela o rascunho. Desfazer/reiniciar/ferramenta ficam bloqueados durante um gesto. Para rolar, usar as pistas ou a área fora das células.
+
+40 testes passaram e build iOS aprovado. Falta verificar a disputa entre recognizer e ScrollView, interrupção real e VoiceOver no iPhone, pois CoreSimulatorService está indisponível. PC-011 permanece em revisão. Vidas continuam apenas planejadas na PC-012.

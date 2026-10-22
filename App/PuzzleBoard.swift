@@ -6,6 +6,11 @@ struct PuzzleBoard: View {
     let cellSide: CGFloat
     var highlighted: Set<Cell> = []
     var onSelect: (Cell) -> Void = { _ in }
+    var onStrokeStart: (Cell) -> Void = { _ in }
+    var onStrokeMove: (Cell?) -> Void = { _ in }
+    var onStrokeEnd: (Bool) -> Void = { _ in }
+    @GestureState private var touching = false
+    @State private var strokeStarted = false
     private var width: CGFloat { CGFloat(game.columns.count + 1) * cellSide }
     private var height: CGFloat { CGFloat(game.rows.count + 1) * cellSide }
     private var cells: [Cell] {
@@ -24,11 +29,13 @@ struct PuzzleBoard: View {
                     .offset(y: CGFloat(row+1)*cellSide)
             }
             ForEach(cells, id: \.self) { cell in
-                Button { onSelect(cell) } label: {
-                    GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
+                GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
                                obstacle: game.puzzle.obstacles.contains(cell), highlighted: highlighted.contains(cell))
                         .padding(2).contentShape(Rectangle())
-                }.buttonStyle(.plain).frame(width: cellSide, height: cellSide)
+                    .frame(width: cellSide, height: cellSide)
+                    .highPriorityGesture(stroke(start: cell))
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityAction { onSelect(cell) }
                     .offset(x: CGFloat(cell.col+1)*cellSide, y: CGFloat(cell.row+1)*cellSide)
                     .accessibilityIdentifier("cell-\(cell.row)-\(cell.col)")
                     .accessibilityLabel("Linha \(cell.row+1), coluna \(cell.col+1)")
@@ -51,6 +58,28 @@ struct PuzzleBoard: View {
                     .allowsHitTesting(false).accessibilityHidden(true)
             }
         }.frame(width: width, height: height)
+            .coordinateSpace(name: "puzzle-board")
+            .onChange(of: touching) { _, active in
+                if !active {
+                    // onEnded commits first; recognizer cancellation has no onEnded.
+                    DispatchQueue.main.async {
+                        if !touching && strokeStarted { strokeStarted = false; onStrokeEnd(true) }
+                    }
+                }
+            }
+            .onDisappear { if strokeStarted { strokeStarted = false; onStrokeEnd(true) } }
+    }
+    private func stroke(start: Cell) -> some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("puzzle-board"))
+            .updating($touching) { _, active, _ in active = true }
+            .onChanged { value in
+                if !strokeStarted { strokeStarted = true; onStrokeStart(start) }
+                onStrokeMove(BoardHitTest.cell(x: value.location.x, y: value.location.y,
+                    side: cellSide, rows: game.rows.count, columns: game.columns.count))
+            }
+            .onEnded { _ in
+                if strokeStarted { strokeStarted = false; onStrokeEnd(false) }
+            }
     }
     private func accessibleState(_ cell: Cell) -> String {
         let state: String

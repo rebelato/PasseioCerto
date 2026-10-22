@@ -58,3 +58,13 @@ extension Game {
         }
     }
 }
+
+extension Game {
+    mutating func commitStroke(_ draft: Game) {
+        guard puzzle == draft.puzzle, valid(draft.path, draft.marks), path != draft.path || marks != draft.marks else { return }
+        history.append(Snapshot(path: path, marks: marks))
+        path = draft.path
+        marks = draft.marks
+    }
+    mutating func discardStrokeHistory() { history.removeAll(keepingCapacity: true) }
+}
