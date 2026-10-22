@@ -4,7 +4,11 @@ struct GameView: View {
     @StateObject private var session = GameSession(saveURL: URL.applicationSupportDirectory.appending(path: "PasseioCerto/attempt.json"))
     private var game: Game { session.attempt.game }
     @Environment(\.scenePhase) private var scenePhase
-    @State private var marking = false
+    private var marking: Bool { session.preferences.marking }
+    private var markingBinding: Binding<Bool> {
+        Binding(get: { session.preferences.marking }, set: { session.setMarking($0) })
+    }
+    @State private var recovery = false
     @State private var reset = false
     @ScaledMetric(relativeTo: .headline) private var cellMinimum: CGFloat = 48
     private var displayedGame: Game { session.displayedGame }
@@ -40,12 +44,21 @@ struct GameView: View {
                 }.frame(height: CGFloat(game.rows.count + 1) * side)
                 GardenNote(text: session.message, symbol: game.won ? "checkmark.circle" : "info.circle")
                 if session.checking { ProgressView("Verificando jogada…") }
-                if let error = session.storageError { GardenNote(text: error, symbol: "exclamationmark.triangle") }
+                if let error = session.storageError {
+                    GardenNote(text: error, symbol: "exclamationmark.triangle")
+                    VStack {
+                        if session.backupAvailable {
+                            Button("Recuperar cópia anterior") { session.recoverBackup() }
+                        }
+                        Button("Tentar salvar novamente") { session.retrySave() }
+                        Button("Salvar esta partida preservando o arquivo original") { recovery = true }
+                    }.buttonStyle(GardenButtonStyle())
+                }
                 if session.attempt.defeated {
                     Button("Tentar novamente", systemImage: "arrow.clockwise") { session.restart() }
                         .buttonStyle(GardenButtonStyle())
                 }
-                GardenTools(marking: $marking).disabled(session.stroke != nil || session.checking || session.attempt.defeated)
+                GardenTools(marking: markingBinding).disabled(session.stroke != nil || session.checking || session.attempt.defeated)
                 HStack {
                     Button("Desfazer", systemImage: "arrow.uturn.backward") { session.undo() }.disabled(!game.canUndo)
                     Spacer()
@@ -59,9 +72,12 @@ struct GameView: View {
                 Button("Reiniciar", role: .destructive) { session.restart() }
             }
         }
-        .onChange(of: scenePhase) { _, phase in if phase != .active { finishStroke(true) } }
+        .confirmationDialog("Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente.", isPresented: $recovery, titleVisibility: .visible) {
+            Button("Preservar original e salvar esta partida") { session.preserveOriginalAndSaveCurrent() }
+        }
+        .onChange(of: scenePhase) { _, phase in if phase != .active { session.suspend() } }
         .onChange(of: marking) { _, _ in finishStroke(true) }
-        .onDisappear { finishStroke(true) }
+        .onDisappear { session.suspend() }
     }
     private func finishStroke(_ cancelled: Bool) {
         if cancelled { session.cancel() }

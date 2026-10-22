@@ -7,6 +7,11 @@ import Combine
     @Published public private(set) var checking = false
     @Published public private(set) var message = "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres."
     @Published public private(set) var storageError: String?
+    @Published public private(set) var preferences = PlayerPreferences()
+    @Published public private(set) var tutorialStep = 0
+    @Published public private(set) var completedPuzzleIDs: Set<String> = []
+    @Published public private(set) var backupAvailable = false
+    private var unreadableSave = false
     private var revision = 0
     private var worker: Task<MoveAssessment, Never>?
     private let saveURL: URL?
@@ -16,8 +21,15 @@ import Combine
     public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, nodeLimit: Int = 100_000) {
         self.attempt = attempt; self.saveURL = saveURL; self.nodeLimit = nodeLimit
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
-            do { self.attempt = try JSONDecoder().decode(GameAttempt.self, from: Data(contentsOf: saveURL)) }
-            catch { storageError = "Não foi possível recuperar a partida salva. O arquivo original foi preservado." }
+            do {
+                apply(try SaveStore(url: saveURL).load())
+                message = self.attempt.defeated ? "As vidas acabaram. Tente novamente com 3 vidas." : self.attempt.game.won ? "Margot chegou! Partida concluída." : "Partida restaurada. Continue de onde parou."
+            }
+            catch {
+                unreadableSave = true
+                backupAvailable = (try? SaveStore(url: saveURL).loadBackup()) != nil
+                storageError = "Não foi possível recuperar a partida salva. O arquivo original foi preservado."
+            }
         }
     }
     public func begin(at cell: Cell, marking: Bool) {
@@ -73,12 +85,53 @@ import Combine
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
     }
-    private func save() {
-        // Do not overwrite an unreadable save implicitly.
-        guard let saveURL, storageError == nil else { return }
+    public func setMarking(_ value: Bool) {
+        guard !checking, stroke == nil else { return }
+        preferences.marking = value; save()
+    }
+    public func setPreferences(_ value: PlayerPreferences) {
+        guard !checking, stroke == nil else { return }
+        preferences = value; save()
+    }
+    public func setTutorialStep(_ step: Int) {
+        guard step >= 0 else { return }
+        tutorialStep = step; save()
+    }
+    public func suspend() { cancel(); save() }
+    public func retrySave() { save() }
+    public func recoverBackup() {
+        guard let saveURL else { return }
+        cancel()
         do {
-            try FileManager.default.createDirectory(at: saveURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-            try JSONEncoder().encode(attempt).write(to: saveURL, options: .atomic)
-        } catch { storageError = "Não foi possível salvar. A partida continua nesta sessão, mas pode não ser recuperada ao fechar." }
+            let store = SaveStore(url: saveURL)
+            let recovered = try store.loadBackup()
+            try store.recover(recovered)
+            apply(recovered); unreadableSave = false; storageError = nil; backupAvailable = false
+            message = "Cópia anterior recuperada. O arquivo substituído foi preservado."
+        } catch { storageError = "Não foi possível recuperar a cópia anterior. Os arquivos foram preservados." }
+    }
+    public func preserveOriginalAndSaveCurrent() {
+        guard let saveURL else { return }
+        cancel()
+        do {
+            try SaveStore(url: saveURL).recover(snapshot)
+            unreadableSave = false; storageError = nil; backupAvailable = false
+            message = "Partida atual salva. O arquivo original foi preservado separadamente."
+        } catch { storageError = "Não foi possível salvar a recuperação. O arquivo original foi preservado." }
+    }
+    private var snapshot: PlayerSave {
+        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs)
+    }
+    private func apply(_ saved: PlayerSave) {
+        attempt = saved.attempt; preferences = saved.preferences
+        tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs
+    }
+    private func save() {
+        if attempt.game.won { completedPuzzleIDs.insert(attempt.game.puzzle.puzzleID) }
+        guard let saveURL, !unreadableSave else { return }
+        do {
+            try SaveStore(url: saveURL).save(snapshot)
+            storageError = nil
+        } catch { storageError = "Não foi possível salvar. Você pode tentar novamente; a última gravação válida foi preservada." }
     }
 }

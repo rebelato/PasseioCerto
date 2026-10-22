@@ -173,3 +173,13 @@ GameSession coordena rascunho, consulta assíncrona, desfazer, reinício e salva
 Extensão ortogonal que excede pistas ou chega cedo à casa registra um único erro no gesto. Demais impasses só descontam quando o solver prova continuação antes e ausência dela depois, ignorando ×. Resultado indeterminado/cancelado reverte sem desconto. Revisão de pedido impede que resultados de antes do reinício/troca de fase alterem a nova sessão. Consultas rodam em Task.detached e bloqueiam novas jogadas enquanto pendentes.
 
 50 testes passaram, incluindo derrota, restauração em disco, migração, cancelamento, impasse sem violação local, vitória por gesto e desfazer. Build iOS aprovado. A interação real e VoiceOver ainda precisam ser revisados no iPhone; PC-012 permanece em revisão.
+
+## Persistência completa · PC-013
+
+`PlayerSave` v3 reúne tentativa, preferências (ferramenta, som e hápticos), posição no tutorial e conjunto de IDs concluídos. Migra Game legado e GameAttempt v2; versões desconhecidas são recusadas. A grade completa é restaurada, sem regenerar pela seed. Sons/hápticos e tutorial têm armazenamento preparado, mas suas interfaces pertencem a PC-020/PC-017.
+
+`SaveStore` valida o arquivo anterior antes de gravar, mantém uma cópia `.backup` válida e substitui cada arquivo por escrita atômica. Falhas não substituem a última gravação válida. Recuperação é explícita: restaurar backup ou salvar a partida atual, preservando o arquivo original em um arquivo único `preserved-UUID`. Arquivos de recuperação nunca são removidos automaticamente.
+
+Ao sair da tela ou perder scenePhase ativo, cancela-se o rascunho/consulta e salva-se apenas a partida confirmada. Vitórias são registradas por conjunto de puzzleIDs, sem duplicar após desfazer, repetir ou reabrir. Preferência da ferramenta é aplicada na tela. Avisos de salvamento oferecem nova tentativa e recuperação; não há apagamento silencioso de arquivo ilegível.
+
+Validação: 57 testes passaram e build iOS aprovado. Testes cobrem round-trip, migrações, versão desconhecida, corrupção, preservação do original, falha injetada antes da substituição atômica, background com gesto pendente e deduplicação de vitórias. O teste de interrupção simula falha do writer; não equivale a encerrar um processo iOS durante uma escrita. Revisão no aparelho e dos fluxos visuais de recuperação permanece pendente; PC-013 está em revisão.

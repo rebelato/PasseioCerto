@@ -59,3 +59,9 @@ O gerador aceita `difficulty: .relaxed` ou `.challenging` e tem duas fases de re
 Três vidas por tentativa. Jogadas impossíveis custam uma vida e são revertidas; ×, desfazer e erros de gesto não custam. Ao zerar, Tentar novamente limpa a partida mantendo a fase. O salvamento local atômico preserva vidas e derrota entre aberturas; falhas de leitura/escrita são informadas. Dicas e preferências ainda terão integração de persistência na PC-013.
 
 50 testes passando e build iOS aprovado. Falta validação manual de gesto→erro→derrota→reinício e VoiceOver no iPhone.
+
+### Persistência completa (PC-013, em revisão)
+
+Formato v3 salva grade, rota, ×, histórico, vidas, preferências, posição no tutorial e IDs concluídos. Restaura a mesma grade, migra formatos anteriores e oferece recuperação por backup sem apagar silenciosamente dados inválidos. A ferramenta selecionada é restaurada; telas de som/hápticos e tutorial entram nas tarefas próprias. Gravações são atômicas e uma vitória não conta duas vezes.
+
+57 testes passando e build iOS aprovado. Falta revisar recuperação e interrupção real no iPhone.
