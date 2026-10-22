@@ -5,6 +5,7 @@ public struct GenerationReport: Sendable {
     public let candidates: Int
     public let rejectedBySolver: Int
     public let rejectedByLogic: Int
+    public let rejectedByDifficulty: Int
 }
 
 public enum PuzzleGenerator {
@@ -19,14 +20,15 @@ public enum PuzzleGenerator {
     }
     /// Bounded synchronous work; UI integration must run this off MainActor (PC-015).
     /// IDs include candidate index, so changing budgets never gives different grids one ID.
-    public static func generate(seed: UInt64, candidateLimit: Int = 80, solverNodeLimit: Int = 20_000,
+    public static func generate(seed: UInt64, difficulty: PuzzleDifficulty? = nil, candidateLimit: Int = 80, solverNodeLimit: Int = 20_000,
                                 isCancelled: () -> Bool = { false }) -> GenerationReport {
         var rng = Random(state: seed)
         var attempted = 0
         var solverRejected = 0
         var logicRejected = 0
+        var difficultyRejected = 0
         func result(_ outcome: GenerationReport.Outcome, _ puzzle: Puzzle? = nil) -> GenerationReport {
-            GenerationReport(outcome: outcome, puzzle: puzzle, candidates: attempted, rejectedBySolver: solverRejected, rejectedByLogic: logicRejected)
+            GenerationReport(outcome: outcome, puzzle: puzzle, candidates: attempted, rejectedBySolver: solverRejected, rejectedByLogic: logicRejected, rejectedByDifficulty: difficultyRejected)
         }
         for index in 0..<min(1000, max(0, candidateLimit)) {
             if isCancelled() { return result(.cancelled) }
@@ -55,10 +57,28 @@ public enum PuzzleGenerator {
             let logical = LogicEngine.analyze(puzzle: puzzle)
             if isCancelled() { return result(.cancelled) }
             guard logical.outcome == .solved, RouteValidator.evaluate(puzzle: puzzle, path: logical.path) == .complete else { logicRejected += 1; continue }
+            if let difficulty, DifficultyClassifier.assess(puzzle)?.level != difficulty {
+                difficultyRejected += 1; continue
+            }
             return result(.generated, puzzle)
         }
         if isCancelled() { return result(.cancelled) }
         // Own stable ID; both validators certify this fixture in the test suite.
-        return result(.fallback, try! PuzzleFixtures.approved.makePuzzle())
+        return result(.fallback, difficulty.map { FallbackCatalog.puzzle(for: $0, seed: seed) } ?? (try! PuzzleFixtures.approved.makePuzzle()))
+    }
+}
+
+public extension PuzzleGenerator {
+    /// Explicit worker task keeps generation off MainActor and forwards cancellation.
+    /// The screen still must discard superseded request IDs when integrating PC-015.
+    static func generateAsync(seed: UInt64, difficulty: PuzzleDifficulty? = nil) async -> GenerationReport {
+        let worker = Task.detached(priority: .userInitiated) {
+            generate(seed: seed, difficulty: difficulty, isCancelled: { Task.isCancelled })
+        }
+        return await withTaskCancellationHandler {
+            await worker.value
+        } onCancel: {
+            worker.cancel()
+        }
     }
 }

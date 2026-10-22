@@ -1,0 +1,5177 @@
+{
+  "generatorVersion" : 1,
+  "peakProcessMemoryBytes" : 6373376,
+  "platform" : "Version 26.5.1 (Build 25F80)",
+  "samples" : [
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 38,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 29,
+      "milliseconds" : 20.071166,
+      "puzzle" : {
+        "columns" : [
+          1,
+          1,
+          1,
+          2,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 4
+          },
+          {
+            "col" : 4,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-0-37",
+        "rows" : [
+          0,
+          4,
+          2,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 0,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 0,
+      "solverRejected" : 8
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 19,
+      "exactNodes" : 23,
+      "fallback" : false,
+      "logicRejected" : 16,
+      "milliseconds" : 7.22075,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          2,
+          2,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 2
+          },
+          {
+            "col" : 0,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-1-18",
+        "rows" : [
+          2,
+          2,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 1,
+        "start" : {
+          "col" : 3,
+          "row" : 1
+        }
+      },
+      "seed" : 1,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 1,
+      "exactNodes" : 24,
+      "fallback" : false,
+      "logicRejected" : 0,
+      "milliseconds" : 0.223541,
+      "puzzle" : {
+        "columns" : [
+          1,
+          4,
+          1,
+          2,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 0
+          },
+          {
+            "col" : 0,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-2-0",
+        "rows" : [
+          0,
+          2,
+          1,
+          3,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 2,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 2,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 12,
+      "exactNodes" : 15,
+      "fallback" : false,
+      "logicRejected" : 10,
+      "milliseconds" : 3.169959,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 4
+          },
+          {
+            "col" : 2,
+            "row" : 1
+          },
+          {
+            "col" : 3,
+            "row" : 4
+          },
+          {
+            "col" : 4,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-3-11",
+        "rows" : [
+          0,
+          0,
+          5,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 3,
+        "start" : {
+          "col" : 4,
+          "row" : 2
+        }
+      },
+      "seed" : 3,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 36,
+      "exactNodes" : 13,
+      "fallback" : false,
+      "logicRejected" : 25,
+      "milliseconds" : 20.038791,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          1,
+          2,
+          5
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-4-35",
+        "rows" : [
+          3,
+          1,
+          1,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 4,
+        "start" : {
+          "col" : 2,
+          "row" : 0
+        }
+      },
+      "seed" : 4,
+      "solverRejected" : 10
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "challenging",
+        "ruleSwitches" : 10,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 2,
+      "milliseconds" : 1.179833,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          2,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 0
+          },
+          {
+            "col" : 4,
+            "row" : 4
+          },
+          {
+            "col" : 3,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-5-3",
+        "rows" : [
+          3,
+          3,
+          1,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 5,
+        "start" : {
+          "col" : 4,
+          "row" : 0
+        }
+      },
+      "seed" : 5,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 1.134125,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          2,
+          2,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 3
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-6-5",
+        "rows" : [
+          0,
+          0,
+          1,
+          3,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 6,
+        "start" : {
+          "col" : 3,
+          "row" : 2
+        }
+      },
+      "seed" : 6,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 14,
+      "exactNodes" : 26,
+      "fallback" : false,
+      "logicRejected" : 11,
+      "milliseconds" : 4.499167,
+      "puzzle" : {
+        "columns" : [
+          0,
+          2,
+          3,
+          3,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 1
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-7-13",
+        "rows" : [
+          3,
+          2,
+          2,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 7,
+        "start" : {
+          "col" : 2,
+          "row" : 3
+        }
+      },
+      "seed" : 7,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 33,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 28,
+      "milliseconds" : 8.505541,
+      "puzzle" : {
+        "columns" : [
+          2,
+          2,
+          3,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-8-32",
+        "rows" : [
+          0,
+          0,
+          3,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 8,
+        "start" : {
+          "col" : 0,
+          "row" : 2
+        }
+      },
+      "seed" : 8,
+      "solverRejected" : 4
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 55,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 47,
+      "milliseconds" : 11.307542,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          1,
+          2,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 2
+          },
+          {
+            "col" : 0,
+            "row" : 2
+          },
+          {
+            "col" : 2,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-9-54",
+        "rows" : [
+          0,
+          0,
+          1,
+          3,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 9,
+        "start" : {
+          "col" : 1,
+          "row" : 2
+        }
+      },
+      "seed" : 9,
+      "solverRejected" : 7
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 1.342417,
+      "puzzle" : {
+        "columns" : [
+          3,
+          3,
+          2,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-10-3",
+        "rows" : [
+          3,
+          1,
+          2,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 10,
+        "start" : {
+          "col" : 2,
+          "row" : 3
+        }
+      },
+      "seed" : 10,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 12,
+      "exactNodes" : 14,
+      "fallback" : false,
+      "logicRejected" : 10,
+      "milliseconds" : 2.441958,
+      "puzzle" : {
+        "columns" : [
+          1,
+          1,
+          1,
+          1,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 0
+          },
+          {
+            "col" : 3,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-11-11",
+        "rows" : [
+          0,
+          5,
+          1,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 11,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 11,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 12,
+      "exactNodes" : 28,
+      "fallback" : false,
+      "logicRejected" : 8,
+      "milliseconds" : 2.85775,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          2,
+          2,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-12-11",
+        "rows" : [
+          4,
+          2,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 12,
+        "start" : {
+          "col" : 4,
+          "row" : 1
+        }
+      },
+      "seed" : 12,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 0.376541,
+      "puzzle" : {
+        "columns" : [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 1
+          },
+          {
+            "col" : 4,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-13-2",
+        "rows" : [
+          1,
+          2,
+          1,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 13,
+        "start" : {
+          "col" : 2,
+          "row" : 4
+        }
+      },
+      "seed" : 13,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 8,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 6,
+      "milliseconds" : 3.710875,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          1,
+          2,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-14-7",
+        "rows" : [
+          0,
+          0,
+          1,
+          3,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 14,
+        "start" : {
+          "col" : 4,
+          "row" : 2
+        }
+      },
+      "seed" : 14,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 28,
+      "exactNodes" : 14,
+      "fallback" : false,
+      "logicRejected" : 21,
+      "milliseconds" : 6.8465,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 0
+          },
+          {
+            "col" : 2,
+            "row" : 0
+          },
+          {
+            "col" : 0,
+            "row" : 4
+          },
+          {
+            "col" : 2,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-15-27",
+        "rows" : [
+          0,
+          5,
+          1,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 15,
+        "start" : {
+          "col" : 0,
+          "row" : 3
+        }
+      },
+      "seed" : 15,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 8,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 7,
+      "milliseconds" : 1.615458,
+      "puzzle" : {
+        "columns" : [
+          1,
+          3,
+          1,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 1
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-16-7",
+        "rows" : [
+          4,
+          2,
+          2,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 16,
+        "start" : {
+          "col" : 0,
+          "row" : 2
+        }
+      },
+      "seed" : 16,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 4,
+      "milliseconds" : 0.86675,
+      "puzzle" : {
+        "columns" : [
+          4,
+          2,
+          2,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 1
+          },
+          {
+            "col" : 1,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-17-5",
+        "rows" : [
+          4,
+          1,
+          1,
+          3,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 17,
+        "start" : {
+          "col" : 2,
+          "row" : 3
+        }
+      },
+      "seed" : 17,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 15,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 12,
+      "milliseconds" : 3.152375,
+      "puzzle" : {
+        "columns" : [
+          0,
+          2,
+          1,
+          3,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-18-14",
+        "rows" : [
+          1,
+          3,
+          1,
+          2,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 18,
+        "start" : {
+          "col" : 1,
+          "row" : 0
+        }
+      },
+      "seed" : 18,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 2,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 0.204708,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          3,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-19-1",
+        "rows" : [
+          3,
+          2,
+          2,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 19,
+        "start" : {
+          "col" : 4,
+          "row" : 1
+        }
+      },
+      "seed" : 19,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 7,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 1.725667,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          1,
+          2,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 1
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-20-6",
+        "rows" : [
+          4,
+          3,
+          1,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 20,
+        "start" : {
+          "col" : 4,
+          "row" : 2
+        }
+      },
+      "seed" : 20,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 35,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 13,
+      "exactNodes" : 36,
+      "fallback" : false,
+      "logicRejected" : 11,
+      "milliseconds" : 2.642709,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          3,
+          2,
+          5
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 1
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-21-12",
+        "rows" : [
+          3,
+          3,
+          1,
+          1,
+          5
+        ],
+        "schemaVersion" : 1,
+        "seed" : 21,
+        "start" : {
+          "col" : 0,
+          "row" : 4
+        }
+      },
+      "seed" : 21,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "challenging",
+        "ruleSwitches" : 10,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 4,
+      "milliseconds" : 0.699916,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          3,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-22-5",
+        "rows" : [
+          3,
+          1,
+          2,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 22,
+        "start" : {
+          "col" : 4,
+          "row" : 0
+        }
+      },
+      "seed" : 22,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 35,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 29,
+      "milliseconds" : 7.251083,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          2,
+          2,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 2
+          },
+          {
+            "col" : 3,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-23-34",
+        "rows" : [
+          3,
+          2,
+          1,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 23,
+        "start" : {
+          "col" : 3,
+          "row" : 3
+        }
+      },
+      "seed" : 23,
+      "solverRejected" : 5
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 23,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 17,
+      "milliseconds" : 7.744083,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          1,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-24-22",
+        "rows" : [
+          2,
+          1,
+          4,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 24,
+        "start" : {
+          "col" : 0,
+          "row" : 3
+        }
+      },
+      "seed" : 24,
+      "solverRejected" : 5
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "challenging",
+        "ruleSwitches" : 10,
+        "version" : 1
+      },
+      "candidates" : 1,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 0,
+      "milliseconds" : 0.090875,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          1,
+          2,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 2
+          },
+          {
+            "col" : 0,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-25-0",
+        "rows" : [
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 25,
+        "start" : {
+          "col" : 4,
+          "row" : 4
+        }
+      },
+      "seed" : 25,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 2,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 0.142834,
+      "puzzle" : {
+        "columns" : [
+          0,
+          2,
+          1,
+          1,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 1
+          },
+          {
+            "col" : 0,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-26-1",
+        "rows" : [
+          1,
+          4,
+          1,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 26,
+        "start" : {
+          "col" : 1,
+          "row" : 0
+        }
+      },
+      "seed" : 26,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 10,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 7,
+      "milliseconds" : 1.544708,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          2,
+          1,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 3
+          },
+          {
+            "col" : 0,
+            "row" : 4
+          },
+          {
+            "col" : 2,
+            "row" : 3
+          },
+          {
+            "col" : 3,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-27-9",
+        "rows" : [
+          3,
+          3,
+          1,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 27,
+        "start" : {
+          "col" : 1,
+          "row" : 1
+        }
+      },
+      "seed" : 27,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 2,
+      "milliseconds" : 2.988666,
+      "puzzle" : {
+        "columns" : [
+          2,
+          3,
+          1,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-28-3",
+        "rows" : [
+          1,
+          2,
+          1,
+          3,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 28,
+        "start" : {
+          "col" : 3,
+          "row" : 3
+        }
+      },
+      "seed" : 28,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 10,
+      "exactNodes" : 22,
+      "fallback" : false,
+      "logicRejected" : 8,
+      "milliseconds" : 1.057167,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          1,
+          1,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-29-9",
+        "rows" : [
+          1,
+          2,
+          5,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 29,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 29,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 32,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 30,
+      "exactNodes" : 29,
+      "fallback" : false,
+      "logicRejected" : 21,
+      "milliseconds" : 7.05,
+      "puzzle" : {
+        "columns" : [
+          5,
+          2,
+          4,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-30-29",
+        "rows" : [
+          3,
+          1,
+          2,
+          2,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 30,
+        "start" : {
+          "col" : 2,
+          "row" : 0
+        }
+      },
+      "seed" : 30,
+      "solverRejected" : 8
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 12,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 10,
+      "milliseconds" : 2.035625,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          3,
+          1,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-31-11",
+        "rows" : [
+          0,
+          1,
+          2,
+          2,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 31,
+        "start" : {
+          "col" : 4,
+          "row" : 1
+        }
+      },
+      "seed" : 31,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 16,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 13,
+      "milliseconds" : 2.91425,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          1,
+          2,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 3
+          },
+          {
+            "col" : 0,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-32-15",
+        "rows" : [
+          0,
+          0,
+          4,
+          3,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 32,
+        "start" : {
+          "col" : 4,
+          "row" : 4
+        }
+      },
+      "seed" : 32,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 26,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 2.854,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          4,
+          2,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 0
+          },
+          {
+            "col" : 0,
+            "row" : 2
+          },
+          {
+            "col" : 4,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-33-5",
+        "rows" : [
+          1,
+          1,
+          2,
+          2,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 33,
+        "start" : {
+          "col" : 2,
+          "row" : 0
+        }
+      },
+      "seed" : 33,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 32,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 18,
+      "exactNodes" : 76,
+      "fallback" : false,
+      "logicRejected" : 17,
+      "milliseconds" : 6.348792,
+      "puzzle" : {
+        "columns" : [
+          3,
+          3,
+          1,
+          2,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 0
+          },
+          {
+            "col" : 0,
+            "row" : 0
+          },
+          {
+            "col" : 2,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-34-17",
+        "rows" : [
+          0,
+          3,
+          3,
+          2,
+          5
+        ],
+        "schemaVersion" : 1,
+        "seed" : 34,
+        "start" : {
+          "col" : 1,
+          "row" : 1
+        }
+      },
+      "seed" : 34,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 2,
+      "milliseconds" : 0.8275,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          3,
+          1,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-35-2",
+        "rows" : [
+          1,
+          1,
+          3,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 35,
+        "start" : {
+          "col" : 4,
+          "row" : 4
+        }
+      },
+      "seed" : 35,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 9,
+      "exactNodes" : 44,
+      "fallback" : false,
+      "logicRejected" : 6,
+      "milliseconds" : 1.494833,
+      "puzzle" : {
+        "columns" : [
+          3,
+          3,
+          2,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-36-8",
+        "rows" : [
+          0,
+          1,
+          2,
+          3,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 36,
+        "start" : {
+          "col" : 3,
+          "row" : 3
+        }
+      },
+      "seed" : 36,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 40,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 32,
+      "milliseconds" : 10.23625,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          1,
+          5,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-37-39",
+        "rows" : [
+          2,
+          1,
+          1,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 37,
+        "start" : {
+          "col" : 4,
+          "row" : 0
+        }
+      },
+      "seed" : 37,
+      "solverRejected" : 7
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 2,
+      "milliseconds" : 0.278875,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          4,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 0
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-38-2",
+        "rows" : [
+          2,
+          2,
+          1,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 38,
+        "start" : {
+          "col" : 2,
+          "row" : 4
+        }
+      },
+      "seed" : 38,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "challenging",
+        "ruleSwitches" : 9,
+        "version" : 1
+      },
+      "candidates" : 1,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 0,
+      "milliseconds" : 0.09525,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          1,
+          2,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-39-0",
+        "rows" : [
+          2,
+          3,
+          2,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 39,
+        "start" : {
+          "col" : 0,
+          "row" : 0
+        }
+      },
+      "seed" : 39,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 1,
+      "exactNodes" : 15,
+      "fallback" : false,
+      "logicRejected" : 0,
+      "milliseconds" : 0.073208,
+      "puzzle" : {
+        "columns" : [
+          1,
+          1,
+          1,
+          4,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 1
+          },
+          {
+            "col" : 3,
+            "row" : 4
+          },
+          {
+            "col" : 1,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-40-0",
+        "rows" : [
+          4,
+          1,
+          1,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 40,
+        "start" : {
+          "col" : 3,
+          "row" : 3
+        }
+      },
+      "seed" : 40,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 12,
+      "exactNodes" : 33,
+      "fallback" : false,
+      "logicRejected" : 9,
+      "milliseconds" : 1.870292,
+      "puzzle" : {
+        "columns" : [
+          5,
+          2,
+          3,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 3
+          },
+          {
+            "col" : 1,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-41-11",
+        "rows" : [
+          3,
+          3,
+          1,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 41,
+        "start" : {
+          "col" : 3,
+          "row" : 1
+        }
+      },
+      "seed" : 41,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 2,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 0.79775,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          3,
+          2,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-42-1",
+        "rows" : [
+          2,
+          2,
+          1,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 42,
+        "start" : {
+          "col" : 4,
+          "row" : 0
+        }
+      },
+      "seed" : 42,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 11,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 7,
+      "milliseconds" : 2.379167,
+      "puzzle" : {
+        "columns" : [
+          4,
+          2,
+          1,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-43-10",
+        "rows" : [
+          3,
+          1,
+          1,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 43,
+        "start" : {
+          "col" : 1,
+          "row" : 3
+        }
+      },
+      "seed" : 43,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 21,
+      "exactNodes" : 23,
+      "fallback" : false,
+      "logicRejected" : 17,
+      "milliseconds" : 4.877333,
+      "puzzle" : {
+        "columns" : [
+          5,
+          2,
+          1,
+          2,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-44-20",
+        "rows" : [
+          2,
+          1,
+          1,
+          2,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 44,
+        "start" : {
+          "col" : 1,
+          "row" : 0
+        }
+      },
+      "seed" : 44,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 5,
+      "exactNodes" : 13,
+      "fallback" : false,
+      "logicRejected" : 4,
+      "milliseconds" : 0.858625,
+      "puzzle" : {
+        "columns" : [
+          4,
+          1,
+          1,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-45-4",
+        "rows" : [
+          0,
+          1,
+          1,
+          1,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 45,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 45,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 7,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 6,
+      "milliseconds" : 2.040167,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          3,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-46-6",
+        "rows" : [
+          2,
+          2,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 46,
+        "start" : {
+          "col" : 2,
+          "row" : 0
+        }
+      },
+      "seed" : 46,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 21,
+      "exactNodes" : 25,
+      "fallback" : false,
+      "logicRejected" : 16,
+      "milliseconds" : 5.111125,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          4,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 1
+          },
+          {
+            "col" : 1,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-47-20",
+        "rows" : [
+          0,
+          3,
+          2,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 47,
+        "start" : {
+          "col" : 0,
+          "row" : 4
+        }
+      },
+      "seed" : 47,
+      "solverRejected" : 4
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 22,
+      "exactNodes" : 15,
+      "fallback" : false,
+      "logicRejected" : 15,
+      "milliseconds" : 5.952417,
+      "puzzle" : {
+        "columns" : [
+          1,
+          3,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-48-21",
+        "rows" : [
+          0,
+          0,
+          2,
+          1,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 48,
+        "start" : {
+          "col" : 4,
+          "row" : 4
+        }
+      },
+      "seed" : 48,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 0.457958,
+      "puzzle" : {
+        "columns" : [
+          1,
+          1,
+          4,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 3
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-49-3",
+        "rows" : [
+          2,
+          1,
+          1,
+          3,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 49,
+        "start" : {
+          "col" : 3,
+          "row" : 0
+        }
+      },
+      "seed" : 49,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 0.521375,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          1,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 1
+          },
+          {
+            "col" : 0,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-50-3",
+        "rows" : [
+          5,
+          2,
+          4,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 50,
+        "start" : {
+          "col" : 3,
+          "row" : 2
+        }
+      },
+      "seed" : 50,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 29,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 25,
+      "milliseconds" : 6.9265,
+      "puzzle" : {
+        "columns" : [
+          3,
+          3,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 2
+          },
+          {
+            "col" : 4,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-51-28",
+        "rows" : [
+          0,
+          1,
+          2,
+          1,
+          5
+        ],
+        "schemaVersion" : 1,
+        "seed" : 51,
+        "start" : {
+          "col" : 4,
+          "row" : 4
+        }
+      },
+      "seed" : 51,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 33,
+      "exactNodes" : 11,
+      "fallback" : false,
+      "logicRejected" : 27,
+      "milliseconds" : 8.069625,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 2
+          },
+          {
+            "col" : 1,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-52-32",
+        "rows" : [
+          5,
+          1,
+          1,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 52,
+        "start" : {
+          "col" : 0,
+          "row" : 2
+        }
+      },
+      "seed" : 52,
+      "solverRejected" : 5
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 33,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 30,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 0.50225,
+      "puzzle" : {
+        "columns" : [
+          0,
+          2,
+          2,
+          2,
+          5
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-53-2",
+        "rows" : [
+          4,
+          2,
+          1,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 53,
+        "start" : {
+          "col" : 1,
+          "row" : 1
+        }
+      },
+      "seed" : 53,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 17,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 14,
+      "milliseconds" : 2.691958,
+      "puzzle" : {
+        "columns" : [
+          0,
+          2,
+          1,
+          5,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-54-16",
+        "rows" : [
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 54,
+        "start" : {
+          "col" : 3,
+          "row" : 4
+        }
+      },
+      "seed" : 54,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "challenging",
+        "ruleSwitches" : 10,
+        "version" : 1
+      },
+      "candidates" : 37,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 30,
+      "milliseconds" : 9.554833,
+      "puzzle" : {
+        "columns" : [
+          1,
+          1,
+          3,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-55-36",
+        "rows" : [
+          3,
+          1,
+          3,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 55,
+        "start" : {
+          "col" : 0,
+          "row" : 0
+        }
+      },
+      "seed" : 55,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 33,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 37,
+      "exactNodes" : 29,
+      "fallback" : false,
+      "logicRejected" : 30,
+      "milliseconds" : 9.847375,
+      "puzzle" : {
+        "columns" : [
+          4,
+          2,
+          2,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 3
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-56-36",
+        "rows" : [
+          5,
+          2,
+          1,
+          3,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 56,
+        "start" : {
+          "col" : 4,
+          "row" : 1
+        }
+      },
+      "seed" : 56,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 7,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 6,
+      "milliseconds" : 1.0875,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          3,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-57-6",
+        "rows" : [
+          0,
+          1,
+          3,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 57,
+        "start" : {
+          "col" : 4,
+          "row" : 1
+        }
+      },
+      "seed" : 57,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 18,
+      "exactNodes" : 14,
+      "fallback" : false,
+      "logicRejected" : 12,
+      "milliseconds" : 4.83175,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          1,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-58-17",
+        "rows" : [
+          0,
+          3,
+          2,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 58,
+        "start" : {
+          "col" : 0,
+          "row" : 4
+        }
+      },
+      "seed" : 58,
+      "solverRejected" : 5
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 10,
+      "exactNodes" : 22,
+      "fallback" : false,
+      "logicRejected" : 7,
+      "milliseconds" : 1.737291,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          1,
+          4,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 4
+          },
+          {
+            "col" : 0,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-59-9",
+        "rows" : [
+          0,
+          1,
+          2,
+          2,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 59,
+        "start" : {
+          "col" : 3,
+          "row" : 1
+        }
+      },
+      "seed" : 59,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 11,
+      "exactNodes" : 23,
+      "fallback" : false,
+      "logicRejected" : 9,
+      "milliseconds" : 1.879375,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          1,
+          3,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-60-10",
+        "rows" : [
+          0,
+          3,
+          3,
+          2,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 60,
+        "start" : {
+          "col" : 0,
+          "row" : 4
+        }
+      },
+      "seed" : 60,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 1,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 0,
+      "milliseconds" : 0.09375,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          1,
+          2,
+          5
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-61-0",
+        "rows" : [
+          2,
+          1,
+          1,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 61,
+        "start" : {
+          "col" : 3,
+          "row" : 0
+        }
+      },
+      "seed" : 61,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 42,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 35,
+      "milliseconds" : 10.561458,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          3,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 2
+          },
+          {
+            "col" : 4,
+            "row" : 3
+          },
+          {
+            "col" : 4,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-62-41",
+        "rows" : [
+          0,
+          1,
+          2,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 62,
+        "start" : {
+          "col" : 2,
+          "row" : 1
+        }
+      },
+      "seed" : 62,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 10,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 7,
+      "milliseconds" : 3.993958,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          2,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-63-9",
+        "rows" : [
+          4,
+          1,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 63,
+        "start" : {
+          "col" : 3,
+          "row" : 0
+        }
+      },
+      "seed" : 63,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 33,
+      "exactNodes" : 27,
+      "fallback" : false,
+      "logicRejected" : 29,
+      "milliseconds" : 8.3875,
+      "puzzle" : {
+        "columns" : [
+          0,
+          2,
+          1,
+          2,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-64-32",
+        "rows" : [
+          0,
+          4,
+          2,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 64,
+        "start" : {
+          "col" : 1,
+          "row" : 2
+        }
+      },
+      "seed" : 64,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 34,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 30,
+      "milliseconds" : 5.516459,
+      "puzzle" : {
+        "columns" : [
+          2,
+          2,
+          1,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-65-33",
+        "rows" : [
+          0,
+          0,
+          1,
+          3,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 65,
+        "start" : {
+          "col" : 0,
+          "row" : 2
+        }
+      },
+      "seed" : 65,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 23,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 18,
+      "milliseconds" : 4.674583,
+      "puzzle" : {
+        "columns" : [
+          2,
+          2,
+          1,
+          1,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-66-22",
+        "rows" : [
+          4,
+          3,
+          2,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 66,
+        "start" : {
+          "col" : 0,
+          "row" : 2
+        }
+      },
+      "seed" : 66,
+      "solverRejected" : 4
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 7,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 1.812042,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          1,
+          3,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 0
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-67-6",
+        "rows" : [
+          1,
+          4,
+          1,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 67,
+        "start" : {
+          "col" : 3,
+          "row" : 3
+        }
+      },
+      "seed" : 67,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 5,
+      "exactNodes" : 27,
+      "fallback" : false,
+      "logicRejected" : 4,
+      "milliseconds" : 1.333875,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          2,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-68-4",
+        "rows" : [
+          0,
+          1,
+          4,
+          1,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 68,
+        "start" : {
+          "col" : 1,
+          "row" : 1
+        }
+      },
+      "seed" : 68,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 22,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 0.450708,
+      "puzzle" : {
+        "columns" : [
+          0,
+          4,
+          3,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-69-3",
+        "rows" : [
+          1,
+          2,
+          1,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 69,
+        "start" : {
+          "col" : 3,
+          "row" : 4
+        }
+      },
+      "seed" : 69,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 9,
+      "exactNodes" : 40,
+      "fallback" : false,
+      "logicRejected" : 8,
+      "milliseconds" : 1.607834,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          1,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-70-8",
+        "rows" : [
+          0,
+          1,
+          3,
+          3,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 70,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 70,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 24,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 1.524625,
+      "puzzle" : {
+        "columns" : [
+          5,
+          2,
+          2,
+          2,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 3
+          },
+          {
+            "col" : 3,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-71-3",
+        "rows" : [
+          4,
+          2,
+          1,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 71,
+        "start" : {
+          "col" : 3,
+          "row" : 1
+        }
+      },
+      "seed" : 71,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 21,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 18,
+      "milliseconds" : 3.190625,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          1,
+          2,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 1
+          },
+          {
+            "col" : 0,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-72-20",
+        "rows" : [
+          2,
+          2,
+          4,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 72,
+        "start" : {
+          "col" : 3,
+          "row" : 1
+        }
+      },
+      "seed" : 72,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 1.171458,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          1,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 0
+          },
+          {
+            "col" : 1,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-73-2",
+        "rows" : [
+          0,
+          4,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 73,
+        "start" : {
+          "col" : 4,
+          "row" : 2
+        }
+      },
+      "seed" : 73,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 2,
+      "exactNodes" : 15,
+      "fallback" : false,
+      "logicRejected" : 1,
+      "milliseconds" : 1.051083,
+      "puzzle" : {
+        "columns" : [
+          3,
+          3,
+          1,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 1
+          },
+          {
+            "col" : 3,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-74-1",
+        "rows" : [
+          3,
+          1,
+          2,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 74,
+        "start" : {
+          "col" : 0,
+          "row" : 4
+        }
+      },
+      "seed" : 74,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 11,
+      "exactNodes" : 34,
+      "fallback" : false,
+      "logicRejected" : 8,
+      "milliseconds" : 3.368083,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          4,
+          3,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 1
+          },
+          {
+            "col" : 1,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-75-10",
+        "rows" : [
+          3,
+          2,
+          2,
+          2,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 75,
+        "start" : {
+          "col" : 1,
+          "row" : 4
+        }
+      },
+      "seed" : 75,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 42,
+      "exactNodes" : 21,
+      "fallback" : false,
+      "logicRejected" : 36,
+      "milliseconds" : 8.3385,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          2,
+          0,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 2
+          },
+          {
+            "col" : 4,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-76-41",
+        "rows" : [
+          2,
+          2,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 76,
+        "start" : {
+          "col" : 2,
+          "row" : 1
+        }
+      },
+      "seed" : 76,
+      "solverRejected" : 5
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 4,
+      "milliseconds" : 1.304792,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          2,
+          3,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 4
+          },
+          {
+            "col" : 4,
+            "row" : 4
+          },
+          {
+            "col" : 0,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-77-5",
+        "rows" : [
+          2,
+          1,
+          2,
+          2,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 77,
+        "start" : {
+          "col" : 2,
+          "row" : 4
+        }
+      },
+      "seed" : 77,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 0.498458,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          1,
+          1,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-78-5",
+        "rows" : [
+          0,
+          0,
+          1,
+          3,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 78,
+        "start" : {
+          "col" : 0,
+          "row" : 3
+        }
+      },
+      "seed" : 78,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 28,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 25,
+      "milliseconds" : 6.600834,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          3,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 0
+          },
+          {
+            "col" : 0,
+            "row" : 3
+          },
+          {
+            "col" : 1,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-79-27",
+        "rows" : [
+          0,
+          1,
+          3,
+          1,
+          3
+        ],
+        "schemaVersion" : 1,
+        "seed" : 79,
+        "start" : {
+          "col" : 4,
+          "row" : 4
+        }
+      },
+      "seed" : 79,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 24,
+        "level" : "challenging",
+        "ruleSwitches" : 8,
+        "version" : 1
+      },
+      "candidates" : 34,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 27,
+      "milliseconds" : 10.846916,
+      "puzzle" : {
+        "columns" : [
+          1,
+          1,
+          3,
+          3,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 4
+          },
+          {
+            "col" : 4,
+            "row" : 0
+          },
+          {
+            "col" : 1,
+            "row" : 4
+          },
+          {
+            "col" : 3,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-80-33",
+        "rows" : [
+          3,
+          2,
+          1,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 80,
+        "start" : {
+          "col" : 0,
+          "row" : 0
+        }
+      },
+      "seed" : 80,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 25,
+      "fallback" : false,
+      "logicRejected" : 2,
+      "milliseconds" : 0.335917,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          2,
+          2,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 3
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-81-2",
+        "rows" : [
+          3,
+          3,
+          1,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 81,
+        "start" : {
+          "col" : 1,
+          "row" : 1
+        }
+      },
+      "seed" : 81,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 16,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 10,
+      "milliseconds" : 4.34075,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          1,
+          4,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-82-15",
+        "rows" : [
+          3,
+          1,
+          1,
+          2,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 82,
+        "start" : {
+          "col" : 1,
+          "row" : 0
+        }
+      },
+      "seed" : 82,
+      "solverRejected" : 5
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 17,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 0.499916,
+      "puzzle" : {
+        "columns" : [
+          1,
+          2,
+          1,
+          2,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-83-3",
+        "rows" : [
+          0,
+          2,
+          3,
+          2,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 83,
+        "start" : {
+          "col" : 0,
+          "row" : 3
+        }
+      },
+      "seed" : 83,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 6,
+      "exactNodes" : 15,
+      "fallback" : false,
+      "logicRejected" : 4,
+      "milliseconds" : 0.656083,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          1,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 1
+          },
+          {
+            "col" : 3,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-84-5",
+        "rows" : [
+          0,
+          0,
+          1,
+          2,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 84,
+        "start" : {
+          "col" : 1,
+          "row" : 2
+        }
+      },
+      "seed" : 84,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 25,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 17,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 13,
+      "milliseconds" : 3.663375,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          4,
+          2,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 0
+          },
+          {
+            "col" : 1,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-85-16",
+        "rows" : [
+          1,
+          1,
+          1,
+          2,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 85,
+        "start" : {
+          "col" : 2,
+          "row" : 0
+        }
+      },
+      "seed" : 85,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 7,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 1.370833,
+      "puzzle" : {
+        "columns" : [
+          1,
+          3,
+          1,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 2
+          },
+          {
+            "col" : 4,
+            "row" : 0
+          },
+          {
+            "col" : 0,
+            "row" : 3
+          },
+          {
+            "col" : 2,
+            "row" : 0
+          }
+        ],
+        "puzzleID" : "generated-v1-86-6",
+        "rows" : [
+          0,
+          1,
+          4,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 86,
+        "start" : {
+          "col" : 0,
+          "row" : 4
+        }
+      },
+      "seed" : 86,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 7,
+        "version" : 1
+      },
+      "candidates" : 19,
+      "exactNodes" : 16,
+      "fallback" : false,
+      "logicRejected" : 12,
+      "milliseconds" : 5.556292,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 0,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-87-18",
+        "rows" : [
+          4,
+          2,
+          1,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 87,
+        "start" : {
+          "col" : 0,
+          "row" : 3
+        }
+      },
+      "seed" : 87,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 14,
+      "exactNodes" : 19,
+      "fallback" : false,
+      "logicRejected" : 11,
+      "milliseconds" : 1.932459,
+      "puzzle" : {
+        "columns" : [
+          0,
+          5,
+          1,
+          1,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-88-13",
+        "rows" : [
+          1,
+          1,
+          1,
+          1,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 88,
+        "start" : {
+          "col" : 1,
+          "row" : 0
+        }
+      },
+      "seed" : 88,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 7,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 2.152458,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          3,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 4,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-89-6",
+        "rows" : [
+          3,
+          1,
+          3,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 89,
+        "start" : {
+          "col" : 2,
+          "row" : 3
+        }
+      },
+      "seed" : 89,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "challenging",
+        "ruleSwitches" : 9,
+        "version" : 1
+      },
+      "candidates" : 11,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 7,
+      "milliseconds" : 5.553333,
+      "puzzle" : {
+        "columns" : [
+          3,
+          2,
+          2,
+          1,
+          2
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 4
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 3
+          },
+          {
+            "col" : 4,
+            "row" : 3
+          }
+        ],
+        "puzzleID" : "generated-v1-90-10",
+        "rows" : [
+          1,
+          3,
+          3,
+          1,
+          2
+        ],
+        "schemaVersion" : 1,
+        "seed" : 90,
+        "start" : {
+          "col" : 4,
+          "row" : 0
+        }
+      },
+      "seed" : 90,
+      "solverRejected" : 3
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 27,
+      "exactNodes" : 26,
+      "fallback" : false,
+      "logicRejected" : 22,
+      "milliseconds" : 6.407417,
+      "puzzle" : {
+        "columns" : [
+          4,
+          2,
+          1,
+          2,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 1
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-91-26",
+        "rows" : [
+          0,
+          2,
+          1,
+          3,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 91,
+        "start" : {
+          "col" : 4,
+          "row" : 3
+        }
+      },
+      "seed" : 91,
+      "solverRejected" : 4
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 3,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 2,
+      "milliseconds" : 0.251,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          2,
+          1,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-92-2",
+        "rows" : [
+          0,
+          1,
+          3,
+          3,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 92,
+        "start" : {
+          "col" : 0,
+          "row" : 1
+        }
+      },
+      "seed" : 92,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 8,
+      "exactNodes" : 22,
+      "fallback" : false,
+      "logicRejected" : 5,
+      "milliseconds" : 1.839167,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          1,
+          3,
+          1
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 2
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-93-7",
+        "rows" : [
+          3,
+          2,
+          3,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 93,
+        "start" : {
+          "col" : 4,
+          "row" : 2
+        }
+      },
+      "seed" : 93,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 31,
+        "level" : "relaxed",
+        "ruleSwitches" : 3,
+        "version" : 1
+      },
+      "candidates" : 19,
+      "exactNodes" : 26,
+      "fallback" : false,
+      "logicRejected" : 17,
+      "milliseconds" : 3.215916,
+      "puzzle" : {
+        "columns" : [
+          2,
+          2,
+          2,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 0,
+          "row" : 2
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 1
+          },
+          {
+            "col" : 2,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-94-18",
+        "rows" : [
+          5,
+          1,
+          5,
+          0,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 94,
+        "start" : {
+          "col" : 0,
+          "row" : 0
+        }
+      },
+      "seed" : 94,
+      "solverRejected" : 1
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 29,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 9,
+      "exactNodes" : 23,
+      "fallback" : false,
+      "logicRejected" : 6,
+      "milliseconds" : 1.87225,
+      "puzzle" : {
+        "columns" : [
+          0,
+          0,
+          2,
+          2,
+          3
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 4
+        },
+        "obstacles" : [
+
+        ],
+        "puzzleID" : "generated-v1-95-8",
+        "rows" : [
+          0,
+          2,
+          1,
+          3,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 95,
+        "start" : {
+          "col" : 3,
+          "row" : 1
+        }
+      },
+      "seed" : 95,
+      "solverRejected" : 2
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 28,
+        "level" : "relaxed",
+        "ruleSwitches" : 4,
+        "version" : 1
+      },
+      "candidates" : 26,
+      "exactNodes" : 20,
+      "fallback" : false,
+      "logicRejected" : 19,
+      "milliseconds" : 8.516625,
+      "puzzle" : {
+        "columns" : [
+          2,
+          1,
+          1,
+          4,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 3,
+          "row" : 1
+        },
+        "obstacles" : [
+          {
+            "col" : 3,
+            "row" : 0
+          },
+          {
+            "col" : 1,
+            "row" : 2
+          }
+        ],
+        "puzzleID" : "generated-v1-96-25",
+        "rows" : [
+          0,
+          1,
+          1,
+          2,
+          4
+        ],
+        "schemaVersion" : 1,
+        "seed" : 96,
+        "start" : {
+          "col" : 0,
+          "row" : 3
+        }
+      },
+      "seed" : 96,
+      "solverRejected" : 6
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 27,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 64,
+      "exactNodes" : 22,
+      "fallback" : false,
+      "logicRejected" : 54,
+      "milliseconds" : 13.816667,
+      "puzzle" : {
+        "columns" : [
+          0,
+          1,
+          3,
+          3,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 1,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-97-63",
+        "rows" : [
+          1,
+          2,
+          1,
+          3,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 97,
+        "start" : {
+          "col" : 2,
+          "row" : 0
+        }
+      },
+      "seed" : 97,
+      "solverRejected" : 9
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 26,
+        "level" : "relaxed",
+        "ruleSwitches" : 6,
+        "version" : 1
+      },
+      "candidates" : 4,
+      "exactNodes" : 18,
+      "fallback" : false,
+      "logicRejected" : 3,
+      "milliseconds" : 0.60775,
+      "puzzle" : {
+        "columns" : [
+          0,
+          3,
+          2,
+          3,
+          0
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 2,
+          "row" : 0
+        },
+        "obstacles" : [
+          {
+            "col" : 1,
+            "row" : 1
+          },
+          {
+            "col" : 0,
+            "row" : 1
+          },
+          {
+            "col" : 1,
+            "row" : 0
+          },
+          {
+            "col" : 2,
+            "row" : 1
+          }
+        ],
+        "puzzleID" : "generated-v1-98-3",
+        "rows" : [
+          2,
+          1,
+          3,
+          1,
+          1
+        ],
+        "schemaVersion" : 1,
+        "seed" : 98,
+        "start" : {
+          "col" : 1,
+          "row" : 4
+        }
+      },
+      "seed" : 98,
+      "solverRejected" : 0
+    },
+    {
+      "assessment" : {
+        "connectivityDeductions" : 0,
+        "deductions" : 30,
+        "level" : "relaxed",
+        "ruleSwitches" : 5,
+        "version" : 1
+      },
+      "candidates" : 16,
+      "exactNodes" : 24,
+      "fallback" : false,
+      "logicRejected" : 14,
+      "milliseconds" : 1.899292,
+      "puzzle" : {
+        "columns" : [
+          3,
+          1,
+          1,
+          1,
+          4
+        ],
+        "generatorVersion" : 1,
+        "goal" : {
+          "col" : 4,
+          "row" : 3
+        },
+        "obstacles" : [
+          {
+            "col" : 2,
+            "row" : 3
+          },
+          {
+            "col" : 4,
+            "row" : 4
+          }
+        ],
+        "puzzleID" : "generated-v1-99-15",
+        "rows" : [
+          5,
+          2,
+          2,
+          1,
+          0
+        ],
+        "schemaVersion" : 1,
+        "seed" : 99,
+        "start" : {
+          "col" : 0,
+          "row" : 2
+        }
+      },
+      "seed" : 99,
+      "solverRejected" : 1
+    }
+  ]
+}

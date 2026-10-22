@@ -47,3 +47,9 @@ O esboço orienta a aparência. Tabuleiro, números, caminho e controles serão 
 `Puzzle` guarda definição imutável, identidade, versões e seed opcional. `Game(puzzle:)` mantém rota ordenada, marcações e histórico separados. Ambos têm formato Codable; carregamento valida limites, versões, conexões e ocupação. Persistência em disco será implementada em PC-013.
 
 Validação deste incremento: 12 testes passaram e build de iPhone Simulator aprovado. Fixtures válidas, impossível e ambígua estão em `PuzzleFixtures`. O projeto segue sem solver/gerador.
+
+### Dificuldade e reservas (PC-008, em revisão)
+
+O gerador aceita `difficulty: .relaxed` ou `.challenging` e tem duas fases de reserva verificadas por nível. A classificação é provisória. `generateAsync` executa a geração fora da MainActor com cancelamento; a ligação à tela permanece na PC-015.
+
+[Relatório local e pendências da calibração](docs/validation/pc008.md). Medições reproduzíveis: `swift run -c release Calibration`. Verificação atual: 34 testes passando e build iOS aprovado. Ainda faltam playtest e medição em iPhone.
