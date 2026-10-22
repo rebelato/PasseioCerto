@@ -8,7 +8,7 @@ Esboço criado com a ferramenta imagegen e aprovado pelo usuário na conversa de
 
 ## Intenção
 
-Um puzzle acolhedor para uma pessoa adulta que gosta de Nonogram, Sudoku e animais. A grade e as pistas têm prioridade; a personalidade aparece no Bento e na chegada à casinha.
+Um puzzle acolhedor para uma pessoa adulta que gosta de Nonogram, Sudoku e animais. A grade e as pistas têm prioridade; a personalidade aparece na Margot e na chegada à casinha.
 
 - Fundo marfim, texto verde-escuro, sálvia/eucalipto e pequenos acentos quentes.
 - Tipografia legível com estilos do sistema e Dynamic Type; testar a personalidade do título sem comprometer leitura.
@@ -19,7 +19,7 @@ Um puzzle acolhedor para uma pessoa adulta que gosta de Nonogram, Sudoku e anima
 ## Hierarquia da partida
 
 1. Navegação e identificação da fase.
-2. Objetivo curto com o nome do cachorro.
+2. Objetivo curto com o nome da cachorrinha.
 3. Tabuleiro, pistas e estados.
 4. Nota contextual/dica quando solicitada.
 5. Ferramentas Caminho / Marcar ×.
@@ -29,7 +29,7 @@ Evitar cabeçalho que roube o espaço da grade. A moldura de iPhone da ilustraç
 
 ## Estados necessários
 
-Célula livre, obstáculo, endpoint do cachorro, endpoint da casa, caminho com arestas, marcação ×, célula destacada por dica e foco acessível. Pistas pendentes/atendidas/excedidas precisam de indicação além da cor.
+Célula livre, obstáculo, endpoint da cachorrinha, endpoint da casa, caminho com arestas, marcação ×, célula destacada por dica e foco acessível. Pistas pendentes/atendidas/excedidas precisam de indicação além da cor.
 
 Som, hápticos e animação são complementos opcionais. Com Reduce Motion, a vitória continua compreensível sem o cachorro percorrer toda a tela.
 
@@ -58,3 +58,13 @@ Contraste calculado dos tokens: texto principal/fundo claro 11,05:1; secundário
 Galerias SwiftUI renderizadas em macOS em largura de 375 pt: [claro](validation/design-components-light.png), [escuro](validation/design-components-dark.png). São componentes, não screenshots de iPhone. A renderização completa com ScrollView não ficou disponível via ImageRenderer; a configuração de texto ampliado no renderer macOS não reproduziu o comportamento iOS. CoreSimulatorService está indisponível no ambiente.
 
 Build de iPhone Simulator aprovado. PC-009 permanece em revisão até verificar a tela completa no iPhone pequeno, texto ampliado, VoiceOver e interação; não considerar a galeria como validação dessas condições.
+
+## Tabuleiro responsivo · PC-010
+
+`PuzzleBoard` foi extraído da tela e recebe `Game`, tamanho da célula e ação de seleção. Dimensões, pistas, obstáculos e endpoints vêm do modelo. A largura da tela determina o tamanho disponível, mantendo células de no mínimo 48 pt e rolagem horizontal quando necessário; a altura usa a quantidade real de linhas. Dynamic Type amplia esse mínimo. A tela mantém rolagem vertical e safe areas nativas.
+
+As conexões são desenhadas somente entre células consecutivas da rota. IDs de células usam coordenadas; VoiceOver diferencia Margot, casinha conectada/isolada, obstáculo, caminho, × e destaque. Controles sobrepostos são decorativos e não capturam toque. Desfazer e reiniciar atualizam a mensagem para não manter aviso de vitória antigo.
+
+Nome confirmado da protagonista: **Margot**. Texto principal: **Leve a Margot até a casinha**. As referências fotográficas adicionais mostram orelhas caídas com tons creme, cachos pequenos, olhos escuros e focinho alongado; a arte final continua em PC-022.
+
+Verificação local: build iOS aprovado; renderizações SwiftUI/macOS inspecionadas em 288 e 360 pt de largura de tabuleiro — [parcial](validation/board-partial.png), [arestas próximas](validation/board-touching.png), [obstáculo](validation/board-obstacle.png). Não são capturas de iPhone. Pendente conferir tela completa, rolagem, safe areas e VoiceOver no simulador/aparelho; CoreSimulatorService indisponível neste ambiente. PC-010 fica em revisão até essa validação.

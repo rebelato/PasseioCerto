@@ -9,7 +9,7 @@ struct GardenGallery: View {
             Text("Praça das Flores · Fase 1").font(.subheadline)
             HStack {
                 Puppy().frame(width: 52, height: 52)
-                Text("Leve sua companheira até a casinha").font(GardenTheme.heading)
+                Text("Leve a Margot até a casinha").font(GardenTheme.heading)
             }.padding(12).background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: 18))
             HStack {
                 GardenClue(target: 3, count: 1, label: "Pendente")
