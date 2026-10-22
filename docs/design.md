@@ -46,3 +46,15 @@ Som, hápticos e animação são complementos opcionais. Com Reduce Motion, a vi
 Não recortar o mockup inteiro para simular uma tela. Grade, pistas, texto, caminho e controles serão nativos. Separar cão, casa, ícone e outros desenhos em arquivos apropriados, com origem/licenciamento documentados e tamanhos verificados no aparelho.
 
 A primeira implementação usa uma ilustração vetorial SwiftUI provisória. A foto pessoal não é incluída no repositório.
+
+## Sistema visual implementado · PC-009
+
+`App/DesignSystem` centraliza tokens de cor semânticos claro/escuro, título serifado, texto arredondado, espaçamento de 16 pt, cantos e área mínima dos controles. Componentes: GardenClue, GardenCell, GardenTools, GardenNote e GardenButtonStyle. Puppy foi separado e preserva a referência branca/cacheada. A arte continua provisória.
+
+Na partida, banner compacto deixa espaço para a grade; caminho é desenhado abaixo dos endpoints. Pistas usam ✓ e ! além da cor. Fonte ampliada aumenta o tamanho mínimo da grade, com rolagem horizontal, e ferramentas têm alternativa de disposição vertical. Galeria/Previews incluem botão Dica e destaque de célula, sem ligar funcionalidades futuras ao jogo.
+
+Contraste calculado dos tokens: texto principal/fundo claro 11,05:1; secundário/fundo 5,44:1; erro/superfície 6,92:1; texto sobre sálvia escura 8,68:1. Contornos contra superfície: 3,15:1 claro e 4,06:1 escuro.
+
+Galerias SwiftUI renderizadas em macOS em largura de 375 pt: [claro](validation/design-components-light.png), [escuro](validation/design-components-dark.png). São componentes, não screenshots de iPhone. A renderização completa com ScrollView não ficou disponível via ImageRenderer; a configuração de texto ampliado no renderer macOS não reproduziu o comportamento iOS. CoreSimulatorService está indisponível no ambiente.
+
+Build de iPhone Simulator aprovado. PC-009 permanece em revisão até verificar a tela completa no iPhone pequeno, texto ampliado, VoiceOver e interação; não considerar a galeria como validação dessas condições.
