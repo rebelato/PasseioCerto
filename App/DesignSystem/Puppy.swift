@@ -7,8 +7,11 @@ import AppKit
 
 struct Puppy: View {
     var pose: MargotPose = .idle
+    var accessory: Accessory?
     var body: some View {
-        GardenArtwork(name: pose.rawValue) { MargotArt(pose: pose) }.accessibilityHidden(true)
+        GardenArtwork(name: pose.rawValue) { MargotArt(pose: pose) }
+            .overlay { if let accessory { AccessoryArt(accessory: accessory) } }
+            .accessibilityHidden(true)
     }
 }
 struct GardenHouse: View {

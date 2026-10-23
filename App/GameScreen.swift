@@ -26,7 +26,7 @@ struct GameScreen: View {
         VStack(spacing: 12) {
             GameTopBar(title: title, lives: session.attempt.mode.hasLives ? session.attempt.lives : nil,
                        onHome: onHome, onSettings: onSettings)
-            MargotBubble(text: bubbleText, symbol: bubbleSymbol, pose: game.won ? .happy : .idle,
+            MargotBubble(text: bubbleText, symbol: bubbleSymbol, pose: game.won ? .happy : .idle, accessory: session.preferences.accessory,
                          onClose: session.hint == nil ? nil : { session.dismissHint() })
                 .accessibilityFocused($bubbleFocused)
             GeometryReader { space in board(in: space.size) }
@@ -63,9 +63,17 @@ struct GameScreen: View {
         if let hint = session.hint { return hint.text }
         if session.hintChecking { return String(localized: "Pensando numa dica…") }
         if session.generating { return String(localized: "Preparando o próximo passeio…") }
+        if session.celebrating && !game.puzzle.trees.isEmpty {
+            return String(localized: "\(session.dogName) fez uma paradinha estratégica na árvore… pronto, agora casa!")
+        }
         if game.won { return String(localized: "Chegamos em casa!") }
         if session.attempt.defeated { return String(localized: "As vidas acabaram. Vamos tentar de novo?") }
-        return session.message ?? String(localized: "Leve \(session.dogName) até a casinha")
+        if let message = session.message { return message }
+        // First walk of a new place: Margot introduces its rule.
+        if let level = session.attempt.level, level.level == 0, let rule = level.world.newRule, game.path.count == 1, game.marks.isEmpty {
+            return String(localized: "Novidade, \(rule.title.lowercased())! \(rule.explanation)")
+        }
+        return String(localized: "Leve \(session.dogName) até a casinha")
     }
     private var bubbleSymbol: String? {
         if let hint = session.hint { return hint.kind == .conflict ? "exclamationmark.triangle" : "lightbulb" }
@@ -78,6 +86,7 @@ struct GameScreen: View {
         let content = PuzzleBoard(game: displayedGame, cellSide: textSize.isAccessibilitySize ? max(fitted, accessibleCell) : fitted,
             interactionsEnabled: session.canInteract,
             onSelectMode: { cell, marking in Task { await session.select(cell, marking: marking) } }, dogName: session.dogName,
+            accessory: session.preferences.accessory,
             arrivalProgress: game.won ? (session.celebrating ? arrivalProgress : 1) : 0,
             walking: session.celebrating && !reduceMotion && !wagging, wagging: wagging, enteredHouse: enteredHouse,
             highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
@@ -166,10 +175,11 @@ struct MargotBubble: View {
     let text: String
     var symbol: String?
     var pose: MargotPose = .idle
+    var accessory: Accessory?
     var onClose: (() -> Void)?
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
-            Puppy(pose: pose).frame(width: 40, height: 40)
+            Puppy(pose: pose, accessory: accessory).frame(width: 40, height: 40)
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 if let symbol { Image(systemName: symbol).foregroundStyle(GardenTheme.accent) }
                 Text(text).font(GardenTheme.body).lineLimit(5).fixedSize(horizontal: false, vertical: true)
