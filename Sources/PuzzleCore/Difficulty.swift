@@ -26,6 +26,7 @@ public enum DifficultyClassifier {
             case .rowRemaining, .columnRemaining: family = 1
             case .unreachable: family = 2; connectivity += 1
             case .onlyContinuation: family = 3
+            case .catNearby, .givenSegment, .puddleStraight, .puddleBlocked, .treeNeedsVisit: family = 4
             }
             if let last, last != family { switches += 1 }
             last = family

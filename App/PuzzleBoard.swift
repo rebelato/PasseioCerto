@@ -8,6 +8,7 @@ struct PuzzleBoard: View {
     var interactionsEnabled = true
     var onSelectMode: ((Cell, Bool) -> Void)?
     var dogName = "Margot"
+    var accessory: Accessory?
     var arrivalProgress: Double = 0
     var walking = false
     /// Victory beats after the walk: a tail wag, then a hop into the house.
@@ -50,8 +51,8 @@ struct PuzzleBoard: View {
             }
             ForEach(cells, id: \.self) { cell in
                 GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
-                               obstacle: game.puzzle.obstacles.contains(cell), highlighted: highlighted.contains(cell),
-                               blocked: violation?.cell == cell)
+                               obstacle: game.puzzle.blocked.contains(cell), highlighted: highlighted.contains(cell),
+                               blocked: violation?.cell == cell, feature: feature(cell), nearCat: game.puzzle.catZone.contains(cell))
                         .padding(2).contentShape(Rectangle())
                     .frame(width: cellSide, height: cellSide)
                     .highPriorityGesture(stroke(start: cell))
@@ -59,7 +60,7 @@ struct PuzzleBoard: View {
                     .accessibilityAddTraits(interactionsEnabled ? .isButton : [])
                     .accessibilityAction { if interactionsEnabled { onSelect(cell) } }
                     .accessibilityActions {
-                        if interactionsEnabled, !game.puzzle.obstacles.contains(cell), let onSelectMode {
+                        if interactionsEnabled, !game.puzzle.blocked.contains(cell), let onSelectMode {
                             Button(String(localized: "Desenhar caminho")) { onSelectMode(cell, false) }
                             Button(String(localized: "Alternar marcação ×")) { onSelectMode(cell, true) }
                         }
@@ -69,7 +70,7 @@ struct PuzzleBoard: View {
                     .accessibilityIdentifier("cell-\(cell.row)-\(cell.col)")
                     .accessibilityLabel(BoardAccessibility.label(cell))
                     .accessibilityValue(BoardAccessibility.value(game: game, cell: cell, dogName: dogName, highlighted: highlighted.contains(cell)))
-                    .accessibilityHint(!interactionsEnabled ? String(localized: "Tabuleiro somente para leitura") : game.puzzle.obstacles.contains(cell) ? String(localized: "Não pode fazer parte do caminho") : marking ? String(localized: "Toque duas vezes para alternar a marcação xis") : String(localized: "Toque duas vezes para continuar ou recuar o caminho"))
+                    .accessibilityHint(!interactionsEnabled ? String(localized: "Tabuleiro somente para leitura") : game.puzzle.blocked.contains(cell) ? String(localized: "Não pode fazer parte do caminho") : marking ? String(localized: "Toque duas vezes para alternar a marcação xis") : String(localized: "Toque duas vezes para continuar ou recuar o caminho"))
             }
             Path { p in
                 for (index, cell) in game.path.enumerated() {
@@ -78,11 +79,18 @@ struct PuzzleBoard: View {
                 }
             }.stroke(GardenTheme.trail, style: StrokeStyle(lineWidth: max(6, cellSide*0.2), lineCap: .round, lineJoin: .round))
                 .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
+            // Pre-drawn pieces: dashed until the route follows them.
+            Path { p in
+                for edge in game.puzzle.givenEdges {
+                    p.move(to: center(edge.a)); p.addLine(to: center(edge.b))
+                }
+            }.stroke(GardenTheme.trail.opacity(0.75), style: StrokeStyle(lineWidth: max(4, cellSide*0.14), lineCap: .round, dash: [max(4, cellSide*0.18), max(3, cellSide*0.12)]))
+                .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
             GardenHouse().padding(3)
                 .frame(width: cellSide-4, height: cellSide-4)
                 .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
                 .allowsHitTesting(false).accessibilityHidden(true)
-            Puppy(pose: walking ? .walking : game.won ? .happy : .idle).padding(3).frame(width: cellSide-4, height: cellSide-4)
+            Puppy(pose: walking ? .walking : game.won ? .happy : .idle, accessory: accessory).padding(3).frame(width: cellSide-4, height: cellSide-4)
                 .rotationEffect(.degrees(wagging ? 12 : lean * 10))
                 .animation(wagging ? .easeInOut(duration: 0.12).repeatForever(autoreverses: true) : .spring(duration: 0.3), value: wagging)
                 .animation(.spring(duration: 0.3), value: lean)
@@ -102,6 +110,14 @@ struct PuzzleBoard: View {
                 }
             }
             .onDisappear { if strokeStarted { strokeStarted = false; onStrokeEnd(true) } }
+    }
+    private func center(_ cell: Cell) -> CGPoint {
+        CGPoint(x: (CGFloat(cell.col)+1.5)*cellSide, y: (CGFloat(cell.row)+1.5)*cellSide)
+    }
+    private func feature(_ cell: Cell) -> CellFeature {
+        let p = game.puzzle
+        return p.trees.contains(cell) ? .tree : p.cats.contains(cell) ? .cat : p.obstacles.contains(cell) ? .shrub
+            : p.bones.contains(cell) ? .bone : p.puddles.contains(cell) ? .puddle : .none
     }
     /// Margot leans toward where the route is heading: -1 left, 1 right.
     private var lean: Double {

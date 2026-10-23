@@ -43,6 +43,16 @@
         }
       }
     },
+    " não consegue atender à pista com o caminho e as marcações atuais.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " não consegue atender à pista com o caminho e as marcações atuais."
+          }
+        }
+      }
+    },
     " −1 vida.": {
       "localizations": {
         "pt-BR": {
@@ -128,6 +138,26 @@
         }
       }
     },
+    "%@ fez uma paradinha estratégica na árvore… pronto, agora casa!": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ fez uma paradinha estratégica na árvore… pronto, agora casa!"
+          }
+        }
+      }
+    },
+    "%@ · %lld/%lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %lld/%lld"
+          }
+        }
+      }
+    },
     "%@ · Tranquilo · calendário UTC\nSeu passeio normal fica guardado.": {
       "extractionState": "stale",
       "localizations": {
@@ -146,6 +176,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@, início do caminho"
+          }
+        }
+      }
+    },
+    "%@, libera com %lld patinhas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, libera com %lld patinhas"
           }
         }
       }
@@ -245,6 +285,26 @@
         }
       }
     },
+    "%lld 🐾": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 🐾"
+          }
+        }
+      }
+    },
+    "%lld/%lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld/%lld"
+          }
+        }
+      }
+    },
     "1 dia seguido": {
       "localizations": {
         "pt-BR": {
@@ -317,6 +377,26 @@
         }
       }
     },
+    "A coluna %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A coluna %lld"
+          }
+        }
+      }
+    },
+    "A coluna %lld já está completa, então esta casa fica fora do caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A coluna %lld já está completa, então esta casa fica fora do caminho."
+          }
+        }
+      }
+    },
     "A coluna %lld já tem todas as casas necessárias. As demais ficam fora do caminho.": {
       "extractionState": "stale",
       "localizations": {
@@ -334,6 +414,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "A coluna %lld passou do número."
+          }
+        }
+      }
+    },
+    "A coluna %lld só tem as casas que faltam para a pista: todas entram no caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A coluna %lld só tem as casas que faltam para a pista: todas entram no caminho."
+          }
+        }
+      }
+    },
+    "A linha %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A linha %lld"
+          }
+        }
+      }
+    },
+    "A linha %lld já está completa, então esta casa fica fora do caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A linha %lld já está completa, então esta casa fica fora do caminho."
           }
         }
       }
@@ -359,6 +469,16 @@
         }
       }
     },
+    "A linha %lld só tem as casas que faltam para a pista: todas entram no caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A linha %lld só tem as casas que faltam para a pista: todas entram no caminho."
+          }
+        }
+      }
+    },
     "A ponta do caminho ficou sem saída antes da casinha.": {
       "extractionState": "stale",
       "localizations": {
@@ -366,6 +486,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "A ponta do caminho ficou sem saída antes da casinha."
+          }
+        }
+      }
+    },
+    "A ponta do caminho só tem uma saída livre.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A ponta do caminho só tem uma saída livre."
           }
         }
       }
@@ -402,6 +532,26 @@
         }
       }
     },
+    "A árvore fica ao lado do caminho, não nele.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A árvore fica ao lado do caminho, não nele."
+          }
+        }
+      }
+    },
+    "Acessórios da %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acessórios da %@"
+          }
+        }
+      }
+    },
     "Agora arraste até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!": {
       "localizations": {
         "pt-BR": {
@@ -419,6 +569,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Agora leve %@ até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!"
+          }
+        }
+      }
+    },
+    "Ainda falta algo antes da casinha.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda falta algo antes da casinha."
           }
         }
       }
@@ -465,6 +625,16 @@
         }
       }
     },
+    "Ao lado do gato.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ao lado do gato."
+          }
+        }
+      }
+    },
     "Arbusto no caminho!": {
       "localizations": {
         "pt-BR": {
@@ -482,6 +652,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Arestas explícitas"
+          }
+        }
+      }
+    },
+    "Arraste o caminho até ela.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste o caminho até ela."
           }
         }
       }
@@ -556,6 +736,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Até 24 caracteres. Em branco, usamos Margot."
+          }
+        }
+      }
+    },
+    "Bandana": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bandana"
+          }
+        }
+      }
+    },
+    "Cada passeio concluído vira uma foto aqui.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada passeio concluído vira uma foto aqui."
           }
         }
       }
@@ -648,6 +848,16 @@
         }
       }
     },
+    "Chapéu": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chapéu"
+          }
+        }
+      }
+    },
     "Chegamos em casa!": {
       "extractionState": "stale",
       "localizations": {
@@ -713,6 +923,16 @@
         }
       }
     },
+    "Continuar passeio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar passeio"
+          }
+        }
+      }
+    },
     "Continuar tutorial": {
       "extractionState": "stale",
       "localizations": {
@@ -742,6 +962,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cópia anterior recuperada. O arquivo substituído foi preservado."
+          }
+        }
+      }
+    },
+    "Daqui não dá para chegar a esta casa sem cruzar o caminho ou casas excluídas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daqui não dá para chegar a esta casa sem cruzar o caminho ou casas excluídas."
           }
         }
       }
@@ -856,6 +1086,16 @@
         }
       }
     },
+    "Ela faz parte do caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ela faz parte do caminho."
+          }
+        }
+      }
+    },
     "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita.": {
       "extractionState": "stale",
       "localizations": {
@@ -863,6 +1103,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita."
+          }
+        }
+      }
+    },
+    "Esse trecho já estava desenhado.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esse trecho já estava desenhado."
+          }
+        }
+      }
+    },
+    "Esta casa fica ao lado do gato, então o caminho não passa por ela.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta casa fica ao lado do gato, então o caminho não passa por ela."
           }
         }
       }
@@ -885,6 +1145,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Esta casa precisa fazer parte da rota; isso ainda não desenha uma ligação até ela."
+          }
+        }
+      }
+    },
+    "Este trecho já vem desenhado: o caminho segue por ele.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este trecho já vem desenhado: o caminho segue por ele."
           }
         }
       }
@@ -922,6 +1192,16 @@
         }
       }
     },
+    "Feira": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feira"
+          }
+        }
+      }
+    },
     "Ferramenta × selecionada para este exercício.": {
       "extractionState": "stale",
       "localizations": {
@@ -933,12 +1213,42 @@
         }
       }
     },
+    "Foto do passeio em %@, %lld patinhas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto do passeio em %@, %lld patinhas"
+          }
+        }
+      }
+    },
     "Galeria de componentes · prévia visual": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Galeria de componentes · prévia visual"
+          }
+        }
+      }
+    },
+    "Gato": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gato"
+          }
+        }
+      }
+    },
+    "Gato: o caminho não pode passar ao lado": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gato: o caminho não pode passar ao lado"
           }
         }
       }
@@ -972,6 +1282,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geração cancelada. Sua partida foi mantida."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld. Complete o lugar anterior.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld. Complete o lugar anterior."
+          }
+        }
+      }
+    },
+    "Grade 5 × 5, onde tudo começa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade 5 × 5, onde tudo começa."
           }
         }
       }
@@ -1051,6 +1381,26 @@
         }
       }
     },
+    "Lacinho": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lacinho"
+          }
+        }
+      }
+    },
+    "Lagoa": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lagoa"
+          }
+        }
+      }
+    },
     "Leve %@ até a casinha": {
       "extractionState": "stale",
       "localizations": {
@@ -1105,6 +1455,16 @@
         }
       }
     },
+    "Linha %lld, coluna %lld: %@ %@%@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linha %lld, coluna %lld: %@ %@%@"
+          }
+        }
+      }
+    },
     "Linha: %lld de %lld. Coluna: %lld de %lld.": {
       "extractionState": "stale",
       "localizations": {
@@ -1123,6 +1483,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Livre"
+          }
+        }
+      }
+    },
+    "Lugares": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lugares"
+          }
+        }
+      }
+    },
+    "Lugares, acessórios e álbum de passeios": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lugares, acessórios e álbum de passeios"
           }
         }
       }
@@ -1188,6 +1568,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Na linha %lld, todas as casas restantes são necessárias para completar a pista."
+          }
+        }
+      }
+    },
+    "Na poça o caminho segue reto.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na poça o caminho segue reto."
+          }
+        }
+      }
+    },
+    "Na poça, só em linha reta.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na poça, só em linha reta."
           }
         }
       }
@@ -1268,6 +1668,16 @@
         }
       }
     },
+    "Novidade, %@! %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novidade, %@! %@"
+          }
+        }
+      }
+    },
     "Novo passeio": {
       "extractionState": "stale",
       "localizations": {
@@ -1286,6 +1696,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Novo passeio preparado! Você tem 3 vidas para levar %@ até a casinha."
+          }
+        }
+      }
+    },
+    "Não dá para atravessar esta poça em linha reta, então o caminho não passa por ela.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não dá para atravessar esta poça em linha reta, então o caminho não passa por ela."
           }
         }
       }
@@ -1378,6 +1798,16 @@
         }
       }
     },
+    "Não sobrou casa livre ao lado de uma árvore.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não sobrou casa livre ao lado de uma árvore."
+          }
+        }
+      }
+    },
     "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue arrastando até a linha 2, coluna 2.": {
       "localizations": {
         "pt-BR": {
@@ -1399,12 +1829,32 @@
         }
       }
     },
+    "O caminho não pode passar ao lado do gato.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho não pode passar ao lado do gato."
+          }
+        }
+      }
+    },
     "O caminho não pode se cruzar.": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "O caminho não pode se cruzar."
+          }
+        }
+      }
+    },
+    "O caminho ou as marcações quebram uma regra. Revise o estado atual ou use Desfazer.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho ou as marcações quebram uma regra. Revise o estado atual ou use Desfazer."
           }
         }
       }
@@ -1420,6 +1870,26 @@
         }
       }
     },
+    "O caminho precisa passar ao lado da árvore, e esta é a única casa livre ao lado dela.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho precisa passar ao lado da árvore, e esta é a única casa livre ao lado dela."
+          }
+        }
+      }
+    },
+    "O caminho precisa passar pelo osso.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho precisa passar pelo osso."
+          }
+        }
+      }
+    },
     "Obstáculo": {
       "extractionState": "stale",
       "localizations": {
@@ -1427,6 +1897,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Obstáculo"
+          }
+        }
+      }
+    },
+    "Osso": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osso"
+          }
+        }
+      }
+    },
+    "Osso, no caminho": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osso, no caminho"
+          }
+        }
+      }
+    },
+    "Osso: o caminho precisa passar aqui": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osso: o caminho precisa passar aqui"
           }
         }
       }
@@ -1441,6 +1941,16 @@
         }
       }
     },
+    "Parada obrigatória: o caminho passa ao lado de cada árvore.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parada obrigatória: o caminho passa ao lado de cada árvore."
+          }
+        }
+      }
+    },
     "Parcial · 288 pt": {
       "extractionState": "stale",
       "localizations": {
@@ -1448,6 +1958,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Parcial · 288 pt"
+          }
+        }
+      }
+    },
+    "Parque": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parque"
           }
         }
       }
@@ -1470,6 +1990,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Partida restaurada. Continue de onde parou."
+          }
+        }
+      }
+    },
+    "Passeio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeio"
           }
         }
       }
@@ -1545,6 +2075,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ponta atual do caminho."
+          }
+        }
+      }
+    },
+    "Poça": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poça"
+          }
+        }
+      }
+    },
+    "Poça: só em linha reta.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poça: só em linha reta."
+          }
+        }
+      }
+    },
+    "Praia": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Praia"
           }
         }
       }
@@ -1663,6 +2223,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Próximo passeio"
+          }
+        }
+      }
+    },
+    "Psiu! Perto do gato, não.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Psiu! Perto do gato, não."
           }
         }
       }
@@ -1938,6 +2508,16 @@
         }
       }
     },
+    "Toque nela para marcar ×.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toque nela para marcar ×."
+          }
+        }
+      }
+    },
     "Tranquilo": {
       "extractionState": "stale",
       "localizations": {
@@ -1977,6 +2557,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Um passeio de cada vez, com %@."
+          }
+        }
+      }
+    },
+    "Uma casa obrigatória está marcada com ×. Revise as marcações.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma casa obrigatória está marcada com ×. Revise as marcações."
           }
         }
       }
@@ -2141,6 +2731,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voltar ao passeio normal"
+          }
+        }
+      }
+    },
+    "Álbum de passeios": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Álbum de passeios"
+          }
+        }
+      }
+    },
+    "Árvore": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Árvore"
+          }
+        }
+      }
+    },
+    "Árvore: o caminho precisa passar ao lado": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Árvore: o caminho precisa passar ao lado"
+          }
+        }
+      }
+    },
+    "Óculos": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Óculos"
           }
         }
       }

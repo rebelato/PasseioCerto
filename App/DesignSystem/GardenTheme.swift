@@ -18,6 +18,7 @@ enum GardenTheme {
     static let trailTint = adaptive(0xF3E4CF, 0x463729)
     /// Soil under obstacles, the most legible thing on the board.
     static let soil = adaptive(0xD9C6A3, 0x5A4733)
+    static let catZone = adaptive(0xF7E6DF, 0x3B2A27)
     static let title = Font.system(.largeTitle, design: .serif, weight: .bold)
     static let heading = Font.system(.headline, design: .rounded, weight: .semibold)
     static let body = Font.system(.body, design: .rounded)
@@ -115,22 +116,36 @@ struct GardenNote: View {
             .padding(GardenTheme.spacing).background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
     }
 }
+/// What sits on a cell besides the route.
+enum CellFeature { case none, shrub, tree, cat, bone, puddle }
 struct GardenCell: View {
     var occupied = false
     var excluded = false
     var obstacle = false
     var highlighted = false
     var blocked = false
-    private var fill: Color { obstacle ? GardenTheme.soil : occupied ? GardenTheme.trailTint : GardenTheme.surface }
+    var feature = CellFeature.none
+    /// Beside a cat: tinted so the forbidden ring around it reads at a glance.
+    var nearCat = false
+    private var fill: Color {
+        obstacle ? GardenTheme.soil : occupied ? GardenTheme.trailTint : nearCat ? GardenTheme.catZone : GardenTheme.surface
+    }
     var body: some View {
         RoundedRectangle(cornerRadius: GardenTheme.cellRadius)
             .fill(fill)
             .overlay(RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(highlighted ? GardenTheme.accent : GardenTheme.border, lineWidth: highlighted ? 3 : 1))
             .overlay { if blocked { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).fill(GardenTheme.error.opacity(0.35)).strokeBorder(GardenTheme.error, lineWidth: 3) } }
             .overlay {
-                if obstacle { GardenShrub().padding(2) }
-                else if excluded { Image(systemName: "xmark").font(.title3.weight(.semibold)).foregroundStyle(GardenTheme.secondary) }
-                else if highlighted { Image(systemName: "lightbulb.fill").font(.caption).foregroundStyle(GardenTheme.accent) }
+                switch feature == .none && obstacle ? .shrub : feature {
+                case .tree: TreeArt().padding(2)
+                case .cat: CatArt().padding(4)
+                case .shrub: GardenShrub().padding(2)
+                case .puddle: PuddleArt().padding(4).opacity(occupied ? 0.6 : 1)
+                case .bone: BoneArt().padding(3).opacity(occupied ? 0.55 : 1)
+                case .none: EmptyView()
+                }
+                if excluded && !obstacle { Image(systemName: "xmark").font(.title3.weight(.semibold)).foregroundStyle(GardenTheme.secondary) }
+                else if highlighted && !obstacle { Image(systemName: "lightbulb.fill").font(.caption).foregroundStyle(GardenTheme.accent) }
             }
     }
 }

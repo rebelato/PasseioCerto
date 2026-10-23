@@ -23,7 +23,11 @@ import Combine
     @Published public private(set) var generating = false
     private var generationWorker: Task<GenerationReport, Error>?
     public typealias GenerationService = @Sendable (UInt64, PuzzleDifficulty) async throws -> GenerationReport
+    public typealias LevelService = @Sendable (WorldLevel) async throws -> GenerationReport
     private let generate: GenerationService
+    private let generateLevel: LevelService
+    @Published public private(set) var progress = WorldLevel.first
+    @Published public private(set) var walks: [WalkRecord] = []
     private var revision = 0
     private let saveURL: URL?
     /// The last visible mistake, shown briefly on the board after the move is undone.
@@ -43,8 +47,9 @@ import Combine
     public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil,
                 generate: @escaping GenerationService = { seed, difficulty in
                     await PuzzleGenerator.generateAsync(seed: seed, difficulty: difficulty)
-                }) {
-        self.generate = generate
+                },
+                generateLevel: @escaping LevelService = { await WorldGenerator.generateAsync($0) }) {
+        self.generate = generate; self.generateLevel = generateLevel
         self.attempt = attempt; self.saveURL = saveURL
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do { apply(try SaveStore(url: saveURL).load()) }
@@ -81,6 +86,7 @@ import Combine
         case .accepted:
             attempt.game = draft.finish()
             celebrating = attempt.game.won
+            if attempt.game.won { recordWalk() }
             if attempt.game.path != before.path || attempt.game.marks != before.marks {
                 feedback = GameFeedback(attempt.game.won ? .victory : .action)
             }
@@ -114,7 +120,7 @@ import Combine
         let game = attempt.game
         let path = game.path
         let continues = path.last.map { abs($0.row-cell.row) + abs($0.col-cell.col) == 1 } ?? false
-            && !path.contains(cell) && !game.marks.contains(cell) && !game.puzzle.obstacles.contains(cell)
+            && !path.contains(cell) && !game.marks.contains(cell) && !game.puzzle.blocked.contains(cell)
         let retracts = path.count > 1 && path[path.count-2] == cell
         await select(cell, marking: held || !(continues || retracts))
     }
@@ -128,7 +134,7 @@ import Combine
         attempt.game.undo(); feedback = GameFeedback(.action); message = nil; save()
     }
     public func restart() {
-        cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle), mode: attempt.mode)
+        cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle), mode: attempt.mode, level: attempt.level)
         message = nil; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
@@ -155,12 +161,27 @@ import Combine
         await generatePuzzle(difficulty: .relaxed, seed: daily.seed, dailyID: daily.id)
     }
     private func parkCurrent() { parkedAttempts[activeDailyID ?? "normal"] = attempt }
+    /// Jogar: resume the unfinished normal walk, or prepare the next level of the progression.
+    public func play() async {
+        if activeDailyID != nil { continueNormal() }
+        guard activeDailyID == nil, attempt.game.won else { return }
+        await playNext()
+    }
+    /// The next level after a finished walk (Próximo passeio).
+    public func playNext() async {
+        let level = progress
+        let service = generateLevel
+        await prepare(seed: level.seed, dailyID: nil, level: level) { try await service(level) }
+    }
     private func generatePuzzle(difficulty: PuzzleDifficulty, seed: UInt64, dailyID: String?) async {
+        let service = generate
+        await prepare(seed: seed, dailyID: dailyID, level: nil) { try await service(seed, difficulty) }
+    }
+    private func prepare(seed: UInt64, dailyID: String?, level: WorldLevel?, _ work: @escaping @Sendable () async throws -> GenerationReport) async {
         cancel()
         generating = true
         let token = revision
-        let service = generate
-        let task = Task.detached(priority: .userInitiated) { try await service(seed, difficulty) }
+        let task = Task.detached(priority: .userInitiated) { try await work() }
         generationWorker = task
         do {
             let report = try await withTaskCancellationHandler { try await task.value } onCancel: { task.cancel() }
@@ -174,12 +195,11 @@ import Combine
             }
             let destination: Puzzle
             if let dailyID {
-                destination = try Puzzle(puzzleID: dailyID, generatorVersion: puzzle.generatorVersion, seed: seed,
-                    rows: puzzle.rows, columns: puzzle.columns, start: puzzle.start, goal: puzzle.goal, obstacles: puzzle.obstacles)
+                destination = try puzzle.renamed(dailyID, seed: seed)
             } else { destination = puzzle }
             parkCurrent(); activeDailyID = dailyID
             // Reserve puzzles are verified like generated ones; the player never needs to know.
-            attempt = GameAttempt(game: Game(puzzle: destination), mode: dailyID == nil ? preferences.playMode : .relaxed)
+            attempt = GameAttempt(game: Game(puzzle: destination), mode: dailyID == nil ? preferences.playMode : .relaxed, level: level)
             message = nil
             save()
         } catch {
@@ -227,7 +247,7 @@ import Combine
         guard !generating, !hintChecking, stroke == nil else { return }
         preferences.playMode = mode
         func switched(_ current: GameAttempt) -> GameAttempt {
-            current.game.won || current.mode == mode ? current : GameAttempt(game: current.game, mode: mode)
+            current.game.won || current.mode == mode ? current : GameAttempt(game: current.game, mode: mode, level: current.level)
         }
         if activeDailyID == nil { attempt = switched(attempt) }
         else if let normal = parkedAttempts["normal"] { parkedAttempts["normal"] = switched(normal) }
@@ -264,12 +284,29 @@ import Combine
         } catch { storageError = String(localized: "Não foi possível salvar a recuperação. O arquivo original foi preservado.") }
     }
     private var snapshot: PlayerSave {
-        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts, bestPaws: bestPaws)
+        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts, bestPaws: bestPaws,
+                   progress: progress, walks: walks)
+    }
+    /// A finished walk joins the album (replays replace the older photo) and moves the progression on.
+    private func recordWalk() {
+        let game = attempt.game
+        walks.removeAll { $0.puzzle.puzzleID == game.puzzle.puzzleID }
+        walks.append(WalkRecord(puzzle: game.puzzle, path: game.path, paws: attempt.paws, date: Date(), place: attempt.level?.world))
+        if walks.count > WalkRecord.albumLimit { walks.removeFirst(walks.count - WalkRecord.albumLimit) }
+        if attempt.level == progress { progress = progress.next }
+    }
+    /// Worlds reached so far, for the album of places.
+    public var unlockedWorlds: [World] { World.allCases.filter { $0 <= progress.world } }
+    public var unlockedAccessories: [Accessory] { Accessory.allCases.filter { $0.cost <= totalPaws } }
+    public func wear(_ accessory: Accessory?) {
+        guard accessory.map(unlockedAccessories.contains) ?? true else { return }
+        preferences.accessory = accessory; save()
     }
     private func apply(_ saved: PlayerSave) {
         activeDailyID = saved.activeDailyID; parkedAttempts = saved.parkedAttempts
         attempt = saved.attempt; preferences = saved.preferences
         tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs; bestPaws = saved.bestPaws
+        progress = saved.progress; walks = saved.walks
     }
     private func save() {
         if attempt.game.won {

@@ -32,3 +32,13 @@ Build completo de simulador e de dispositivo **bloqueados** no CompileAssetCatal
 Atualização PC-023: o [pipeline real](https://github.com/rebelato/PasseioCerto/actions/runs/39982849632) aprovou o build completo, catálogo, metadados AppIcon, instalação e abertura em simulador iOS 26.2. A [captura](validation/ci-first-launch.png) mostra Margot e casinha no tutorial. A limitação local acima permanece, mas o empacotamento foi validado no CI.
 
 Pendente: ícone instalado na tela inicial, aparência em iPhone pequeno/grande, estados durante animação e revisão visual da semelhança com Margot. PC-022 permanece Em revisão.
+
+## Regras temáticas e acessórios (design review, parte 2)
+
+`App/DesignSystem/ThemedArt.swift` tem arte vetorial original em SwiftUI, sem imagens externas nem fotos. Usa a mesma tela de 200 pt da `MargotArt` e é escalada para caber na célula.
+
+- **Itens das fases:** osso, árvore com frutinhas, gato laranja e poça.
+- **Acessórios da Margot:** lacinho, bandana, chapéu e óculos, posicionados sobre o retrato pelas coordenadas do rosto da `MargotArt`.
+- **Cores:** fixas e com contornos próprios, para continuarem legíveis nos fundos claro, escuro, de terra (`soil`) e na faixa ao redor do gato (`catZone`).
+
+Capturas no simulador: [Parque 10×10](validation/design-review/park-10x10.png) e [Seu cantinho](validation/design-review/corner.png). **Pendente:** revisão em iPhone físico; o álbum de polaroids não teve captura.
