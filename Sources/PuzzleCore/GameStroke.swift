@@ -1,6 +1,6 @@
 /// A mistake the player can see: the offending cell plus the clue it broke, if any.
 public struct StrokeViolation: Equatable, Sendable {
-    public enum Kind: Equatable, Sendable { case rowExceeded, columnExceeded, arrivedEarly, obstacle, crossedPath }
+    public enum Kind: Equatable, Sendable { case rowExceeded, columnExceeded, arrivedEarly, obstacle, tree, nearCat, puddleTurn, givenEdge, crossedPath }
     public let kind: Kind
     public let cell: Cell
     public var row: Int?
@@ -9,8 +9,12 @@ public struct StrokeViolation: Equatable, Sendable {
         switch kind {
         case .rowExceeded: return String(localized: "A linha \((row ?? 0)+1) passou do número.")
         case .columnExceeded: return String(localized: "A coluna \((column ?? 0)+1) passou do número.")
-        case .arrivedEarly: return String(localized: "Ainda faltam pistas antes da casinha.")
+        case .arrivedEarly: return String(localized: "Ainda falta algo antes da casinha.")
         case .obstacle: return String(localized: "Arbusto no caminho!")
+        case .tree: return String(localized: "A árvore fica ao lado do caminho, não nele.")
+        case .nearCat: return String(localized: "Psiu! Perto do gato, não.")
+        case .puddleTurn: return String(localized: "Na poça, só em linha reta.")
+        case .givenEdge: return String(localized: "Esse trecho já estava desenhado.")
         case .crossedPath: return String(localized: "O caminho não pode se cruzar.")
         }
     }
@@ -49,7 +53,10 @@ public struct GameStroke: Sendable {
         let path = preview.path
         guard let tip = path.last, !preview.won, tip != preview.goal, preview.puzzle.contains(cell),
               abs(tip.row-cell.row)+abs(tip.col-cell.col) == 1 else { return nil }
-        if preview.puzzle.obstacles.contains(cell) { return StrokeViolation(kind: .obstacle, cell: cell) }
+        let puzzle = preview.puzzle
+        if puzzle.trees.contains(cell) { return StrokeViolation(kind: .tree, cell: cell) }
+        if puzzle.cats.contains(cell) || puzzle.catZone.contains(cell) { return StrokeViolation(kind: .nearCat, cell: cell) }
+        if puzzle.blocked.contains(cell) { return StrokeViolation(kind: .obstacle, cell: cell) }
         if path.contains(cell) {
             // Stepping back onto the previous cell erases; anything else crosses the route.
             return path.count > 1 && path[path.count-2] == cell ? nil : StrokeViolation(kind: .crossedPath, cell: cell)
@@ -59,6 +66,8 @@ public struct GameStroke: Sendable {
         case .contradiction(.rowExceeded(let r)): return StrokeViolation(kind: .rowExceeded, cell: cell, row: r)
         case .contradiction(.columnExceeded(let c)): return StrokeViolation(kind: .columnExceeded, cell: cell, column: c)
         case .contradiction(.arrivedBeforeClues): return StrokeViolation(kind: .arrivedEarly, cell: cell)
+        case .contradiction(.turnedOnPuddle): return StrokeViolation(kind: .puddleTurn, cell: tip)
+        case .contradiction(.brokeGivenEdge): return StrokeViolation(kind: .givenEdge, cell: cell)
         default: return nil
         }
     }

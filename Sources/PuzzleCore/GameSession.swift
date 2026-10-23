@@ -164,8 +164,7 @@ import Combine
             }
             let destination: Puzzle
             if let dailyID {
-                destination = try Puzzle(puzzleID: dailyID, generatorVersion: puzzle.generatorVersion, seed: seed,
-                    rows: puzzle.rows, columns: puzzle.columns, start: puzzle.start, goal: puzzle.goal, obstacles: puzzle.obstacles)
+                destination = try puzzle.renamed(dailyID, seed: seed)
             } else { destination = puzzle }
             parkCurrent(); activeDailyID = dailyID
             // Reserve puzzles are verified like generated ones; the player never needs to know.
