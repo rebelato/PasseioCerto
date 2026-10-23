@@ -18,7 +18,7 @@ public struct Game: Codable, Sendable {
     private var history: [Snapshot] = []
     public init(puzzle: Puzzle) { self.puzzle = puzzle; path = [puzzle.start] }
     public init() { self.init(puzzle: try! PuzzleFixtures.approved.makePuzzle()) }
-    public var occupied: Set<Cell> { Set(path).union([goal]) }
+    public var occupied: Set<Cell> { Set(path).union(puzzle.knownGoal.map { [$0] } ?? []) }
     public var rowCounts: [Int] { RouteValidator.counts(puzzle: puzzle, path: path).rows }
     public var columnCounts: [Int] { RouteValidator.counts(puzzle: puzzle, path: path).columns }
     public var status: RouteStatus { RouteValidator.evaluate(puzzle: puzzle, path: path, marks: marks) }
@@ -33,7 +33,7 @@ public struct Game: Codable, Sendable {
         } else {
             if path.count > 1 && path[path.count - 2] == cell { path.removeLast() }
             else {
-                guard let last = path.last, last != goal, !path.contains(cell), !marks.contains(cell), abs(last.row-cell.row)+abs(last.col-cell.col) == 1 else { return false }
+                guard let last = path.last, last != puzzle.knownGoal, !path.contains(cell), !marks.contains(cell), abs(last.row-cell.row)+abs(last.col-cell.col) == 1 else { return false }
                 path.append(cell)
                 if case .contradiction(let violation) = RouteValidator.evaluate(puzzle: puzzle, path: path), violation != .arrivedBeforeClues {
                     path = previous.path; return false

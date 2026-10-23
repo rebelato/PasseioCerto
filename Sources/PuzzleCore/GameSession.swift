@@ -23,7 +23,8 @@ import Combine
     @Published public private(set) var generating = false
     private var generationWorker: Task<GenerationReport, Error>?
     public typealias GenerationService = @Sendable (UInt64, PuzzleDifficulty) async throws -> GenerationReport
-    public typealias LevelService = @Sendable (WorldLevel) async throws -> GenerationReport
+    /// Level to generate, and whether the house is hidden.
+    public typealias LevelService = @Sendable (WorldLevel, Bool) async throws -> GenerationReport
     private let generate: GenerationService
     private let generateLevel: LevelService
     @Published public private(set) var progress = WorldLevel.first
@@ -48,7 +49,7 @@ import Combine
                 generate: @escaping GenerationService = { seed, difficulty in
                     await PuzzleGenerator.generateAsync(seed: seed, difficulty: difficulty)
                 },
-                generateLevel: @escaping LevelService = { await WorldGenerator.generateAsync($0) }) {
+                generateLevel: @escaping LevelService = { await WorldGenerator.generateAsync($0, hiddenHouse: $1) }) {
         self.generate = generate; self.generateLevel = generateLevel
         self.attempt = attempt; self.saveURL = saveURL
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
@@ -167,11 +168,21 @@ import Combine
         guard activeDailyID == nil, attempt.game.won else { return }
         await playNext()
     }
-    /// The next level after a finished walk (Próximo passeio).
+    /// The next level after a finished walk (Próximo passeio): after a chosen level, the one
+    /// that follows it; otherwise the progression.
     public func playNext() async {
-        let level = progress
+        let next = attempt.game.won ? attempt.level?.next : nil
+        await play(next ?? progress)
+    }
+    /// Any level, reached or not, using the current hidden-house preference.
+    public func play(_ level: WorldLevel) async {
         let service = generateLevel
-        await prepare(seed: level.seed, dailyID: nil, level: level) { try await service(level) }
+        let hidden = preferences.hiddenHouse
+        await prepare(seed: level.seed, dailyID: nil, level: level) { try await service(level, hidden) }
+    }
+    public func setHiddenHouse(_ hidden: Bool) {
+        guard !generating, !hintChecking, stroke == nil else { return }
+        preferences.hiddenHouse = hidden; save()
     }
     private func generatePuzzle(difficulty: PuzzleDifficulty, seed: UInt64, dailyID: String?) async {
         let service = generate

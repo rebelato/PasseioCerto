@@ -26,6 +26,22 @@ final class WorldTests: XCTestCase {
             }
         }
     }
+    func testHiddenHouseReservesAndLevelsAreUniqueWithoutKnowingTheEnd() throws {
+        for world in World.allCases {
+            for p in try XCTUnwrap(FallbackCatalog.hiddenWorlds[world]) {
+                XCTAssertTrue(p.hiddenGoal)
+                XCTAssertEqual(p.rows.count, world.size)
+                XCTAssertEqual(LogicEngine.analyze(puzzle: p).outcome, .solved, p.puzzleID)
+                let exact = ExactSolver.solve(puzzle: p, nodeLimit: 2_000_000)
+                XCTAssertEqual(exact.classification, .unique, p.puzzleID)
+                XCTAssertEqual(exact.solutions.first?.last, p.goal, "The only walk ends at the hidden house")
+            }
+        }
+        let r = WorldGenerator.generate(WorldLevel(world: .beach, level: 1), hiddenHouse: true)
+        XCTAssertEqual(r.outcome, .generated)
+        XCTAssertEqual(r.puzzle?.hiddenGoal, true)
+        XCTAssertNotEqual(r.puzzle, WorldGenerator.generate(WorldLevel(world: .beach, level: 1)).puzzle)
+    }
     func testGeneratedLevelsAreVerifiedReproducibleAndThemed() throws {
         for level in [WorldLevel(world: .flowerSquare, level: 0), WorldLevel(world: .beach, level: 2), WorldLevel(world: .market, level: 1)] {
             let a = WorldGenerator.generate(level), b = WorldGenerator.generate(level)
@@ -60,7 +76,7 @@ final class ProgressionSessionTests: XCTestCase {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: folder) }
         let url = folder.appendingPathComponent("save.json")
-        let s = GameSession(saveURL: url, generateLevel: { level in
+        let s = GameSession(saveURL: url, generateLevel: { level, _ in
             GenerationReport(outcome: .generated, puzzle: try Self.tiny.renamed("level-\(level.level)", seed: nil), candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
         })
         await s.play()
@@ -80,6 +96,21 @@ final class ProgressionSessionTests: XCTestCase {
         XCTAssertEqual(restored.progress, s.progress)
         XCTAssertEqual(restored.walks, s.walks)
         XCTAssertEqual(restored.attempt.level, .first)
+    }
+    @MainActor func testChosenLevelsDontMoveProgressAndNextFollowsThem() async {
+        let s = GameSession(generateLevel: { level, hidden in
+            let id = "level-\(level.world.rawValue)-\(level.level)" + (hidden ? "-hidden" : "")
+            return GenerationReport(outcome: .generated, puzzle: try Self.tiny.renamed(id, seed: nil), candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
+        })
+        s.setHiddenHouse(true)
+        let hardest = WorldLevel(world: .pond, level: World.levelsPerWorld - 1)
+        await s.play(hardest)
+        XCTAssertEqual(s.attempt.level, hardest)
+        XCTAssertEqual(s.attempt.game.puzzle.puzzleID, "level-4-7-hidden")
+        await s.select(Cell(0,1), marking: false)
+        XCTAssertEqual(s.progress, .first, "Skipping ahead to test a level doesn't move the progression")
+        await s.playNext()
+        XCTAssertEqual(s.attempt.level, hardest.next)
     }
     @MainActor func testAccessoriesUnlockWithPaws() {
         let s = GameSession()
