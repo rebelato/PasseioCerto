@@ -23,12 +23,13 @@ if CommandLine.arguments.contains("reserves") {
     // Two verified grids per world for FallbackCatalog.worlds, printed as JSON lines.
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.sortedKeys]
+    let hidden = CommandLine.arguments.contains("hidden")
     for world in World.allCases {
         var found = 0
         for attempt in UInt64(1)..<200 where found < 2 {
-            let r = WorldGenerator.generate(WorldLevel(world: world, level: 3), attempt: attempt)
+            let r = WorldGenerator.generate(WorldLevel(world: world, level: 3), attempt: attempt, hiddenHouse: hidden)
             guard r.outcome == .generated, var p = r.puzzle else { continue }
-            p = try p.renamed("reserve-world-v1-\(world.rawValue)-\(found)", seed: nil)
+            p = try p.renamed("reserve-world-v1\(hidden ? "h" : "")-\(world.rawValue)-\(found)", seed: nil)
             print("\(world.rawValue)\t" + String(decoding: try encoder.encode(p), as: UTF8.self))
             found += 1
         }
@@ -42,7 +43,7 @@ if CommandLine.arguments.contains("worlds") {
         for level in 0..<World.levelsPerWorld {
             let wl = WorldLevel(world: world, level: level)
             let start = clock.now
-            let r = WorldGenerator.generate(wl)
+            let r = WorldGenerator.generate(wl, hiddenHouse: CommandLine.arguments.contains("hidden"))
             let ms = start.duration(to: clock.now).components
             let tier = r.puzzle.flatMap(LogicEngine.requiredTier) ?? -1
             print("\(world) \(level) outcome=\(r.outcome) ms=\(Double(ms.seconds)*1000 + Double(ms.attoseconds)/1e15) candidates=\(r.candidates) solver=\(r.rejectedBySolver) logic=\(r.rejectedByLogic) difficulty=\(r.rejectedByDifficulty) tier=\(tier)")

@@ -51,7 +51,7 @@ public struct GameStroke: Sendable {
     /// Orthogonal steps from the tip that break a rule shown on the board.
     private func visibleViolation(stepping cell: Cell) -> StrokeViolation? {
         let path = preview.path
-        guard let tip = path.last, !preview.won, tip != preview.goal, preview.puzzle.contains(cell),
+        guard let tip = path.last, !preview.won, tip != preview.puzzle.knownGoal, preview.puzzle.contains(cell),
               abs(tip.row-cell.row)+abs(tip.col-cell.col) == 1 else { return nil }
         let puzzle = preview.puzzle
         if puzzle.trees.contains(cell) { return StrokeViolation(kind: .tree, cell: cell) }

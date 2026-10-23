@@ -42,7 +42,15 @@ struct GameView: View {
                 tutorialRequested = true; showingLearning = true
             }
         }
-        .sheet(isPresented: $showingCorner) { CornerView(session: session) { showingCorner = false } }
+        .sheet(isPresented: $showingCorner) {
+            CornerView(session: session, onClose: { showingCorner = false }) { level in
+                showingCorner = false
+                Task {
+                    await session.play(level)
+                    if session.attempt.level == level { showingHome = false }
+                }
+            }
+        }
         .sheet(isPresented: $showingLearning) {
             if tutorialRequested {
                 TutorialView(step: session.tutorialStep, dogName: session.dogName,
@@ -87,6 +95,11 @@ struct GameView: View {
                         PlayModePicker(selection: Binding(get: { session.preferences.playMode }, set: { session.setPlayMode($0) }))
                         Text(session.preferences.playMode.hasLives ? String(localized: "3 vidas por passeio. Erros custam uma.") : String(localized: "Sem vidas e sem pressa."))
                             .font(.footnote).foregroundStyle(GardenTheme.secondary)
+                        Toggle(isOn: Binding(get: { session.preferences.hiddenHouse }, set: { session.setHiddenHouse($0) })) {
+                            Label(String(localized: "Casinha escondida"), systemImage: "eye.slash")
+                        }.font(GardenTheme.heading).padding(.horizontal, 4).padding(.top, 4)
+                        Text(String(localized: "A casinha só aparece quando o caminho termina. Vale para os próximos passeios."))
+                            .font(.footnote).foregroundStyle(GardenTheme.secondary).multilineTextAlignment(.center)
                     }
                     dailyCard(daily, now: timeline.date)
                     cornerSummary
