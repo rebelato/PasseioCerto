@@ -568,7 +568,7 @@
         "Executar o pipeline real e registrar resultado antes de marcar concluído; especificar limites do corpus para manter custo previsível."
       ],
       "id": "PC-023",
-      "stage": "Backlog MVP",
+      "stage": "Concluído",
       "trello": {
         "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad9891be22691f0ab627e90",
         "url": "https://trello.com/c/X0nJpRsH",

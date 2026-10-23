@@ -36,4 +36,12 @@ Evidências em `build/ci-evidence` e derivados em `build/ci-derived`, ignorados 
 
 ## Resultado real
 
-A execução no GitHub será registrada nesta seção após o primeiro push. Conclusão da PC-023 depende do pipeline real, não apenas da sintaxe YAML.
+Execução [39982849632](https://github.com/rebelato/PasseioCerto/actions/runs/39982849632), em 23/10/2026, **aprovada** para o commit `3eba263c30319dddce838c922949cfef3882d292`.
+
+- 86 testes, zero falhas; suíte em 9,547 segundos.
+- Build iOS completo aprovado, com Assets.car, localização pt-BR e AppIcon.
+- Instalação e abertura aprovadas no iPhone 16 / iOS 26.2; processo confirmado após três segundos.
+- Job concluído em aproximadamente 7min27s, dentro do limite de 25 minutos.
+- [Captura preservada da primeira abertura](validation/ci-first-launch.png): tutorial em português, Margot, casinha e pistas visíveis, sem cortes aparentes nesta configuração. Não houve interação automatizada com o tabuleiro.
+
+O pipeline também resolve a pendência de compilação do catálogo da PC-022. Validação física, VoiceOver, hápticos, partidas completas e desempenho no aparelho continuam na PC-024. O commit posterior de documentação apenas registra estas evidências; o SHA testado é o indicado acima.

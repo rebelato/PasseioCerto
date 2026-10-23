@@ -29,4 +29,6 @@ Copiar os PNGs nomeados para seus imagesets/appiconset após revisar. O script t
 
 Build completo de simulador e de dispositivo **bloqueados** no CompileAssetCatalogVariant: `No available simulator runtimes for platform iphonesimulator`; serviço CoreSimulator indisponível neste ambiente. Build iOS do código passou com `EXCLUDED_SOURCE_FILE_NAMES=Assets.xcassets ASSETCATALOG_COMPILER_APPICON_NAME=` apenas para isolar a checagem de compilação. Isso **não valida** o empacotamento do catálogo/ícone.
 
-Pendente: build completo no Xcode com runtime disponível, ícone instalado na tela inicial, aparência em iPhone pequeno/grande, estados durante animação e revisão visual da semelhança com Margot. PC-022 permanece Em revisão.
+Atualização PC-023: o [pipeline real](https://github.com/rebelato/PasseioCerto/actions/runs/39982849632) aprovou o build completo, catálogo, metadados AppIcon, instalação e abertura em simulador iOS 26.2. A [captura](validation/ci-first-launch.png) mostra Margot e casinha no tutorial. A limitação local acima permanece, mas o empacotamento foi validado no CI.
+
+Pendente: ícone instalado na tela inicial, aparência em iPhone pequeno/grande, estados durante animação e revisão visual da semelhança com Margot. PC-022 permanece Em revisão.
