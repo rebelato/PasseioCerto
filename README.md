@@ -91,3 +91,13 @@ Primeiro passeio usa uma grade fixa 3×3 e seis momentos: contagem incluindo end
 Abre automaticamente enquanto não concluído/pulado; Continuar depois mantém o progresso, Pular vai ao passeio normal e Ajustes permite continuar ou repetir. Todos os passos funcionam por toque e ação de acessibilidade, sem exigir arraste; layout usa texto escalável e rolagem.
 
 71 testes passaram e build iOS aprovado. [Primeiro passo renderizado em SwiftUI no macOS](docs/validation/tutorial-example.png). Pendente no iPhone: fluxo da apresentação, toque, foco VoiceOver e Dynamic Type.
+
+### Início e desafio diário (PC-018, em revisão)
+
+O app abre no início com Continuar (última tentativa ativa), Novo passeio, dificuldade Tranquilo/Desafiador, Desafio do dia e Ajustes. Dentro da partida, Início preserva o progresso. Novo passeio pede confirmação para substituir somente o passeio normal; os diários ficam guardados.
+
+O diário usa calendário gregoriano **UTC**, independente do fuso do aparelho: chave `daily-v1-AAAA-MM-DD`, seed numérica AAAAMMDD e nível Tranquilo. A data aparece no início, atualizado a cada minuto; o dia muda à meia-noite UTC. Não há servidor nem dependência de rede. A política v1 deve ser mantida; alterações incompatíveis no gerador exigem nova versão da política diária.
+
+Save v4 migra v3 e formatos antigos, guarda a tentativa ativa, o passeio normal e diários por ID. A grade completa, vidas, rota e histórico de um diário persistido são recuperados sem geração, mesmo após voltar o relógio ou atualizar o app. Abrir outro dia não troca a fase ativa automaticamente. Cancelar/falhar durante geração preserva a tentativa; o diário só passa a ativo quando pronto.
+
+76 testes passaram e build iOS aprovado. Cobertura inclui fronteira UTC, offsets de fuso, migração v3, independência dos progressos, reabertura sem regenerar, mudança de data e falha de geração. Pendente no iPhone: layout do início, navegação, Dynamic Type/VoiceOver e retomada real.

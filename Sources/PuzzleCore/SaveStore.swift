@@ -12,23 +12,30 @@ public struct PlayerSave: Codable, Sendable {
     public var preferences: PlayerPreferences
     public var tutorialStep: Int
     public var completedPuzzleIDs: Set<String>
-    public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = []) {
-        schemaVersion = 3; self.attempt = attempt; self.preferences = preferences
+    public var activeDailyID: String?
+    public var parkedAttempts: [String: GameAttempt]
+    public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:]) {
+        schemaVersion = 4; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
         self.tutorialStep = tutorialStep; self.completedPuzzleIDs = completedPuzzleIDs
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.attempt) {
-            schemaVersion = try c.decode(Int.self, forKey: .schemaVersion)
-            guard schemaVersion == 3 else { throw PuzzleError.invalidSession }
+            let version = try c.decode(Int.self, forKey: .schemaVersion)
+            schemaVersion = 4
+            guard version == 3 || version == 4 else { throw PuzzleError.invalidSession }
             attempt = try c.decode(GameAttempt.self, forKey: .attempt)
             preferences = try c.decode(PlayerPreferences.self, forKey: .preferences)
             tutorialStep = try c.decode(Int.self, forKey: .tutorialStep)
             completedPuzzleIDs = try c.decode(Set<String>.self, forKey: .completedPuzzleIDs)
+            activeDailyID = version == 4 ? try c.decodeIfPresent(String.self, forKey: .activeDailyID) : nil
+            parkedAttempts = version == 4 ? try c.decode([String: GameAttempt].self, forKey: .parkedAttempts) : [:]
+            guard parkedAttempts.allSatisfy({ $0.key == "normal" || ($0.key.hasPrefix("daily-v1-") && $0.value.game.puzzle.puzzleID == $0.key) }),
+                  activeDailyID == nil || (activeDailyID == attempt.game.puzzle.puzzleID && activeDailyID!.hasPrefix("daily-v1-") && parkedAttempts["normal"] != nil) else { throw PuzzleError.invalidSession }
             guard tutorialStep >= 0, completedPuzzleIDs.allSatisfy({ !$0.isEmpty }) else { throw PuzzleError.invalidSession }
         } else {
-            schemaVersion = 3; attempt = try GameAttempt(from: decoder)
+            schemaVersion = 4; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
             preferences = PlayerPreferences(); tutorialStep = 0; completedPuzzleIDs = []
         }
         if attempt.game.won { completedPuzzleIDs.insert(attempt.game.puzzle.puzzleID) }

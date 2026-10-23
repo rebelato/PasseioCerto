@@ -50,7 +50,7 @@ final class SaveStoreTests: XCTestCase {
     func testMigratesBothOldFormats() throws {
         for bytes in [try JSONEncoder().encode(Game()), try JSONEncoder().encode(GameAttempt())] {
             let loaded = try JSONDecoder().decode(PlayerSave.self, from: bytes)
-            XCTAssertEqual(loaded.schemaVersion, 3)
+            XCTAssertEqual(loaded.schemaVersion, 4)
             XCTAssertEqual(loaded.attempt.lives, 3)
             XCTAssertEqual(loaded.preferences, PlayerPreferences())
         }

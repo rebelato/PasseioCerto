@@ -11,6 +11,8 @@ import Combine
     @Published public private(set) var tutorialStep = 0
     @Published public private(set) var completedPuzzleIDs: Set<String> = []
     @Published public private(set) var backupAvailable = false
+    @Published public private(set) var activeDailyID: String?
+    @Published public private(set) var parkedAttempts: [String: GameAttempt] = [:]
     @Published public private(set) var celebrating = false
     public func finishCelebration() { celebrating = false }
     private var unreadableSave = false
@@ -102,10 +104,30 @@ import Combine
         message = "Nova tentativa: 3 vidas para levar a Margot até a casinha."; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
-        cancel(); attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
+        cancel(); parkCurrent(); activeDailyID = nil
+        attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
     }
     /// Keep the current attempt until a complete replacement is ready.
     public func newPuzzle(difficulty: PuzzleDifficulty, seed: UInt64 = UInt64.random(in: .min ... .max)) async {
+        await generatePuzzle(difficulty: difficulty, seed: seed, dailyID: nil)
+    }
+    public func continueNormal() {
+        guard activeDailyID != nil, let normal = parkedAttempts["normal"] else { return }
+        cancel(); parkCurrent(); activeDailyID = nil; attempt = normal
+        message = "Passeio retomado. Continue de onde parou."; save()
+    }
+    public func openDaily(date: Date = Date()) async {
+        let daily = DailyChallenge(date: date)
+        if activeDailyID == daily.id { cancel(); return }
+        if let saved = parkedAttempts[daily.id] {
+            cancel(); parkCurrent(); activeDailyID = daily.id; attempt = saved
+            message = saved.game.won ? "Desafio diário já concluído!" : "Desafio diário retomado."; save()
+            return
+        }
+        await generatePuzzle(difficulty: .relaxed, seed: daily.seed, dailyID: daily.id)
+    }
+    private func parkCurrent() { parkedAttempts[activeDailyID ?? "normal"] = attempt }
+    private func generatePuzzle(difficulty: PuzzleDifficulty, seed: UInt64, dailyID: String?) async {
         cancel()
         generating = true
         let token = revision
@@ -122,7 +144,13 @@ import Combine
             guard let puzzle = report.puzzle else {
                 message = "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."; return
             }
-            attempt = GameAttempt(game: Game(puzzle: puzzle))
+            let destination: Puzzle
+            if let dailyID {
+                destination = try Puzzle(puzzleID: dailyID, generatorVersion: puzzle.generatorVersion, seed: seed,
+                    rows: puzzle.rows, columns: puzzle.columns, start: puzzle.start, goal: puzzle.goal, obstacles: puzzle.obstacles)
+            } else { destination = puzzle }
+            parkCurrent(); activeDailyID = dailyID
+            attempt = GameAttempt(game: Game(puzzle: destination))
             message = report.outcome == .fallback
                 ? "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas."
                 : "Novo passeio preparado! Você tem 3 vidas para levar a Margot até a casinha."
@@ -188,9 +216,10 @@ import Combine
         } catch { storageError = "Não foi possível salvar a recuperação. O arquivo original foi preservado." }
     }
     private var snapshot: PlayerSave {
-        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs)
+        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts)
     }
     private func apply(_ saved: PlayerSave) {
+        activeDailyID = saved.activeDailyID; parkedAttempts = saved.parkedAttempts
         attempt = saved.attempt; preferences = saved.preferences
         tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs
     }

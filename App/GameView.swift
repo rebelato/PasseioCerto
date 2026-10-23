@@ -5,7 +5,7 @@ struct GameView: View {
     private var game: Game { session.attempt.game }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var arrivalProgress = 0.0
-    @State private var showingHome = false
+    @State private var showingHome = true
     @State private var showingLearning = false
     @State private var tutorialRequested = false
     @AccessibilityFocusState private var victoryFocused: Bool
@@ -25,23 +25,19 @@ struct GameView: View {
     var body: some View {
         Group {
         if showingHome {
-            VStack(spacing: 24) {
-                Puppy().frame(width: 120, height: 120)
-                Text("Passeio Certo").font(GardenTheme.title)
-                Text("Um passeio de cada vez, com a Margot.").multilineTextAlignment(.center)
-                Button("Voltar ao passeio") { showingHome = false }.buttonStyle(GardenButtonStyle())
-            }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(GardenTheme.background).foregroundStyle(GardenTheme.ink)
+            home
         } else {
         GeometryReader { screen in
         let side = max((min(screen.size.width, 420) - 32) / CGFloat(game.columns.count + 1), cellMinimum)
         ScrollView {
             VStack(spacing: GardenTheme.spacing) {
                 Text("Passeio Certo").font(GardenTheme.title).foregroundStyle(GardenTheme.ink)
+                Button("Início", systemImage: "house") { session.suspend(); showingHome = true }
+                    .buttonStyle(GardenButtonStyle())
                 Button("Ajustes", systemImage: "gearshape") {
                     session.suspend(); tutorialRequested = false; showingLearning = true
                 }.buttonStyle(GardenButtonStyle())
-                Text("Praça das Flores · 5 × 5").font(.subheadline)
+                Text(session.activeDailyID.map { "Desafio diário · " + $0.replacingOccurrences(of: "daily-v1-", with: "") } ?? "Praça das Flores · 5 × 5").font(.subheadline)
                 HStack(spacing: 10) {
                     ForEach(0..<3) { index in
                         Image(systemName: index < session.attempt.lives ? "heart.fill" : "heart")
@@ -154,7 +150,7 @@ struct GameView: View {
             if tutorialRequested {
                 TutorialView(step: session.tutorialStep,
                     onProgress: { session.setTutorialStep($0) },
-                    onClose: { showingLearning = false })
+                    onClose: { showingLearning = false; showingHome = false })
             } else {
                 VStack(spacing: 24) {
                     Text("Ajustes").font(GardenTheme.title)
@@ -181,9 +177,13 @@ struct GameView: View {
         }
         .onChange(of: reduceMotion) { _, enabled in if enabled { session.finishCelebration() } }
         .onChange(of: game.won) { _, won in victoryFocused = won }
-        .confirmationDialog("Começar uma nova fase? A tentativa atual será substituída quando a nova fase estiver pronta.", isPresented: $newPuzzle, titleVisibility: .visible) {
+        .confirmationDialog("Gerar um novo passeio normal? O passeio normal anterior será substituído quando estiver pronto. Desafios diários ficam guardados.", isPresented: $newPuzzle, titleVisibility: .visible) {
             Button("Gerar fase · \(difficulty.title)") {
-                Task { await session.newPuzzle(difficulty: difficulty) }
+                Task {
+                    let previous = game.puzzle.puzzleID
+                    await session.newPuzzle(difficulty: difficulty)
+                    if game.puzzle.puzzleID != previous { showingHome = false }
+                }
             }
         }
         .confirmationDialog("Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente.", isPresented: $recovery, titleVisibility: .visible) {
@@ -193,6 +193,46 @@ struct GameView: View {
         .onChange(of: session.hint) { _, value in hintFocused = value != nil }
         .onChange(of: marking) { _, _ in finishStroke(true) }
         .onDisappear { session.suspend() }
+    }
+    private var home: some View {
+        TimelineView(.periodic(from: .now, by: 60)) { timeline in
+            let daily = DailyChallenge(date: timeline.date)
+            ScrollView {
+                VStack(spacing: 20) {
+                    Puppy().frame(width: 110, height: 110)
+                    Text("Passeio Certo").font(GardenTheme.title)
+                    Text("Um passeio de cada vez, com a Margot.").multilineTextAlignment(.center)
+                    Button("Continuar", systemImage: "play.fill") { showingHome = false }
+                    if session.activeDailyID != nil {
+                        Button("Voltar ao passeio normal") { session.continueNormal(); showingHome = false }
+                    }
+                    Picker("Dificuldade do novo passeio", selection: $difficulty) {
+                        ForEach(PuzzleDifficulty.allCases, id: \.self) { Text($0.title).tag($0) }
+                    }.pickerStyle(.segmented)
+                    Button("Novo passeio", systemImage: "sparkles") { newPuzzle = true }
+                    Button(session.completedPuzzleIDs.contains(daily.id) ? "Desafio do dia · concluído" : "Desafio do dia", systemImage: "calendar") {
+                        Task {
+                            await session.openDaily(date: timeline.date)
+                            if session.activeDailyID == daily.id { showingHome = false }
+                        }
+                    }
+                    Text("\(daily.dateKey) · Tranquilo · calendário UTC\nSeu passeio normal fica guardado.")
+                        .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    Button("Ajustes", systemImage: "gearshape") {
+                        tutorialRequested = false; showingLearning = true
+                    }
+                }.buttonStyle(GardenButtonStyle()).disabled(session.generating)
+                if session.generating {
+                    ProgressView("Preparando passeio…")
+                    Button("Cancelar") { session.cancelGeneration() }.buttonStyle(GardenButtonStyle())
+                }
+                if let error = session.storageError {
+                    GardenNote(text: error + " Abra Continuar para acessar a recuperação.", symbol: "exclamationmark.triangle")
+                }
+                GardenNote(text: session.message, symbol: "info.circle")
+            }.padding(20).frame(maxWidth: 420).frame(maxWidth: .infinity)
+                .background(GardenTheme.background).foregroundStyle(GardenTheme.ink)
+        }
     }
     private func finishStroke(_ cancelled: Bool) {
         if cancelled { session.cancel() }
