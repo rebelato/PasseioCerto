@@ -135,3 +135,7 @@ O String Catalog `App/Localizable.xcstrings` tem português brasileiro, com lín
 Retratos neutro, em passeio e feliz, casinha, arbusto e ícone em catálogo. Fonte vetorial original e exportação reproduzível; fotos pessoais não incluídas. [Arte e proveniência](docs/artwork.md).
 
 Renderizações claras/escuras e PNGs revisados. Código iOS compila com catálogo excluído da checagem; build completo do catálogo bloqueado por CoreSimulator indisponível, inclusive na tentativa para dispositivo. Ainda precisa de build completo e revisão em iPhone.
+
+### Integração contínua (PC-023)
+
+GitHub Actions verifica testes do núcleo, build iOS completo com assets e instalação/abertura em simulador. Ambiente fixado em macOS 15, Xcode 26.3 e iOS 26.2, sem assinatura ou credenciais pessoais. [Comandos, limites e evidências](docs/ci.md).
