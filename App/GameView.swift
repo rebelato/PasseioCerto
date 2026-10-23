@@ -165,7 +165,7 @@ struct GameView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(String(localized: "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas."))
                         Text(String(localized: "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto."))
-                        Text(String(localized: "Arraste para desenhar o caminho; volte uma casa para apagar. Toque numa casa para marcar ×, e toque de novo para limpar. Dica explica uma dedução sem jogar por você."))
+                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."))
                         Text(String(localized: "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas."))
                         Text(String(localized: "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."))
                     }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
@@ -219,7 +219,7 @@ private struct TutorialView: View {
                         arrivalProgress: lesson.game.won ? 1 : 0,
                         highlighted: lesson.target.map { Set([$0]) } ?? [],
                         onSelect: { lesson.select($0) },
-                        onTap: { lesson.tap($0) },
+                        onTap: { cell, _ in lesson.tap(cell) },
                         onStrokeMove: { lesson.drag(to: $0) })
                 }.frame(height: side*4)
                 if let feedback = lesson.feedback { GardenNote(text: feedback, symbol: "info.circle") }

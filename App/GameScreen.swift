@@ -83,7 +83,7 @@ struct GameScreen: View {
             highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
             highlightedColumn: session.hint?.column, violation: session.displayedViolation,
             onSelect: { cell in Task { await session.select(cell, marking: false) } },
-            onTap: { cell in Task { await session.select(cell, marking: true) } },
+            onTap: { cell, held in Task { await session.tap(cell, held: held) } },
             onStrokeStart: { session.begin(at: $0, marking: false) },
             onStrokeMove: { session.move(to: $0) },
             onStrokeEnd: { cancelled in

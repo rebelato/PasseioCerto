@@ -19,13 +19,14 @@ struct PuzzleBoard: View {
     /// A visible mistake: the cell and clue blink in the error color before the move is undone.
     var violation: StrokeViolation?
     var onSelect: (Cell) -> Void = { _ in }
-    /// A touch that never leaves its cell; the game uses it to toggle ×.
-    var onTap: (Cell) -> Void = { _ in }
+    /// A touch that never leaves its cell, and whether it was held (long press).
+    var onTap: (Cell, Bool) -> Void = { _, _ in }
     var onStrokeStart: (Cell) -> Void = { _ in }
     var onStrokeMove: (Cell?) -> Void = { _ in }
     var onStrokeEnd: (Bool) -> Void = { _ in }
     @GestureState private var touching = false
     @State private var strokeStarted = false
+    @State private var touchStart: Date?
     private var width: CGFloat { CGFloat(game.columns.count + 1) * cellSide }
     private var height: CGFloat { CGFloat(game.rows.count + 1) * cellSide }
     private var cells: [Cell] {
@@ -95,6 +96,7 @@ struct PuzzleBoard: View {
                 if !active {
                     // onEnded commits first; recognizer cancellation has no onEnded.
                     DispatchQueue.main.async {
+                        touchStart = nil
                         if !touching && strokeStarted { strokeStarted = false; onStrokeEnd(true) }
                     }
                 }
@@ -111,6 +113,7 @@ struct PuzzleBoard: View {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("puzzle-board"))
             .updating($touching) { _, active, _ in active = true }
             .onChanged { value in
+                if touchStart == nil { touchStart = value.time }
                 let cell = BoardHitTest.cell(x: value.location.x, y: value.location.y,
                     side: cellSide, rows: game.rows.count, columns: game.columns.count)
                 if !strokeStarted {
@@ -119,9 +122,11 @@ struct PuzzleBoard: View {
                 }
                 onStrokeMove(cell)
             }
-            .onEnded { _ in
+            .onEnded { value in
+                let held = value.time.timeIntervalSince(touchStart ?? value.time) >= 0.45
+                touchStart = nil
                 if strokeStarted { strokeStarted = false; onStrokeEnd(false) }
-                else { onTap(start) }
+                else { onTap(start, held) }
             }
     }
 
