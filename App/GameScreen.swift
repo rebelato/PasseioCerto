@@ -69,6 +69,9 @@ struct GameScreen: View {
         if game.won { return String(localized: "Chegamos em casa!") }
         if session.attempt.defeated { return String(localized: "As vidas acabaram. Vamos tentar de novo?") }
         if let message = session.message { return message }
+        if game.puzzle.hiddenGoal && game.path.count == 1 && game.marks.isEmpty {
+            return String(localized: "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.")
+        }
         // First walk of a new place: Margot introduces its rule.
         if let level = session.attempt.level, level.level == 0, let rule = level.world.newRule, game.path.count == 1, game.marks.isEmpty {
             return String(localized: "Novidade, \(rule.title.lowercased())! \(rule.explanation)")

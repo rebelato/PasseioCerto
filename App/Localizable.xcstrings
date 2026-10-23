@@ -377,6 +377,26 @@
         }
       }
     },
+    "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha."
+          }
+        }
+      }
+    },
+    "A casinha só aparece quando o caminho termina. Vale para os próximos passeios.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A casinha só aparece quando o caminho termina. Vale para os próximos passeios."
+          }
+        }
+      }
+    },
     "A coluna %lld": {
       "localizations": {
         "pt-BR": {
@@ -837,6 +857,16 @@
         }
       }
     },
+    "Casinha escondida": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha escondida"
+          }
+        }
+      }
+    },
     "Casinha, passeio concluído": {
       "extractionState": "stale",
       "localizations": {
@@ -1096,6 +1126,16 @@
         }
       }
     },
+    "Escolher uma fase deste lugar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolher uma fase deste lugar"
+          }
+        }
+      }
+    },
     "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita.": {
       "extractionState": "stale",
       "localizations": {
@@ -1155,6 +1195,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Este trecho já vem desenhado: o caminho segue por ele."
+          }
+        }
+      }
+    },
+    "Fase %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fase %lld"
+          }
+        }
+      }
+    },
+    "Fase %lld · a mais difícil": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fase %lld · a mais difícil"
           }
         }
       }
@@ -1282,6 +1342,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geração cancelada. Sua partida foi mantida."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld, com a casinha escondida.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld, com a casinha escondida."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld."
           }
         }
       }
@@ -1901,6 +1981,16 @@
         }
       }
     },
+    "Onde tudo começa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onde tudo começa."
+          }
+        }
+      }
+    },
     "Osso": {
       "localizations": {
         "pt-BR": {
@@ -2514,6 +2604,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toque nela para marcar ×."
+          }
+        }
+      }
+    },
+    "Toque num lugar para escolher a fase, mesmo antes de chegar nele. Isso não muda o seu progresso.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toque num lugar para escolher a fase, mesmo antes de chegar nele. Isso não muda o seu progresso."
           }
         }
       }
