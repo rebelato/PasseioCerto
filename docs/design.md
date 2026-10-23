@@ -18,12 +18,10 @@ Um puzzle acolhedor para uma pessoa adulta que gosta de Nonogram, Sudoku e anima
 
 ## Hierarquia da partida
 
-1. Navegação e identificação da fase.
-2. Objetivo curto com o nome da cachorrinha.
-3. Tabuleiro, pistas e estados.
-4. Nota contextual/dica quando solicitada.
-5. Ferramentas Caminho / Marcar ×.
-6. Desfazer e Dica.
+1. Barra fina: voltar, nome da fase com corações (só no Desafiador) e Ajustes.
+2. Balão da Margot: objetivo curto, ou erro, dica e vitória quando houver.
+3. Tabuleiro, pistas e estados, no maior tamanho que couber sem rolagem.
+4. Barra de ícones: Desfazer · Dica · Reiniciar. Arrastar desenha; tocar alterna × (não há seletor de ferramenta).
 
 Evitar cabeçalho que roube o espaço da grade. A moldura de iPhone da ilustração não é parte da interface. Não colocar controles ou conteúdo sob a barra de status, home indicator ou teclado.
 
@@ -39,7 +37,7 @@ Som, hápticos e animação são complementos opcionais. Com Reduce Motion, a vi
 - Não exigir precisão motora para demonstrar que a pessoa entendeu a dedução.
 - Pista atendida não é selo de acerto global. × é marcação do jogador.
 - Dica explica um próximo fato; não resolve silenciosamente a fase.
-- Três corações indicam vidas por tentativa, com texto acessível e feedback de erro além da cor. Ao zerar, oferecer Tentar novamente. Sem cronômetro obrigatório, anúncios ou bloqueio por moedas.
+- No Desafiador, três corações indicam vidas, com texto acessível. Só erros visíveis custam vida, e a casa ou pista culpada pisca antes de desfazer. Ao zerar, oferecer Tentar de novo. No Tranquilo não há vidas; as vidas que sobram viram patinhas. Sem cronômetro obrigatório, anúncios ou bloqueio por moedas.
 
 ## Assets finais
 

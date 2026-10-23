@@ -12,6 +12,26 @@
         }
       }
     },
+    " Abra Jogar para acessar a recuperação.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " Abra Jogar para acessar a recuperação."
+          }
+        }
+      }
+    },
+    " As vidas acabaram.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " As vidas acabaram."
+          }
+        }
+      }
+    },
     " Esta dica considera suas marcações × como hipóteses.": {
       "extractionState": "stale",
       "localizations": {
@@ -19,6 +39,16 @@
           "stringUnit": {
             "state": "translated",
             "value": " Esta dica considera suas marcações × como hipóteses."
+          }
+        }
+      }
+    },
+    " −1 vida.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " −1 vida."
           }
         }
       }
@@ -31,6 +61,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ Linha %lld, coluna %lld: %@%@"
+          }
+        }
+      }
+    },
+    "%@ adorou: passeio perfeito!": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ adorou: passeio perfeito!"
           }
         }
       }
@@ -53,6 +93,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ chegou! Todas as pistas foram atendidas."
+          }
+        }
+      }
+    },
+    "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Arraste de %@ até a linha 1, coluna 2 para completá-la.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Arraste de %@ até a linha 1, coluna 2 para completá-la."
           }
         }
       }
@@ -123,6 +173,26 @@
         }
       }
     },
+    "%lld dias seguidos": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld dias seguidos"
+          }
+        }
+      }
+    },
+    "%lld passeios": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld passeios"
+          }
+        }
+      }
+    },
     "%lld passeios diferentes concluídos": {
       "extractionState": "stale",
       "localizations": {
@@ -130,6 +200,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld passeios diferentes concluídos"
+          }
+        }
+      }
+    },
+    "%lld patinhas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld patinhas"
+          }
+        }
+      }
+    },
+    "%lld patinhas de 3": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld patinhas de 3"
           }
         }
       }
@@ -145,6 +235,26 @@
         }
       }
     },
+    "1 dia seguido": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 dia seguido"
+          }
+        }
+      }
+    },
+    "1 passeio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 passeio"
+          }
+        }
+      }
+    },
     "1 passeio diferente concluído": {
       "extractionState": "stale",
       "localizations": {
@@ -156,12 +266,32 @@
         }
       }
     },
+    "1 patinha de 3": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 patinha de 3"
+          }
+        }
+      }
+    },
     "1 vida restante de 3": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "1 vida restante de 3"
+          }
+        }
+      }
+    },
+    "3 vidas por passeio. Erros custam uma.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 vidas por passeio. Erros custam uma."
           }
         }
       }
@@ -188,6 +318,16 @@
         }
       }
     },
+    "A coluna %lld passou do número.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A coluna %lld passou do número."
+          }
+        }
+      }
+    },
     "A linha %lld já tem todas as casas necessárias. As demais ficam fora do caminho.": {
       "extractionState": "stale",
       "localizations": {
@@ -195,6 +335,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "A linha %lld já tem todas as casas necessárias. As demais ficam fora do caminho."
+          }
+        }
+      }
+    },
+    "A linha %lld passou do número.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A linha %lld passou do número."
           }
         }
       }
@@ -221,6 +371,16 @@
         }
       }
     },
+    "A primeira linha já está completa. Toque na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A primeira linha já está completa. Toque na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho."
+          }
+        }
+      }
+    },
     "A primeira linha já está completa. Use × na linha 1, coluna 3 para lembrar que ela fica fora do caminho.": {
       "extractionState": "stale",
       "localizations": {
@@ -232,6 +392,16 @@
         }
       }
     },
+    "Agora arraste até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agora arraste até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!"
+          }
+        }
+      }
+    },
     "Agora leve %@ até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!": {
       "extractionState": "stale",
       "localizations": {
@@ -239,6 +409,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Agora leve %@ até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!"
+          }
+        }
+      }
+    },
+    "Ainda faltam pistas antes da casinha.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda faltam pistas antes da casinha."
           }
         }
       }
@@ -265,6 +445,26 @@
         }
       }
     },
+    "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."
+          }
+        }
+      }
+    },
+    "Arbusto no caminho!": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arbusto no caminho!"
+          }
+        }
+      }
+    },
     "Arestas explícitas": {
       "extractionState": "stale",
       "localizations": {
@@ -287,6 +487,16 @@
         }
       }
     },
+    "Arraste para desenhar o caminho; volte uma casa para apagar. Toque numa casa para marcar ×, e toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste para desenhar o caminho; volte uma casa para apagar. Toque numa casa para marcar ×, e toque de novo para limpar. Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
     "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto.": {
       "extractionState": "stale",
       "localizations": {
@@ -305,6 +515,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "As vidas acabaram. Tente novamente com 3 vidas."
+          }
+        }
+      }
+    },
+    "As vidas acabaram. Vamos tentar de novo?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As vidas acabaram. Vamos tentar de novo?"
           }
         }
       }
@@ -437,6 +657,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Como jogar"
+          }
+        }
+      }
+    },
+    "Concluído! Novo desafio em %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concluído! Novo desafio em %@"
           }
         }
       }
@@ -770,6 +1000,26 @@
         }
       }
     },
+    "Jogar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogar"
+          }
+        }
+      }
+    },
+    "Jogar de novo": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogar de novo"
+          }
+        }
+      }
+    },
     "Jogar novamente": {
       "extractionState": "stale",
       "localizations": {
@@ -890,6 +1140,16 @@
         }
       }
     },
+    "Modo do passeio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modo do passeio"
+          }
+        }
+      }
+    },
     "Na coluna %lld, todas as casas restantes são necessárias para completar a pista.": {
       "extractionState": "stale",
       "localizations": {
@@ -908,6 +1168,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Na linha %lld, todas as casas restantes são necessárias para completar a pista."
+          }
+        }
+      }
+    },
+    "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas."
           }
         }
       }
@@ -1088,6 +1358,16 @@
         }
       }
     },
+    "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue arrastando até a linha 2, coluna 2.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue arrastando até a linha 2, coluna 2."
+          }
+        }
+      }
+    },
     "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2.": {
       "extractionState": "stale",
       "localizations": {
@@ -1095,6 +1375,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2."
+          }
+        }
+      }
+    },
+    "O caminho não pode se cruzar.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho não pode se cruzar."
           }
         }
       }
@@ -1117,6 +1407,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Obstáculo"
+          }
+        }
+      }
+    },
+    "Para desenhar, arraste a partir da ponta do caminho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Para desenhar, arraste a partir da ponta do caminho."
           }
         }
       }
@@ -1208,6 +1508,16 @@
         }
       }
     },
+    "Pensando numa dica…": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pensando numa dica…"
+          }
+        }
+      }
+    },
     "Ponta atual do caminho.": {
       "extractionState": "stale",
       "localizations": {
@@ -1273,6 +1583,16 @@
         }
       }
     },
+    "Preparando o próximo passeio…": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparando o próximo passeio…"
+          }
+        }
+      }
+    },
     "Preparando passeio…": {
       "extractionState": "stale",
       "localizations": {
@@ -1313,6 +1633,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Próxima fase"
+          }
+        }
+      }
+    },
+    "Próximo passeio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Próximo passeio"
           }
         }
       }
@@ -1438,6 +1768,26 @@
         }
       }
     },
+    "Sem erros, o passeio vale 3 patinhas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem erros, o passeio vale 3 patinhas."
+          }
+        }
+      }
+    },
+    "Sem vidas e sem pressa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem vidas e sem pressa."
+          }
+        }
+      }
+    },
     "Seu cantinho": {
       "extractionState": "stale",
       "localizations": {
@@ -1445,6 +1795,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Seu cantinho"
+          }
+        }
+      }
+    },
+    "Seu recorde aqui é de %lld patinhas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seu recorde aqui é de %lld patinhas."
           }
         }
       }
@@ -1489,6 +1849,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tabuleiro somente para leitura"
+          }
+        }
+      }
+    },
+    "Tentar de novo": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar de novo"
           }
         }
       }
@@ -1555,6 +1925,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tranquilo"
+          }
+        }
+      }
+    },
+    "Tranquilo · termina em %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tranquilo · termina em %@"
           }
         }
       }
@@ -1665,6 +2045,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Você aprendeu! Na partida normal são 3 vidas: um caminho impossível custa uma vida; × e desfazer são livres."
+          }
+        }
+      }
+    },
+    "Você aprendeu! No modo Desafiador são 3 vidas: passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma. No Tranquilo, erre à vontade.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você aprendeu! No modo Desafiador são 3 vidas: passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma. No Tranquilo, erre à vontade."
           }
         }
       }
