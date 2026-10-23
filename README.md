@@ -26,7 +26,7 @@ Abra `PasseioCerto.xcodeproj` no Xcode e execute o esquema `PasseioCerto` em um 
 
 Testes do núcleo: `swift test`. Verificação inicial: quatro testes passaram e build para iPhone Simulator concluído. A execução e revisão visual em aparelho ainda estão pendentes.
 
-Ainda faltam validação dos gestos no aparelho, animação de chegada, arte final e integração de geração automática à tela. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
+Ainda faltam validação dos gestos no aparelho, animação de chegada, arte final, tutorial e desafio diário. O marco M1 segue em andamento; os cartões representam o escopo completo, não apenas este incremento.
 
 ## Primeiro beta
 
@@ -71,3 +71,9 @@ Formato v3 salva grade, rota, ×, histórico, vidas, preferências, posição no
 O botão Dica apresenta a primeira dedução disponível, com coordenadas, destaque na célula e na pista relacionada. Considera as marcações × como hipóteses e informa conflitos ou ausência de dedução. Não consulta o gabarito, não aplica movimentos e não consome vidas. Jogar, reiniciar ou suspender descarta dicas antigas.
 
 62 testes passando e build iOS aprovado. [Exemplo visual](docs/validation/hint-example.png) renderizado com SwiftUI no macOS; interação, rolagem e foco do VoiceOver ainda precisam de revisão no iPhone.
+
+### Geração na tela (PC-015, em revisão)
+
+Nova fase permite escolher Tranquilo ou Desafiador e pede confirmação antes de substituir a tentativa. A geração local roda fora da MainActor, mostra carregamento sem percentual inventado e oferece cancelamento. A partida atual permanece disponível se a geração for cancelada ou falhar; apenas um resultado atual substitui e salva a fase, com 3 vidas. Ao atingir o orçamento, usa uma reserva verificada do nível escolhido e informa isso na tela. Background e saída cancelam o pedido; respostas antigas são descartadas.
+
+67 testes passando e build iOS aprovado. Testes cobrem persistência, dificuldade, reserva por orçamento esgotado, falha, cancelamento, background e respostas fora de ordem. Pendente: verificar responsividade, confirmação, cancelamento e retomada em iPhone.

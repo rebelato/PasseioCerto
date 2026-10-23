@@ -15,13 +15,21 @@ import Combine
     @Published public private(set) var hint: HintAdvice?
     @Published public private(set) var hintChecking = false
     private var hintWorker: Task<HintAdvice, Never>?
+    @Published public private(set) var generating = false
+    private var generationWorker: Task<GenerationReport, Error>?
+    public typealias GenerationService = @Sendable (UInt64, PuzzleDifficulty) async throws -> GenerationReport
+    private let generate: GenerationService
     private var revision = 0
     private var worker: Task<MoveAssessment, Never>?
     private let saveURL: URL?
     private let nodeLimit: Int
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
-    public var canInteract: Bool { !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
-    public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, nodeLimit: Int = 100_000) {
+    public var canInteract: Bool { !generating && !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
+    public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, nodeLimit: Int = 100_000,
+                generate: @escaping GenerationService = { seed, difficulty in
+                    await PuzzleGenerator.generateAsync(seed: seed, difficulty: difficulty)
+                }) {
+        self.generate = generate
         self.attempt = attempt; self.saveURL = saveURL; self.nodeLimit = nodeLimit
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do {
@@ -43,6 +51,7 @@ import Combine
     }
     public func move(to cell: Cell?) { guard !checking else { return }; stroke?.move(to: cell) }
     public func cancel() {
+        generationWorker?.cancel(); generationWorker = nil; generating = false
         revision += 1; worker?.cancel(); worker = nil; stroke = nil; checking = false
         hintWorker?.cancel(); hintWorker = nil; hint = nil; hintChecking = false
     }
@@ -80,7 +89,7 @@ import Combine
         begin(at: cell, marking: marking); await finish()
     }
     public func undo() {
-        guard !checking, !hintChecking, stroke == nil, !attempt.defeated, attempt.game.canUndo else { return }
+        guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, attempt.game.canUndo else { return }
         hint = nil
         attempt.game.undo(); message = "Última ação desfeita. Vidas perdidas não são recuperadas."; save()
     }
@@ -90,6 +99,41 @@ import Combine
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
+    }
+    /// Keep the current attempt until a complete replacement is ready.
+    public func newPuzzle(difficulty: PuzzleDifficulty, seed: UInt64 = UInt64.random(in: .min ... .max)) async {
+        cancel()
+        generating = true
+        let token = revision
+        let service = generate
+        let task = Task.detached(priority: .userInitiated) { try await service(seed, difficulty) }
+        generationWorker = task
+        do {
+            let report = try await withTaskCancellationHandler { try await task.value } onCancel: { task.cancel() }
+            guard token == revision else { return }
+            generating = false; generationWorker = nil
+            guard !Task.isCancelled, !task.isCancelled, report.outcome != .cancelled else {
+                message = "Geração cancelada. Sua partida foi mantida."; return
+            }
+            guard let puzzle = report.puzzle else {
+                message = "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."; return
+            }
+            attempt = GameAttempt(game: Game(puzzle: puzzle))
+            message = report.outcome == .fallback
+                ? "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas."
+                : "Novo passeio preparado! Você tem 3 vidas para levar a Margot até a casinha."
+            save()
+        } catch {
+            guard token == revision else { return }
+            generating = false; generationWorker = nil
+            message = Task.isCancelled || task.isCancelled || error is CancellationError
+                ? "Geração cancelada. Sua partida foi mantida."
+                : "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."
+        }
+    }
+    public func cancelGeneration() {
+        guard generating else { return }
+        cancel(); message = "Geração cancelada. Sua partida foi mantida."
     }
     public func requestHint() async {
         guard canInteract, stroke == nil else { return }
@@ -106,11 +150,11 @@ import Combine
     }
     public func dismissHint() { hint = nil }
     public func setMarking(_ value: Bool) {
-        guard !checking, !hintChecking, stroke == nil else { return }
+        guard !generating, !checking, !hintChecking, stroke == nil else { return }
         preferences.marking = value; save()
     }
     public func setPreferences(_ value: PlayerPreferences) {
-        guard !checking, !hintChecking, stroke == nil else { return }
+        guard !generating, !checking, !hintChecking, stroke == nil else { return }
         preferences = value; save()
     }
     public func setTutorialStep(_ step: Int) {

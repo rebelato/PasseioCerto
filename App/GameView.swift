@@ -11,6 +11,8 @@ struct GameView: View {
     @AccessibilityFocusState private var hintFocused: Bool
     @State private var recovery = false
     @State private var reset = false
+    @State private var newPuzzle = false
+    @State private var difficulty = PuzzleDifficulty.relaxed
     @ScaledMetric(relativeTo: .headline) private var cellMinimum: CGFloat = 48
     private var displayedGame: Game { session.displayedGame }
     private let green = GardenTheme.accent
@@ -20,7 +22,7 @@ struct GameView: View {
         ScrollView {
             VStack(spacing: GardenTheme.spacing) {
                 Text("Passeio Certo").font(GardenTheme.title).foregroundStyle(GardenTheme.ink)
-                Text("Praça das Flores · Fase 1").font(.subheadline)
+                Text("Praça das Flores · 5 × 5").font(.subheadline)
                 HStack(spacing: 10) {
                     ForEach(0..<3) { index in
                         Image(systemName: index < session.attempt.lives ? "heart.fill" : "heart")
@@ -54,6 +56,11 @@ struct GameView: View {
                             .buttonStyle(GardenButtonStyle())
                     }
                 }
+                if session.generating {
+                    ProgressView("Preparando novo passeio…")
+                    Button("Cancelar geração", systemImage: "xmark.circle") { session.cancelGeneration() }
+                        .buttonStyle(GardenButtonStyle())
+                }
                 if session.hintChecking { ProgressView("Preparando dica…") }
                 if session.checking { ProgressView("Verificando jogada…") }
                 if let error = session.storageError {
@@ -70,22 +77,35 @@ struct GameView: View {
                     Button("Tentar novamente", systemImage: "arrow.clockwise") { session.restart() }
                         .buttonStyle(GardenButtonStyle())
                 }
-                GardenTools(marking: markingBinding).disabled(session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                GardenTools(marking: markingBinding).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
                 HStack {
                     Button("Desfazer", systemImage: "arrow.uturn.backward") { session.undo() }.disabled(!game.canUndo)
                     Button("Dica", systemImage: "lightbulb") {
                         Task { await session.requestHint() }
                     }.disabled(!session.canInteract)
-                }.buttonStyle(GardenButtonStyle()).disabled(session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
                 HStack {
                     Button("Reiniciar", systemImage: "arrow.clockwise") { reset = true }
-                }.buttonStyle(GardenButtonStyle()).disabled(session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                Picker("Dificuldade da próxima fase", selection: $difficulty) {
+                    ForEach(PuzzleDifficulty.allCases, id: \.self) { level in
+                        Text(level.title).tag(level)
+                    }
+                }.pickerStyle(.segmented).disabled(session.generating)
+                Button("Nova fase", systemImage: "sparkles") { newPuzzle = true }
+                    .buttonStyle(GardenButtonStyle())
+                    .disabled(session.generating || session.checking || session.hintChecking || session.stroke != nil)
                 Text("Arraste ou toque nas casas vizinhas. Volte uma casa para apagar. Para rolar, arraste pelas pistas ou fora da grade.").font(.footnote).foregroundStyle(.secondary)
             }.padding(GardenTheme.spacing).frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)
         }.background(GardenTheme.background).foregroundStyle(GardenTheme.ink).tint(green)
             .confirmationDialog("Reiniciar esta fase?", isPresented: $reset, titleVisibility: .visible) {
                 Button("Reiniciar", role: .destructive) { session.restart() }
+            }
+        }
+        .confirmationDialog("Começar uma nova fase? A tentativa atual será substituída quando a nova fase estiver pronta.", isPresented: $newPuzzle, titleVisibility: .visible) {
+            Button("Gerar fase · \(difficulty.title)") {
+                Task { await session.newPuzzle(difficulty: difficulty) }
             }
         }
         .confirmationDialog("Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente.", isPresented: $recovery, titleVisibility: .visible) {
