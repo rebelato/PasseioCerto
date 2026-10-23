@@ -83,3 +83,11 @@ Nova fase permite escolher Tranquilo ou Desafiador e pede confirmação antes de
 Após vitória validada, Margot percorre em dois segundos os segmentos da rota congelada. A conclusão é salva antes da animação; pular, suspender ou reabrir não repete o registro. Reduzir Movimento mostra diretamente o estado de chegada. A conclusão oferece próxima fase, jogar novamente e voltar a uma tela inicial simples (a tela completa segue na PC-018). Desfazer fica indisponível após vitória; jogar novamente inicia uma tentativa limpa da mesma fase.
 
 68 testes passaram e build iOS aprovado. [Estado final do tabuleiro](docs/validation/arrival-example.png) renderizado em SwiftUI no macOS. Pendente no iPhone: fluidez, pular, Reduce Motion, VoiceOver e navegação. A arte da Margot ainda é provisória (PC-022).
+
+### Tutorial jogável (PC-017, em revisão)
+
+Primeiro passeio usa uma grade fixa 3×3 e seis momentos: contagem incluindo endpoints, caminho ortogonal, ×, desfazer, dica real e chegada. Cada ação avança o checkpoint salvo. O exercício usa Game, HintProvider e o validador normal, sem alterar a tentativa ou registrar recompensas. Ao retornar a um checkpoint, o pequeno exercício é reconstruído; passos já concluídos não são repetidos.
+
+Abre automaticamente enquanto não concluído/pulado; Continuar depois mantém o progresso, Pular vai ao passeio normal e Ajustes permite continuar ou repetir. Todos os passos funcionam por toque e ação de acessibilidade, sem exigir arraste; layout usa texto escalável e rolagem.
+
+71 testes passaram e build iOS aprovado. [Primeiro passo renderizado em SwiftUI no macOS](docs/validation/tutorial-example.png). Pendente no iPhone: fluxo da apresentação, toque, foco VoiceOver e Dynamic Type.

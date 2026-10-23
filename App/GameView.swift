@@ -6,6 +6,8 @@ struct GameView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var arrivalProgress = 0.0
     @State private var showingHome = false
+    @State private var showingLearning = false
+    @State private var tutorialRequested = false
     @AccessibilityFocusState private var victoryFocused: Bool
     @Environment(\.scenePhase) private var scenePhase
     private var marking: Bool { session.preferences.marking }
@@ -36,6 +38,9 @@ struct GameView: View {
         ScrollView {
             VStack(spacing: GardenTheme.spacing) {
                 Text("Passeio Certo").font(GardenTheme.title).foregroundStyle(GardenTheme.ink)
+                Button("Ajustes", systemImage: "gearshape") {
+                    session.suspend(); tutorialRequested = false; showingLearning = true
+                }.buttonStyle(GardenButtonStyle())
                 Text("Praça das Flores · 5 × 5").font(.subheadline)
                 HStack(spacing: 10) {
                     ForEach(0..<3) { index in
@@ -140,6 +145,28 @@ struct GameView: View {
         }
         }
         }
+        .task {
+            if session.tutorialStep < TutorialSession.completedStep {
+                tutorialRequested = true; showingLearning = true
+            }
+        }
+        .sheet(isPresented: $showingLearning) {
+            if tutorialRequested {
+                TutorialView(step: session.tutorialStep,
+                    onProgress: { session.setTutorialStep($0) },
+                    onClose: { showingLearning = false })
+            } else {
+                VStack(spacing: 24) {
+                    Text("Ajustes").font(GardenTheme.title)
+                    Button(session.tutorialStep < TutorialSession.completedStep ? "Continuar tutorial" : "Repetir tutorial") {
+                        if session.tutorialStep >= TutorialSession.completedStep { session.setTutorialStep(0) }
+                        tutorialRequested = true
+                    }.buttonStyle(GardenButtonStyle())
+                    Button("Fechar") { showingLearning = false }.buttonStyle(GardenButtonStyle())
+                }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(GardenTheme.background)
+            }
+        }
         .task(id: session.celebrating) {
             guard session.celebrating else { arrivalProgress = 0; return }
             if reduceMotion { session.finishCelebration(); return }
@@ -173,5 +200,55 @@ struct GameView: View {
     }
     private func select(_ cell: Cell) {
         Task { await session.select(cell, marking: marking) }
+    }
+}
+
+
+private struct TutorialView: View {
+    @StateObject private var lesson: TutorialSession
+    let onProgress: (Int) -> Void
+    let onClose: () -> Void
+    @ScaledMetric(relativeTo: .headline) private var side: CGFloat = 60
+    @AccessibilityFocusState private var instructionFocused: Bool
+    init(step: Int, onProgress: @escaping (Int) -> Void, onClose: @escaping () -> Void) {
+        _lesson = StateObject(wrappedValue: TutorialSession(step: step))
+        self.onProgress = onProgress; self.onClose = onClose
+    }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 16) {
+                Text("Primeiro passeio").font(GardenTheme.title)
+                Text(lesson.step < TutorialSession.completedStep ? "Passo \(lesson.step+1) de 6" : "Tudo pronto!").font(.subheadline)
+                GardenNote(text: lesson.instruction, symbol: "pawprint")
+                    .accessibilityFocused($instructionFocused)
+                ScrollView(.horizontal) {
+                    PuzzleBoard(game: lesson.game, cellSide: side,
+                        arrivalProgress: lesson.game.won ? 1 : 0,
+                        highlighted: lesson.target.map { Set([$0]) } ?? [],
+                        onSelect: { lesson.select($0) },
+                        onStrokeStart: { lesson.select($0) })
+                }.frame(height: side*4)
+                if let feedback = lesson.feedback { GardenNote(text: feedback, symbol: "info.circle") }
+                if let hint = lesson.hint { GardenNote(text: hint.text, symbol: "lightbulb") }
+                if lesson.step == 2 { Text("Ferramenta × selecionada para este exercício.").font(.footnote) }
+                if lesson.step == 3 {
+                    Button("Desfazer", systemImage: "arrow.uturn.backward") { lesson.undo() }
+                }
+                if lesson.step == 4 {
+                    Button("Dica", systemImage: "lightbulb") { lesson.requestHint() }
+                }
+                if lesson.step == TutorialSession.completedStep {
+                    Button("Ir para meu passeio", systemImage: "pawprint") { onClose() }
+                } else {
+                    Button("Continuar depois") { onClose() }
+                    Button("Pular tutorial") {
+                        onProgress(TutorialSession.completedStep); onClose()
+                    }
+                }
+            }.buttonStyle(GardenButtonStyle()).padding(20).frame(maxWidth: 420).frame(maxWidth: .infinity)
+        }.background(GardenTheme.background).foregroundStyle(GardenTheme.ink)
+            .interactiveDismissDisabled()
+            .onChange(of: lesson.step) { _, step in onProgress(step); instructionFocused = true }
+            .onAppear { instructionFocused = true }
     }
 }
