@@ -5,7 +5,7 @@ import Combine
     @Published public private(set) var attempt: GameAttempt
     @Published public private(set) var stroke: GameStroke?
     @Published public private(set) var checking = false
-    @Published public private(set) var message = "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres."
+    @Published public private(set) var message = String(localized: "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres.")
     @Published public private(set) var storageError: String?
     @Published public private(set) var preferences = PlayerPreferences()
     @Published public private(set) var tutorialStep = 0
@@ -33,7 +33,7 @@ import Combine
     public func renameDog(_ name: String) {
         guard !generating, !checking, !hintChecking, stroke == nil else { return }
         preferences.dogName = PlayerPreferences.normalizedName(name)
-        message = "Nome salvo: \(dogName)."; save()
+        message = String(localized: "Nome salvo: \(dogName)."); save()
     }
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
     public var canInteract: Bool { !generating && !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
@@ -46,12 +46,12 @@ import Combine
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do {
                 apply(try SaveStore(url: saveURL).load())
-                message = self.attempt.defeated ? "As vidas acabaram. Tente novamente com 3 vidas." : self.attempt.game.won ? "\(dogName) chegou! Partida concluída." : "Partida restaurada. Continue de onde parou."
+                message = self.attempt.defeated ? String(localized: "As vidas acabaram. Tente novamente com 3 vidas.") : self.attempt.game.won ? String(localized: "\(dogName) chegou! Partida concluída.") : String(localized: "Partida restaurada. Continue de onde parou.")
             }
             catch {
                 unreadableSave = true
                 backupAvailable = (try? SaveStore(url: saveURL).loadBackup()) != nil
-                storageError = "Não foi possível recuperar a partida salva. O arquivo original foi preservado."
+                storageError = String(localized: "Não foi possível recuperar a partida salva. O arquivo original foi preservado.")
             }
         }
     }
@@ -91,15 +91,15 @@ import Combine
             if attempt.game.path != before.path || attempt.game.marks != before.marks {
                 feedback = GameFeedback(attempt.game.won ? .victory : .action)
             }
-            message = attempt.game.won ? "\(dogName) chegou! Todas as pistas foram atendidas." : "Continue seguindo as pistas."
+            message = attempt.game.won ? String(localized: "\(dogName) chegou! Todas as pistas foram atendidas.") : String(localized: "Continue seguindo as pistas.")
             save()
         case .penalty:
             feedback = GameFeedback(.conflict)
             attempt.lives = max(0, attempt.lives-1)
-            message = attempt.defeated ? "As vidas acabaram. Tente novamente com 3 vidas." : "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita."
+            message = attempt.defeated ? String(localized: "As vidas acabaram. Tente novamente com 3 vidas.") : String(localized: "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita.")
             save()
-        case .inconclusive: message = "Não foi possível verificar a jogada agora. Ela foi desfeita sem perder vida."
-        case .cancelled: message = "Jogada cancelada sem perder vida."
+        case .inconclusive: message = String(localized: "Não foi possível verificar a jogada agora. Ela foi desfeita sem perder vida.")
+        case .cancelled: message = String(localized: "Jogada cancelada sem perder vida.")
         }
     }
     public func select(_ cell: Cell, marking: Bool) async {
@@ -109,11 +109,11 @@ import Combine
     public func undo() {
         guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
         hint = nil
-        attempt.game.undo(); feedback = GameFeedback(.action); message = "Última ação desfeita. Vidas perdidas não são recuperadas."; save()
+        attempt.game.undo(); feedback = GameFeedback(.action); message = String(localized: "Última ação desfeita. Vidas perdidas não são recuperadas."); save()
     }
     public func restart() {
         cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle))
-        message = "Nova tentativa: 3 vidas para levar \(dogName) até a casinha."; save()
+        message = String(localized: "Nova tentativa: 3 vidas para levar \(dogName) até a casinha."); save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); parkCurrent(); activeDailyID = nil
@@ -126,14 +126,14 @@ import Combine
     public func continueNormal() {
         guard activeDailyID != nil, let normal = parkedAttempts["normal"] else { return }
         cancel(); parkCurrent(); activeDailyID = nil; attempt = normal
-        message = "Passeio retomado. Continue de onde parou."; save()
+        message = String(localized: "Passeio retomado. Continue de onde parou."); save()
     }
     public func openDaily(date: Date = Date()) async {
         let daily = DailyChallenge(date: date)
         if activeDailyID == daily.id { cancel(); return }
         if let saved = parkedAttempts[daily.id] {
             cancel(); parkCurrent(); activeDailyID = daily.id; attempt = saved
-            message = saved.game.won ? "Desafio diário já concluído!" : "Desafio diário retomado."; save()
+            message = saved.game.won ? String(localized: "Desafio diário já concluído!") : String(localized: "Desafio diário retomado."); save()
             return
         }
         await generatePuzzle(difficulty: .relaxed, seed: daily.seed, dailyID: daily.id)
@@ -151,10 +151,10 @@ import Combine
             guard token == revision else { return }
             generating = false; generationWorker = nil
             guard !Task.isCancelled, !task.isCancelled, report.outcome != .cancelled else {
-                message = "Geração cancelada. Sua partida foi mantida."; return
+                message = String(localized: "Geração cancelada. Sua partida foi mantida."); return
             }
             guard let puzzle = report.puzzle else {
-                message = "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."; return
+                message = String(localized: "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."); return
             }
             let destination: Puzzle
             if let dailyID {
@@ -164,20 +164,20 @@ import Combine
             parkCurrent(); activeDailyID = dailyID
             attempt = GameAttempt(game: Game(puzzle: destination))
             message = report.outcome == .fallback
-                ? "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas."
-                : "Novo passeio preparado! Você tem 3 vidas para levar \(dogName) até a casinha."
+                ? String(localized: "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas.")
+                : String(localized: "Novo passeio preparado! Você tem 3 vidas para levar \(dogName) até a casinha.")
             save()
         } catch {
             guard token == revision else { return }
             generating = false; generationWorker = nil
             message = Task.isCancelled || task.isCancelled || error is CancellationError
-                ? "Geração cancelada. Sua partida foi mantida."
-                : "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."
+                ? String(localized: "Geração cancelada. Sua partida foi mantida.")
+                : String(localized: "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente.")
         }
     }
     public func cancelGeneration() {
         guard generating else { return }
-        cancel(); message = "Geração cancelada. Sua partida foi mantida."
+        cancel(); message = String(localized: "Geração cancelada. Sua partida foi mantida.")
     }
     public func requestHint() async {
         guard canInteract, stroke == nil else { return }
@@ -215,8 +215,8 @@ import Combine
             let recovered = try store.loadBackup()
             try store.recover(recovered)
             apply(recovered); unreadableSave = false; storageError = nil; backupAvailable = false
-            message = "Cópia anterior recuperada. O arquivo substituído foi preservado."
-        } catch { storageError = "Não foi possível recuperar a cópia anterior. Os arquivos foram preservados." }
+            message = String(localized: "Cópia anterior recuperada. O arquivo substituído foi preservado.")
+        } catch { storageError = String(localized: "Não foi possível recuperar a cópia anterior. Os arquivos foram preservados.") }
     }
     public func preserveOriginalAndSaveCurrent() {
         guard let saveURL else { return }
@@ -224,8 +224,8 @@ import Combine
         do {
             try SaveStore(url: saveURL).recover(snapshot)
             unreadableSave = false; storageError = nil; backupAvailable = false
-            message = "Partida atual salva. O arquivo original foi preservado separadamente."
-        } catch { storageError = "Não foi possível salvar a recuperação. O arquivo original foi preservado." }
+            message = String(localized: "Partida atual salva. O arquivo original foi preservado separadamente.")
+        } catch { storageError = String(localized: "Não foi possível salvar a recuperação. O arquivo original foi preservado.") }
     }
     private var snapshot: PlayerSave {
         PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts)
@@ -241,6 +241,6 @@ import Combine
         do {
             try SaveStore(url: saveURL).save(snapshot)
             storageError = nil
-        } catch { storageError = "Não foi possível salvar. Você pode tentar novamente; a última gravação válida foi preservada." }
+        } catch { storageError = String(localized: "Não foi possível salvar. Você pode tentar novamente; a última gravação válida foi preservada.") }
     }
 }

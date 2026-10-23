@@ -1,0 +1,14 @@
+{
+  "claro": {
+    "texto/superficie": 11.63,
+    "texto/nota": 9.75,
+    "secundario/superficie": 5.72,
+    "borda/superficie": 3.15
+  },
+  "escuro": {
+    "texto/superficie": 11.71,
+    "texto/nota": 8.68,
+    "secundario/superficie": 7.6,
+    "borda/superficie": 4.06
+  }
+}

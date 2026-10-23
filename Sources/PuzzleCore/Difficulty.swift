@@ -1,6 +1,7 @@
+import Foundation
 public enum PuzzleDifficulty: String, Codable, CaseIterable, Sendable {
     case relaxed, challenging
-    public var title: String { self == .relaxed ? "Tranquilo" : "Desafiador" }
+    public var title: String { self == .relaxed ? String(localized: "Tranquilo") : String(localized: "Desafiador") }
 }
 public struct DifficultyAssessment: Codable, Equatable, Sendable {
     public let version: Int

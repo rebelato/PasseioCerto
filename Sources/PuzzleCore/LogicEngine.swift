@@ -1,3 +1,4 @@
+import Foundation
 public struct Deduction: Equatable, Sendable {
     public enum Action: Equatable, Sendable { case required(Cell), excluded(Cell), extend(Cell) }
     public enum Reason: Equatable, Sendable {
@@ -8,12 +9,12 @@ public struct Deduction: Equatable, Sendable {
     public let reason: Reason
     public var explanation: String {
         switch reason {
-        case .rowComplete(let r): return "A linha \(r+1) já tem todas as casas necessárias. As demais ficam fora do caminho."
-        case .columnComplete(let c): return "A coluna \(c+1) já tem todas as casas necessárias. As demais ficam fora do caminho."
-        case .rowRemaining(let r): return "Na linha \(r+1), todas as casas restantes são necessárias para completar a pista."
-        case .columnRemaining(let c): return "Na coluna \(c+1), todas as casas restantes são necessárias para completar a pista."
-        case .unreachable: return "Esta casa não pode ser alcançada a partir da ponta sem atravessar casas excluídas ou repetir o caminho."
-        case .onlyContinuation: return "A ponta do caminho tem apenas uma casa vizinha disponível para continuar."
+        case .rowComplete(let r): return String(localized: "A linha \(r+1) já tem todas as casas necessárias. As demais ficam fora do caminho.")
+        case .columnComplete(let c): return String(localized: "A coluna \(c+1) já tem todas as casas necessárias. As demais ficam fora do caminho.")
+        case .rowRemaining(let r): return String(localized: "Na linha \(r+1), todas as casas restantes são necessárias para completar a pista.")
+        case .columnRemaining(let c): return String(localized: "Na coluna \(c+1), todas as casas restantes são necessárias para completar a pista.")
+        case .unreachable: return String(localized: "Esta casa não pode ser alcançada a partir da ponta sem atravessar casas excluídas ou repetir o caminho.")
+        case .onlyContinuation: return String(localized: "A ponta do caminho tem apenas uma casa vizinha disponível para continuar.")
         }
     }
 }
@@ -42,7 +43,7 @@ public enum LogicEngine {
         while true {
             switch RouteValidator.evaluate(puzzle: puzzle, path: path, marks: marks) {
             case .complete: return result(.solved)
-            case .contradiction: return result(.contradiction("O caminho ou as marcações violam uma regra. Revise o estado atual ou use Desfazer."))
+            case .contradiction: return result(.contradiction(String(localized: "O caminho ou as marcações violam uma regra. Revise o estado atual ou use Desfazer.")))
             case .incomplete: break
             }
             let before = deductions.count
@@ -53,7 +54,7 @@ public enum LogicEngine {
                     let known = cells.filter { required.contains($0) }.count
                     let available = cells.filter { !excluded.contains($0) }
                     guard known <= clues[index], available.count >= clues[index] else {
-                        return result(.contradiction("A \(axis == 0 ? "linha" : "coluna") \(index+1) não consegue atender à pista com o caminho e as marcações atuais."))
+                        return result(.contradiction(String(localized: "A \(axis == 0 ? ")linha" : "colunaString(localized: ") \(index+1) não consegue atender à pista com o caminho e as marcações atuais.")))
                     }
                     if known == clues[index] {
                         for cell in available where !required.contains(cell) {
@@ -79,14 +80,14 @@ public enum LogicEngine {
                 }
             }
             guard required.subtracting(Set(path)).isSubset(of: reachable) else {
-                return result(.contradiction("Uma casa obrigatória ou a casinha ficou sem ligação possível com a ponta do caminho. Revise as marcações ou desfaça um trecho."))
+                return result(.contradiction(String(localized: "Uma casa obrigatória ou a casinha ficou sem ligação possível com a ponta do caminho. Revise as marcações ou desfaça um trecho.")))
             }
             for cell in all where !required.contains(cell) && !excluded.contains(cell) && !reachable.contains(cell) {
                 excluded.insert(cell)
                 deductions.append(Deduction(action: .excluded(cell), reason: .unreachable))
             }
             let next = neighbors(tip).filter { !excluded.contains($0) && !path.contains($0) }
-            if next.isEmpty { return result(.contradiction("A ponta do caminho ficou sem saída antes da casinha.")) }
+            if next.isEmpty { return result(.contradiction(String(localized: "A ponta do caminho ficou sem saída antes da casinha."))) }
             if next.count == 1 {
                 path.append(next[0]); required.insert(next[0])
                 deductions.append(Deduction(action: .extend(next[0]), reason: .onlyContinuation))

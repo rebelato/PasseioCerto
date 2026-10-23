@@ -117,3 +117,15 @@ Ajustes oferece controles independentes e persistentes de Sons e Feedback tátil
 No iOS, tons PCM originais curtos e de baixo volume são reproduzidos sem sobreposição. A sessão usa [AVAudioSession ambient](https://developer.apple.com/documentation/avfaudio/avaudiosession/category-swift.struct/ambient), configurada para misturar com áudio externo e respeitar o modo silencioso. Sons param ao desativar a opção, abrir Ajustes, voltar ao início ou sair da atividade. Feedback tátil usa impacto suave, aviso e sucesso; ausência de hardware não impede jogar.
 
 83 testes passaram e build iOS aprovado. Cobertura de eventos por gesto, cancelamento, conflito, vitória sem repetição, preferências restauradas e mensagens preservadas com opções desligadas. Pendente em iPhone: volume, vibração, silencioso, fones, interrupção por chamada, música externa, VoiceOver e interface dos ajustes.
+
+### Acessibilidade e português (PC-021, em revisão)
+
+VoiceOver recebe coordenadas, estado, contagens de linha/coluna, ponta atual e conexões reais da rota. Ações nomeadas permitem desenhar ou alternar × sem trocar a ferramenta; tabuleiro bloqueado fica somente para leitura. A leitura segue pistas de coluna e linhas em ordem. Fechar dica devolve foco ao botão Dica. A ferramenta selecionada tem checkmark além da cor.
+
+Em tamanhos de acessibilidade, ferramentas ficam empilhadas e dificuldade usa menu. Botões permitem múltiplas linhas; células continuam com tamanho escalável e rolagem. Reduzir Movimento mantém o comportamento da PC-016.
+
+O String Catalog `App/Localizable.xcstrings` tem português brasileiro, com língua-fonte `pt` compatível com o projeto existente. Mensagens do núcleo usam String(localized:). Para atualizar chaves, faça build com SWIFT_EMIT_LOC_STRINGS=YES e execute `python3 scripts/update-localizations.py <pasta Objects-normal/arm64>`. O script preserva traduções existentes.
+
+86 testes passaram e build iOS aprovado, incluindo compilação do catálogo no bundle. [Claro](docs/validation/accessibility-light.png) e [escuro](docs/validation/accessibility-dark.png) foram renderizados no macOS em largura de 320 pt; não são capturas de iPhone. [Contrastes calculados](docs/validation/accessibility-contrast.json) verificam pares de cores explícitos do tema; não cobrem todas as cores dinâmicas do sistema.
+
+**Pendente em iPhone pequeno/grande:** navegação completa por VoiceOver, foco de dica/vitória, Dynamic Type máximo, teclado/safe areas, rolagem do tabuleiro, Reduzir Movimento e interrupções. O simulador não pôde ser executado neste ambiente; build e snapshots estáticos não substituem essa revisão.

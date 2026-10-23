@@ -4,6 +4,9 @@ import SwiftUI
 struct PuzzleBoard: View {
     let game: Game
     let cellSide: CGFloat
+    var marking = false
+    var interactionsEnabled = true
+    var onSelectMode: ((Cell, Bool) -> Void)?
     var dogName = "Margot"
     var arrivalProgress: Double = 0
     var highlighted: Set<Cell> = []
@@ -23,16 +26,18 @@ struct PuzzleBoard: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             ForEach(game.columns.indices, id: \.self) { col in
-                GardenClue(target: game.columns[col], count: game.columnCounts[col], label: "Coluna \(col+1)")
+                GardenClue(target: game.columns[col], count: game.columnCounts[col], label: String(localized: "Coluna \(col+1)"))
                     .overlay { if highlightedColumn == col { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.accent, lineWidth: 3) } }
                     .padding(2).frame(width: cellSide, height: cellSide)
                     .offset(x: CGFloat(col+1)*cellSide)
+                    .accessibilitySortPriority(Double(1000-col))
             }
             ForEach(game.rows.indices, id: \.self) { row in
-                GardenClue(target: game.rows[row], count: game.rowCounts[row], label: "Linha \(row+1)")
+                GardenClue(target: game.rows[row], count: game.rowCounts[row], label: String(localized: "Linha \(row+1)"))
                     .overlay { if highlightedRow == row { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.accent, lineWidth: 3) } }
                     .padding(2).frame(width: cellSide, height: cellSide)
                     .offset(y: CGFloat(row+1)*cellSide)
+                    .accessibilitySortPriority(Double((game.rows.count-row)*(game.columns.count+1)+1))
             }
             ForEach(cells, id: \.self) { cell in
                 GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
@@ -40,13 +45,21 @@ struct PuzzleBoard: View {
                         .padding(2).contentShape(Rectangle())
                     .frame(width: cellSide, height: cellSide)
                     .highPriorityGesture(stroke(start: cell))
-                    .accessibilityAddTraits(.isButton)
-                    .accessibilityAction { onSelect(cell) }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityAddTraits(interactionsEnabled ? .isButton : [])
+                    .accessibilityAction { if interactionsEnabled { onSelect(cell) } }
+                    .accessibilityActions {
+                        if interactionsEnabled, !game.puzzle.obstacles.contains(cell), let onSelectMode {
+                            Button(String(localized: "Desenhar caminho")) { onSelectMode(cell, false) }
+                            Button(String(localized: "Alternar marcação ×")) { onSelectMode(cell, true) }
+                        }
+                    }
+                    .accessibilitySortPriority(Double((game.rows.count-cell.row)*(game.columns.count+1)-cell.col))
                     .offset(x: CGFloat(cell.col+1)*cellSide, y: CGFloat(cell.row+1)*cellSide)
                     .accessibilityIdentifier("cell-\(cell.row)-\(cell.col)")
-                    .accessibilityLabel("Linha \(cell.row+1), coluna \(cell.col+1)")
-                    .accessibilityValue(accessibleState(cell))
-                    .accessibilityHint(game.puzzle.obstacles.contains(cell) ? "Não pode fazer parte do caminho" : "Ativa a ferramenta selecionada nesta casa")
+                    .accessibilityLabel(BoardAccessibility.label(cell))
+                    .accessibilityValue(BoardAccessibility.value(game: game, cell: cell, dogName: dogName, highlighted: highlighted.contains(cell)))
+                    .accessibilityHint(!interactionsEnabled ? String(localized: "Tabuleiro somente para leitura") : game.puzzle.obstacles.contains(cell) ? String(localized: "Não pode fazer parte do caminho") : marking ? String(localized: "Toque duas vezes para alternar a marcação xis") : String(localized: "Toque duas vezes para continuar ou recuar o caminho"))
             }
             Path { p in
                 for (index, cell) in game.path.enumerated() {
@@ -86,16 +99,7 @@ struct PuzzleBoard: View {
                 if strokeStarted { strokeStarted = false; onStrokeEnd(false) }
             }
     }
-    private func accessibleState(_ cell: Cell) -> String {
-        let state: String
-        if cell == game.start { state = game.won ? "Início do caminho concluído" : "\(dogName), início do caminho" }
-        else if cell == game.goal { state = game.won ? "Casinha, destino de \(dogName), passeio concluído" : game.path.last == cell ? "Casinha, caminho conectado" : "Casinha, ainda não conectada" }
-        else if game.puzzle.obstacles.contains(cell) { state = "Obstáculo" }
-        else if game.path.contains(cell) { state = "Caminho" }
-        else if game.marks.contains(cell) { state = "Marcada com xis" }
-        else { state = "Livre" }
-        return highlighted.contains(cell) ? state + ", destacada pela dica" : state
-    }
+
 }
 
 /// Fixed inputs for visual checks; no network, generation or reference-solution lookup at runtime.
@@ -115,11 +119,11 @@ enum BoardSamples {
 struct BoardPreviews: PreviewProvider {
     static var previews: some View {
         Group {
-            PuzzleBoard(game: BoardSamples.partial, cellSide: 48).previewDisplayName("Parcial · 288 pt")
-            PuzzleBoard(game: BoardSamples.touching, cellSide: 60).previewDisplayName("Arestas explícitas")
-            PuzzleBoard(game: Game(puzzle: try! PuzzleFixtures.perimeter.makePuzzle()), cellSide: 48).previewDisplayName("Obstáculo")
+            PuzzleBoard(game: BoardSamples.partial, cellSide: 48).previewDisplayName(String(localized: "Parcial · 288 pt"))
+            PuzzleBoard(game: BoardSamples.touching, cellSide: 60).previewDisplayName(String(localized: "Arestas explícitas"))
+            PuzzleBoard(game: Game(puzzle: try! PuzzleFixtures.perimeter.makePuzzle()), cellSide: 48).previewDisplayName(String(localized: "Obstáculo"))
             PuzzleBoard(game: BoardSamples.partial, cellSide: 72, highlighted: [Cell(2,3)])
-                .environment(\.dynamicTypeSize, .accessibility2).previewDisplayName("Texto ampliado")
+                .environment(\.dynamicTypeSize, .accessibility2).previewDisplayName(String(localized: "Texto ampliado"))
         }.padding(12).background(GardenTheme.background)
     }
 }

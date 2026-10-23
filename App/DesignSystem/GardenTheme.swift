@@ -43,6 +43,7 @@ struct GardenButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var enabled
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.font(GardenTheme.heading)
+            .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, minHeight: GardenTheme.minTarget)
             .padding(.horizontal, 12).padding(.vertical, 4)
             .foregroundStyle(enabled ? GardenTheme.ink : GardenTheme.secondary)
@@ -67,7 +68,7 @@ struct GardenClue: View {
                         in: RoundedRectangle(cornerRadius: GardenTheme.cellRadius))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(label)
-            .accessibilityValue("\(count) de \(target) casas ocupadas. \(count > target ? "Pista excedida" : count == target ? "Contagem atingida" : "Pendente")")
+            .accessibilityValue(String(localized: "\(count) de \(target) casas ocupadas. \(count > target ? "Pista excedida" : count == target ? "Contagem atingida" : "Pendente")"))
     }
 }
 struct GardenNote: View {
@@ -76,21 +77,30 @@ struct GardenNote: View {
     var body: some View {
         Label { Text(text).font(GardenTheme.body).fixedSize(horizontal: false, vertical: true) }
         icon: { Image(systemName: symbol).font(.title3) }
+            .accessibilityElement(children: .combine)
             .foregroundStyle(GardenTheme.ink).frame(maxWidth: .infinity, alignment: .leading)
             .padding(GardenTheme.spacing).background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
     }
 }
 struct GardenTools: View {
+    @Environment(\.dynamicTypeSize) private var textSize
     @Binding var marking: Bool
     var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 8) { tool(false); tool(true) }
+        if textSize.isAccessibilitySize {
             VStack(spacing: 8) { tool(false); tool(true) }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { tool(false); tool(true) }
+                VStack(spacing: 8) { tool(false); tool(true) }
+            }
         }
     }
     private func tool(_ value: Bool) -> some View {
         Button { marking = value } label: {
-            Label(value ? "Marcar ×" : "Caminho", systemImage: value ? "xmark" : "pawprint.fill")
+            HStack {
+                Label(value ? String(localized: "Marcar ×") : String(localized: "Caminho"), systemImage: value ? "xmark" : "pawprint.fill")
+                if marking == value { Image(systemName: "checkmark").accessibilityHidden(true) }
+            }
                 .font(GardenTheme.heading).padding(.horizontal, 16).padding(.vertical, 12)
                 .frame(maxWidth: .infinity, minHeight: GardenTheme.minTarget)
                 .foregroundStyle(marking == value ? GardenTheme.background : GardenTheme.ink)
@@ -112,5 +122,20 @@ struct GardenCell: View {
                 else if excluded { Image(systemName: "xmark").font(.title3).foregroundStyle(GardenTheme.secondary) }
                 else if highlighted { Image(systemName: "lightbulb.fill").font(.caption).foregroundStyle(GardenTheme.accent) }
             }
+    }
+}
+
+struct DifficultyPicker: View {
+    @Binding var selection: PuzzleDifficulty
+    @Environment(\.dynamicTypeSize) private var textSize
+    var body: some View {
+        if textSize.isAccessibilitySize {
+            picker.pickerStyle(.menu).frame(minHeight: GardenTheme.minTarget)
+        } else { picker.pickerStyle(.segmented) }
+    }
+    private var picker: some View {
+        Picker(String(localized: "Dificuldade do próximo passeio"), selection: $selection) {
+            ForEach(PuzzleDifficulty.allCases, id: \.self) { Text($0.title).tag($0) }
+        }
     }
 }

@@ -1,0 +1,1751 @@
+{
+  "sourceLanguage": "pt",
+  "strings": {
+    " Abra Continuar para acessar a recuperação.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " Abra Continuar para acessar a recuperação."
+          }
+        }
+      }
+    },
+    " Esta dica considera suas marcações × como hipóteses.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " Esta dica considera suas marcações × como hipóteses."
+          }
+        }
+      }
+    },
+    "%@": {},
+    "%@ Linha %lld, coluna %lld: %@%@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Linha %lld, coluna %lld: %@%@"
+          }
+        }
+      }
+    },
+    "%@ chegou! Partida concluída.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ chegou! Partida concluída."
+          }
+        }
+      }
+    },
+    "%@ chegou! Todas as pistas foram atendidas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ chegou! Todas as pistas foram atendidas."
+          }
+        }
+      }
+    },
+    "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2 para completá-la.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2 para completá-la."
+          }
+        }
+      }
+    },
+    "%@ · Tranquilo · calendário UTC\nSeu passeio normal fica guardado.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · Tranquilo · calendário UTC\nSeu passeio normal fica guardado."
+          }
+        }
+      }
+    },
+    "%@, início do caminho": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, início do caminho"
+          }
+        }
+      }
+    },
+    "%lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        }
+      }
+    },
+    "%lld de %lld casas ocupadas. %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld de %lld casas ocupadas. %@"
+          }
+        }
+      }
+    },
+    "%lld de 3 vidas": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld de 3 vidas"
+          }
+        }
+      }
+    },
+    "%lld passeios diferentes concluídos": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld passeios diferentes concluídos"
+          }
+        }
+      }
+    },
+    "%lld vidas restantes de 3": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld vidas restantes de 3"
+          }
+        }
+      }
+    },
+    "1 passeio diferente concluído": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 passeio diferente concluído"
+          }
+        }
+      }
+    },
+    "1 vida restante de 3": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 vida restante de 3"
+          }
+        }
+      }
+    },
+    "A %@ %lld não consegue atender à pista com o caminho e as marcações atuais.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A %@ %lld não consegue atender à pista com o caminho e as marcações atuais."
+          }
+        }
+      }
+    },
+    "A coluna %lld já tem todas as casas necessárias. As demais ficam fora do caminho.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A coluna %lld já tem todas as casas necessárias. As demais ficam fora do caminho."
+          }
+        }
+      }
+    },
+    "A linha %lld já tem todas as casas necessárias. As demais ficam fora do caminho.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A linha %lld já tem todas as casas necessárias. As demais ficam fora do caminho."
+          }
+        }
+      }
+    },
+    "A ponta do caminho ficou sem saída antes da casinha.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A ponta do caminho ficou sem saída antes da casinha."
+          }
+        }
+      }
+    },
+    "A ponta do caminho tem apenas uma casa vizinha disponível para continuar.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A ponta do caminho tem apenas uma casa vizinha disponível para continuar."
+          }
+        }
+      }
+    },
+    "A primeira linha já está completa. Use × na linha 1, coluna 3 para lembrar que ela fica fora do caminho.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A primeira linha já está completa. Use × na linha 1, coluna 3 para lembrar que ela fica fora do caminho."
+          }
+        }
+      }
+    },
+    "Agora leve %@ até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agora leve %@ até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!"
+          }
+        }
+      }
+    },
+    "Ajustes": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes"
+          }
+        }
+      }
+    },
+    "Alternar marcação ×": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alternar marcação ×"
+          }
+        }
+      }
+    },
+    "Arestas explícitas": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arestas explícitas"
+          }
+        }
+      }
+    },
+    "Arraste ou toque nas casas vizinhas. Volte uma casa para apagar. Para rolar, arraste pelas pistas ou fora da grade.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste ou toque nas casas vizinhas. Volte uma casa para apagar. Para rolar, arraste pelas pistas ou fora da grade."
+          }
+        }
+      }
+    },
+    "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto."
+          }
+        }
+      }
+    },
+    "As vidas acabaram. Tente novamente com 3 vidas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As vidas acabaram. Tente novamente com 3 vidas."
+          }
+        }
+      }
+    },
+    "Até 24 caracteres. Em branco, usamos Margot.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Até 24 caracteres. Em branco, usamos Margot."
+          }
+        }
+      }
+    },
+    "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres."
+          }
+        }
+      }
+    },
+    "Caminho": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caminho"
+          }
+        }
+      }
+    },
+    "Cancelar": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        }
+      }
+    },
+    "Cancelar geração": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar geração"
+          }
+        }
+      }
+    },
+    "Casa destacada pela orientação.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casa destacada pela orientação."
+          }
+        }
+      }
+    },
+    "Casinha ainda não conectada": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha ainda não conectada"
+          }
+        }
+      }
+    },
+    "Casinha conectada": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha conectada"
+          }
+        }
+      }
+    },
+    "Casinha, passeio concluído": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha, passeio concluído"
+          }
+        }
+      }
+    },
+    "Chegamos em casa!": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chegamos em casa!"
+          }
+        }
+      }
+    },
+    "Coluna %lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coluna %lld"
+          }
+        }
+      }
+    },
+    "Como jogar": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Como jogar"
+          }
+        }
+      }
+    },
+    "Continuar": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar"
+          }
+        }
+      }
+    },
+    "Continuar depois": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar depois"
+          }
+        }
+      }
+    },
+    "Continuar tutorial": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar tutorial"
+          }
+        }
+      }
+    },
+    "Continue seguindo as pistas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue seguindo as pistas."
+          }
+        }
+      }
+    },
+    "Cópia anterior recuperada. O arquivo substituído foi preservado.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cópia anterior recuperada. O arquivo substituído foi preservado."
+          }
+        }
+      }
+    },
+    "Desafiador": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafiador"
+          }
+        }
+      }
+    },
+    "Desafio diário já concluído!": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafio diário já concluído!"
+          }
+        }
+      }
+    },
+    "Desafio diário retomado.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafio diário retomado."
+          }
+        }
+      }
+    },
+    "Desafio diário · ": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafio diário · "
+          }
+        }
+      }
+    },
+    "Desafio do dia": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafio do dia"
+          }
+        }
+      }
+    },
+    "Desafio do dia · concluído": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desafio do dia · concluído"
+          }
+        }
+      }
+    },
+    "Desenhar caminho": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desenhar caminho"
+          }
+        }
+      }
+    },
+    "Desfazer": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desfazer"
+          }
+        }
+      }
+    },
+    "Dica": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dica"
+          }
+        }
+      }
+    },
+    "Dificuldade do próximo passeio": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dificuldade do próximo passeio"
+          }
+        }
+      }
+    },
+    "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita."
+          }
+        }
+      }
+    },
+    "Esta casa não pode ser alcançada a partir da ponta sem atravessar casas excluídas ou repetir o caminho.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta casa não pode ser alcançada a partir da ponta sem atravessar casas excluídas ou repetir o caminho."
+          }
+        }
+      }
+    },
+    "Esta casa precisa fazer parte da rota; isso ainda não desenha uma ligação até ela.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta casa precisa fazer parte da rota; isso ainda não desenha uma ligação até ela."
+          }
+        }
+      }
+    },
+    "Fechar": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        }
+      }
+    },
+    "Fechar dica": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar dica"
+          }
+        }
+      }
+    },
+    "Feedback tátil": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feedback tátil"
+          }
+        }
+      }
+    },
+    "Ferramenta × selecionada para este exercício.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ferramenta × selecionada para este exercício."
+          }
+        }
+      }
+    },
+    "Galeria de componentes · prévia visual": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Galeria de componentes · prévia visual"
+          }
+        }
+      }
+    },
+    "Gerar fase · %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerar fase · %@"
+          }
+        }
+      }
+    },
+    "Gerar um novo passeio normal? O passeio normal anterior será substituído quando estiver pronto. Desafios diários ficam guardados.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerar um novo passeio normal? O passeio normal anterior será substituído quando estiver pronto. Desafios diários ficam guardados."
+          }
+        }
+      }
+    },
+    "Geração cancelada. Sua partida foi mantida.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geração cancelada. Sua partida foi mantida."
+          }
+        }
+      }
+    },
+    "Início": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Início"
+          }
+        }
+      }
+    },
+    "Início do caminho concluído": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Início do caminho concluído"
+          }
+        }
+      }
+    },
+    "Ir para meu passeio": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ir para meu passeio"
+          }
+        }
+      }
+    },
+    "Jogada cancelada sem perder vida.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogada cancelada sem perder vida."
+          }
+        }
+      }
+    },
+    "Jogar novamente": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogar novamente"
+          }
+        }
+      }
+    },
+    "Leve %@ até a casinha": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leve %@ até a casinha"
+          }
+        }
+      }
+    },
+    "Leve a Margot até a casinha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leve a Margot até a casinha"
+          }
+        }
+      }
+    },
+    "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas."
+          }
+        }
+      }
+    },
+    "Linha %lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linha %lld"
+          }
+        }
+      }
+    },
+    "Linha %lld, coluna %lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linha %lld, coluna %lld"
+          }
+        }
+      }
+    },
+    "Linha: %lld de %lld. Coluna: %lld de %lld.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linha: %lld de %lld. Coluna: %lld de %lld."
+          }
+        }
+      }
+    },
+    "Livre": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livre"
+          }
+        }
+      }
+    },
+    "Marcada com xis": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marcada com xis"
+          }
+        }
+      }
+    },
+    "Marcar ×": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marcar ×"
+          }
+        }
+      }
+    },
+    "Margot": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Margot"
+          }
+        }
+      }
+    },
+    "Na coluna %lld, todas as casas restantes são necessárias para completar a pista.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na coluna %lld, todas as casas restantes são necessárias para completar a pista."
+          }
+        }
+      }
+    },
+    "Na linha %lld, todas as casas restantes são necessárias para completar a pista.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na linha %lld, todas as casas restantes são necessárias para completar a pista."
+          }
+        }
+      }
+    },
+    "Nome atual: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome atual: %@"
+          }
+        }
+      }
+    },
+    "Nome da cachorrinha": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome da cachorrinha"
+          }
+        }
+      }
+    },
+    "Nome da sua companhia": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome da sua companhia"
+          }
+        }
+      }
+    },
+    "Nome salvo: %@.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome salvo: %@."
+          }
+        }
+      }
+    },
+    "Nova fase": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nova fase"
+          }
+        }
+      }
+    },
+    "Nova tentativa: 3 vidas para levar %@ até a casinha.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nova tentativa: 3 vidas para levar %@ até a casinha."
+          }
+        }
+      }
+    },
+    "Novo passeio": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novo passeio"
+          }
+        }
+      }
+    },
+    "Novo passeio preparado! Você tem 3 vidas para levar %@ até a casinha.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novo passeio preparado! Você tem 3 vidas para levar %@ até a casinha."
+          }
+        }
+      }
+    },
+    "Não encontrei uma próxima dedução com as regras disponíveis. Você pode revisar as pistas e suas marcações.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não encontrei uma próxima dedução com as regras disponíveis. Você pode revisar as pistas e suas marcações."
+          }
+        }
+      }
+    },
+    "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."
+          }
+        }
+      }
+    },
+    "Não foi possível recuperar a cópia anterior. Os arquivos foram preservados.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível recuperar a cópia anterior. Os arquivos foram preservados."
+          }
+        }
+      }
+    },
+    "Não foi possível recuperar a partida salva. O arquivo original foi preservado.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível recuperar a partida salva. O arquivo original foi preservado."
+          }
+        }
+      }
+    },
+    "Não foi possível salvar a recuperação. O arquivo original foi preservado.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível salvar a recuperação. O arquivo original foi preservado."
+          }
+        }
+      }
+    },
+    "Não foi possível salvar. Você pode tentar novamente; a última gravação válida foi preservada.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível salvar. Você pode tentar novamente; a última gravação válida foi preservada."
+          }
+        }
+      }
+    },
+    "Não foi possível verificar a jogada agora. Ela foi desfeita sem perder vida.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível verificar a jogada agora. Ela foi desfeita sem perder vida."
+          }
+        }
+      }
+    },
+    "Não pode fazer parte do caminho": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não pode fazer parte do caminho"
+          }
+        }
+      }
+    },
+    "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2."
+          }
+        }
+      }
+    },
+    "O caminho ou as marcações violam uma regra. Revise o estado atual ou use Desfazer.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho ou as marcações violam uma regra. Revise o estado atual ou use Desfazer."
+          }
+        }
+      }
+    },
+    "Obstáculo": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obstáculo"
+          }
+        }
+      }
+    },
+    "Parcial · 288 pt": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parcial · 288 pt"
+          }
+        }
+      }
+    },
+    "Partida atual salva. O arquivo original foi preservado separadamente.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partida atual salva. O arquivo original foi preservado separadamente."
+          }
+        }
+      }
+    },
+    "Partida restaurada. Continue de onde parou.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partida restaurada. Continue de onde parou."
+          }
+        }
+      }
+    },
+    "Passeio Certo": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeio Certo"
+          }
+        }
+      }
+    },
+    "Passeio concluído!": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeio concluído!"
+          }
+        }
+      }
+    },
+    "Passeio concluído! Todas as pistas foram atendidas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeio concluído! Todas as pistas foram atendidas."
+          }
+        }
+      }
+    },
+    "Passeio retomado. Continue de onde parou.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeio retomado. Continue de onde parou."
+          }
+        }
+      }
+    },
+    "Passo %lld de 6": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passo %lld de 6"
+          }
+        }
+      }
+    },
+    "Ponta atual do caminho.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponta atual do caminho."
+          }
+        }
+      }
+    },
+    "Praça das Flores": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Praça das Flores"
+          }
+        }
+      }
+    },
+    "Praça das Flores · 5 × 5": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Praça das Flores · 5 × 5"
+          }
+        }
+      }
+    },
+    "Praça das Flores · Fase 1": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Praça das Flores · Fase 1"
+          }
+        }
+      }
+    },
+    "Preparando dica…": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparando dica…"
+          }
+        }
+      }
+    },
+    "Preparando novo passeio…": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparando novo passeio…"
+          }
+        }
+      }
+    },
+    "Preparando passeio…": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparando passeio…"
+          }
+        }
+      }
+    },
+    "Preservar original e salvar esta partida": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preservar original e salvar esta partida"
+          }
+        }
+      }
+    },
+    "Primeiro passeio": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Primeiro passeio"
+          }
+        }
+      }
+    },
+    "Próxima fase": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Próxima fase"
+          }
+        }
+      }
+    },
+    "Pular animação": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pular animação"
+          }
+        }
+      }
+    },
+    "Pular tutorial": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pular tutorial"
+          }
+        }
+      }
+    },
+    "Recuperar cópia anterior": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recuperar cópia anterior"
+          }
+        }
+      }
+    },
+    "Reiniciar": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reiniciar"
+          }
+        }
+      }
+    },
+    "Reiniciar esta fase?": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reiniciar esta fase?"
+          }
+        }
+      }
+    },
+    "Repetir tutorial": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repetir tutorial"
+          }
+        }
+      }
+    },
+    "Repetir uma fase não aumenta a contagem.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repetir uma fase não aumenta a contagem."
+          }
+        }
+      }
+    },
+    "Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente."
+          }
+        }
+      }
+    },
+    "Salvar esta partida preservando o arquivo original": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvar esta partida preservando o arquivo original"
+          }
+        }
+      }
+    },
+    "Salvar nome": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvar nome"
+          }
+        }
+      }
+    },
+    "Segue para %@.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segue para %@."
+          }
+        }
+      }
+    },
+    "Seu cantinho": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seu cantinho"
+          }
+        }
+      }
+    },
+    "Siga a ação indicada acima. Aqui você pode aprender sem perder vidas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siga a ação indicada acima. Aqui você pode aprender sem perder vidas."
+          }
+        }
+      }
+    },
+    "Sons": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sons"
+          }
+        }
+      }
+    },
+    "Sons suaves e vibrações opcionais. As pistas e mensagens continuam disponíveis com tudo desligado.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sons suaves e vibrações opcionais. As pistas e mensagens continuam disponíveis com tudo desligado."
+          }
+        }
+      }
+    },
+    "Tabuleiro somente para leitura": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tabuleiro somente para leitura"
+          }
+        }
+      }
+    },
+    "Tentar novamente": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar novamente"
+          }
+        }
+      }
+    },
+    "Tentar salvar novamente": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar salvar novamente"
+          }
+        }
+      }
+    },
+    "Texto ampliado": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texto ampliado"
+          }
+        }
+      }
+    },
+    "Toque duas vezes para alternar a marcação xis": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toque duas vezes para alternar a marcação xis"
+          }
+        }
+      }
+    },
+    "Toque duas vezes para continuar ou recuar o caminho": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toque duas vezes para continuar ou recuar o caminho"
+          }
+        }
+      }
+    },
+    "Tranquilo": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tranquilo"
+          }
+        }
+      }
+    },
+    "Tudo pronto!": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tudo pronto!"
+          }
+        }
+      }
+    },
+    "Um passeio de cada vez, com %@.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um passeio de cada vez, com %@."
+          }
+        }
+      }
+    },
+    "Uma casa obrigatória ou a casinha ficou sem ligação possível com a ponta do caminho. Revise as marcações ou desfaça um trecho.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma casa obrigatória ou a casinha ficou sem ligação possível com a ponta do caminho. Revise as marcações ou desfaça um trecho."
+          }
+        }
+      }
+    },
+    "Uma dica explica uma dedução, sem jogar por você. Toque em Dica para experimentar.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma dica explica uma dedução, sem jogar por você. Toque em Dica para experimentar."
+          }
+        }
+      }
+    },
+    "Uma marcação pode ser desfeita. Toque em Desfazer para remover o × que você acabou de colocar.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma marcação pode ser desfeita. Toque em Desfazer para remover o × que você acabou de colocar."
+          }
+        }
+      }
+    },
+    "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas."
+          }
+        }
+      }
+    },
+    "Use × como lembrete. Desfazer remove sua última ação; Dica explica uma dedução sem jogar por você.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use × como lembrete. Desfazer remove sua última ação; Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
+    "Vem de %@.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vem de %@."
+          }
+        }
+      }
+    },
+    "Verificando jogada…": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verificando jogada…"
+          }
+        }
+      }
+    },
+    "Você aprendeu! Na partida normal são 3 vidas: um caminho impossível custa uma vida; × e desfazer são livres.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você aprendeu! Na partida normal são 3 vidas: um caminho impossível custa uma vida; × e desfazer são livres."
+          }
+        }
+      }
+    },
+    "Você levou %@ para casa. Obrigada pelo passeio!": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você levou %@ para casa. Obrigada pelo passeio!"
+          }
+        }
+      }
+    },
+    "Você pode continuar o caminho até esta casa.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você pode continuar o caminho até esta casa."
+          }
+        }
+      }
+    },
+    "Você pode marcar esta casa com ×.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você pode marcar esta casa com ×."
+          }
+        }
+      }
+    },
+    "Você tem 3 vidas. Um caminho impossível custa uma vida e é desfeito. ×, desfazer e gestos inválidos não custam vidas; desfazer não devolve vidas perdidas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você tem 3 vidas. Um caminho impossível custa uma vida e é desfeito. ×, desfazer e gestos inválidos não custam vidas; desfazer não devolve vidas perdidas."
+          }
+        }
+      }
+    },
+    "Voltar ao início": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voltar ao início"
+          }
+        }
+      }
+    },
+    "Voltar ao passeio normal": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voltar ao passeio normal"
+          }
+        }
+      }
+    },
+    "Última ação desfeita. Vidas perdidas não são recuperadas.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Última ação desfeita. Vidas perdidas não são recuperadas."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
