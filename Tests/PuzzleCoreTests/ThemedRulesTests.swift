@@ -56,6 +56,9 @@ final class ThemedRulesTests: XCTestCase {
         let solved = LogicEngine.analyze(puzzle: tree)
         XCTAssertEqual(solved.outcome, .solved)
         XCTAssertEqual(ExactSolver.solve(puzzle: tree).classification, .unique)
+        let hint = HintProvider.advice(for: Game(puzzle: cat))
+        XCTAssertEqual(hint.cells, [Cell(1,0)])
+        XCTAssertTrue(hint.text.contains("gato"))
         XCTAssertEqual(LogicEngine.requiredTier(try puzzle()), 2, "Extending the route always needs continuation")
     }
 

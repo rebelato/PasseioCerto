@@ -53,3 +53,38 @@ final class WorldTests: XCTestCase {
         }
     }
 }
+
+final class ProgressionSessionTests: XCTestCase {
+    private static let tiny = try! Puzzle(puzzleID: "tiny", rows: [2,0], columns: [1,1], start: Cell(0,0), goal: Cell(0,1))
+    @MainActor func testWinningALevelAdvancesOnceAndFillsTheAlbum() async throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let url = folder.appendingPathComponent("save.json")
+        let s = GameSession(saveURL: url, generateLevel: { level in
+            GenerationReport(outcome: .generated, puzzle: try Self.tiny.renamed("level-\(level.level)", seed: nil), candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
+        })
+        await s.play()
+        XCTAssertNil(s.attempt.level, "An unfinished free walk is resumed, not replaced")
+        for cell in PuzzleFixtures.approved.witnessRoutes[0].dropFirst() { await s.select(cell, marking: false) }
+        XCTAssertEqual(s.progress, .first, "Free walks don't move the progression")
+        await s.play()
+        XCTAssertEqual(s.attempt.level, .first)
+        await s.select(Cell(0,1), marking: false)
+        XCTAssertTrue(s.attempt.game.won)
+        XCTAssertEqual(s.progress, WorldLevel.first.next)
+        s.restart(); await s.select(Cell(0,1), marking: false)
+        XCTAssertEqual(s.progress, WorldLevel.first.next, "Replaying a level doesn't skip ahead")
+        XCTAssertEqual(s.walks.map(\.puzzle.puzzleID), [PuzzleFixtures.approved.id, "level-0"])
+        XCTAssertEqual(s.walks.last?.place, .flowerSquare)
+        let restored = GameSession(saveURL: url)
+        XCTAssertEqual(restored.progress, s.progress)
+        XCTAssertEqual(restored.walks, s.walks)
+        XCTAssertEqual(restored.attempt.level, .first)
+    }
+    @MainActor func testAccessoriesUnlockWithPaws() {
+        let s = GameSession()
+        XCTAssertTrue(s.unlockedAccessories.isEmpty)
+        s.wear(.bow)
+        XCTAssertNil(s.preferences.accessory, "Locked accessories can't be worn")
+    }
+}
