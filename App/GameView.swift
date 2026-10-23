@@ -80,7 +80,7 @@ struct GameView: View {
                         .allowsHitTesting(session.canInteract)
                         .accessibilityHidden(session.attempt.defeated)
                 }.frame(height: CGFloat(game.rows.count + 1) * side)
-                GardenNote(text: session.message, symbol: game.won ? "checkmark.circle" : "info.circle")
+                if let message = session.message { GardenNote(text: message, symbol: "info.circle") }
                 if let hint = session.hint {
                     VStack(alignment: .leading, spacing: 8) {
                         GardenNote(text: hint.text, symbol: hint.kind == .conflict ? "exclamationmark.triangle" : "lightbulb")
@@ -271,7 +271,7 @@ struct GameView: View {
                             if session.activeDailyID == daily.id { showingHome = false }
                         }
                     }
-                    Text(String(localized: "\(daily.dateKey) · Tranquilo · calendário UTC\nSeu passeio normal fica guardado."))
+                    Text(String(localized: "Novo desafio em \(DailyCountdown.text(from: timeline.date))"))
                         .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     Button(String(localized: "Ajustes"), systemImage: "gearshape") {
                         tutorialRequested = false; showingLearning = true
@@ -284,9 +284,15 @@ struct GameView: View {
                 if let error = session.storageError {
                     GardenNote(text: error + String(localized: " Abra Continuar para acessar a recuperação."), symbol: "exclamationmark.triangle")
                 }
-                GardenNote(text: session.message, symbol: "info.circle")
             }.padding(20).frame(maxWidth: 420).frame(maxWidth: .infinity)
                 .background(GardenTheme.background).foregroundStyle(GardenTheme.ink)
+        }
+    }
+    private enum DailyCountdown {
+        /// "3h 12min" until the next local midnight; minutes only in the last hour.
+        static func text(from now: Date) -> String {
+            let minutes = max(1, Int(DailyChallenge.nextReset(after: now).timeIntervalSince(now) / 60))
+            return minutes >= 60 ? "\(minutes / 60)h \(minutes % 60)min" : "\(minutes)min"
         }
     }
     private func finishStroke(_ cancelled: Bool) {

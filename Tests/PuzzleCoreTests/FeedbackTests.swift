@@ -52,7 +52,7 @@ final class FeedbackTests: XCTestCase {
         XCTAssertEqual(restored.attempt.game.path, route)
         XCTAssertNil(restored.feedback)
         await restored.select(Cell(1,1), marking: false)
-        XCTAssertTrue(restored.message.contains("perdeu 1 vida"))
+        XCTAssertTrue(restored.message?.contains("perdeu 1 vida") == true)
         XCTAssertEqual(restored.attempt.lives, 2)
     }
 }

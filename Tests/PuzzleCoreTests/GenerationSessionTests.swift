@@ -30,7 +30,7 @@ final class GenerationSessionTests: XCTestCase {
         })
         await s.newPuzzle(difficulty: .relaxed, seed: 0)
         XCTAssertEqual(s.attempt.game.puzzle, FallbackCatalog.puzzle(for: .relaxed, seed: 0))
-        XCTAssertTrue(s.message.contains("reserva"))
+        XCTAssertNil(s.message, "Reserve puzzles are used silently")
         XCTAssertEqual(ExactSolver.solve(puzzle: s.attempt.game.puzzle).classification, .unique)
         XCTAssertEqual(LogicEngine.analyze(puzzle: s.attempt.game.puzzle).outcome, .solved)
     }
@@ -43,7 +43,7 @@ final class GenerationSessionTests: XCTestCase {
         XCTAssertEqual(s.attempt.game.marks, before.marks)
         XCTAssertEqual(s.attempt.game.path, before.path)
         XCTAssertFalse(s.generating)
-        XCTAssertTrue(s.message.contains("tente novamente"))
+        XCTAssertTrue(s.message?.contains("tente novamente") == true)
     }
     @MainActor func testCancellationAndBackgroundDiscardUncooperativeWorker() async {
         for background in [false, true] {

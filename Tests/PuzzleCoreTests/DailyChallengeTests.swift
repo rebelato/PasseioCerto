@@ -3,13 +3,16 @@ import Foundation
 @testable import PuzzleCore
 final class DailyChallengeTests: XCTestCase {
     private func date(_ value: String) -> Date { ISO8601DateFormatter().date(from: value)! }
-    func testUTCDateAndVersionAreStableAcrossOffsetsAndMidnight() {
-        let a = DailyChallenge(date: date("2026-10-23T00:00:00Z"))
-        let b = DailyChallenge(date: date("2026-10-22T21:00:00-03:00"))
-        XCTAssertEqual(a, b)
-        XCTAssertEqual(a.id, "daily-v1-2026-10-23")
-        XCTAssertEqual(a.seed, 20261023)
-        XCTAssertNotEqual(a, DailyChallenge(date: date("2026-10-22T23:59:59Z")))
+    func testDayTurnsOverAtLocalMidnight() {
+        let brazil = TimeZone(identifier: "America/Sao_Paulo")!
+        let evening = DailyChallenge(date: date("2026-10-22T21:00:00-03:00"), timeZone: brazil)
+        XCTAssertEqual(evening.id, "daily-v1-2026-10-22")
+        XCTAssertEqual(evening, DailyChallenge(date: date("2026-10-22T23:59:59-03:00"), timeZone: brazil))
+        let midnight = DailyChallenge(date: date("2026-10-23T00:00:00-03:00"), timeZone: brazil)
+        XCTAssertEqual(midnight.id, "daily-v1-2026-10-23")
+        XCTAssertEqual(midnight.seed, 20261023)
+        XCTAssertEqual(DailyChallenge.nextReset(after: date("2026-10-22T21:00:00-03:00"), timeZone: brazil),
+                       date("2026-10-23T00:00:00-03:00"))
     }
     @MainActor func testDailyAndNormalKeepIndependentProgressAcrossRelaunch() async throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)

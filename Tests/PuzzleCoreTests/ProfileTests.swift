@@ -29,7 +29,7 @@ final class ProfileTests: XCTestCase {
         XCTAssertEqual(restored.dogName, "Pérola 🐩")
         XCTAssertTrue(TutorialSession(step: 0, dogName: restored.dogName).instruction.contains(restored.dogName))
         restored.continueNormal(); restored.restart()
-        XCTAssertTrue(restored.message.contains(restored.dogName))
+        XCTAssertNil(restored.message)
         restored.renameDog("")
         XCTAssertEqual(GameSession(saveURL: url).dogName, "Margot")
     }
@@ -41,7 +41,7 @@ final class ProfileTests: XCTestCase {
             for cell in PuzzleFixtures.approved.witnessRoutes[0].dropFirst() { await s.select(cell, marking: false) }
             XCTAssertTrue(s.attempt.game.won)
             XCTAssertEqual(s.completedWalkCount, 1)
-            XCTAssertTrue(s.message.contains("Lua chegou"))
+            XCTAssertNil(s.message)
             s.finishCelebration(); s.suspend()
             XCTAssertEqual(s.completedWalkCount, 1)
         }

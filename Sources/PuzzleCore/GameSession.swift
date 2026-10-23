@@ -5,7 +5,8 @@ import Combine
     @Published public private(set) var attempt: GameAttempt
     @Published public private(set) var stroke: GameStroke?
     @Published public private(set) var checking = false
-    @Published public private(set) var message = String(localized: "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres.")
+    /// Player-facing notice; nil when there is nothing worth saying.
+    @Published public private(set) var message: String?
     @Published public private(set) var storageError: String?
     @Published public private(set) var preferences = PlayerPreferences()
     @Published public private(set) var tutorialStep = 0
@@ -33,7 +34,7 @@ import Combine
     public func renameDog(_ name: String) {
         guard !generating, !checking, !hintChecking, stroke == nil else { return }
         preferences.dogName = PlayerPreferences.normalizedName(name)
-        message = String(localized: "Nome salvo: \(dogName)."); save()
+        save()
     }
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
     public var canInteract: Bool { !generating && !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
@@ -44,10 +45,7 @@ import Combine
         self.generate = generate
         self.attempt = attempt; self.saveURL = saveURL; self.nodeLimit = nodeLimit
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
-            do {
-                apply(try SaveStore(url: saveURL).load())
-                message = self.attempt.defeated ? String(localized: "As vidas acabaram. Tente novamente com 3 vidas.") : self.attempt.game.won ? String(localized: "\(dogName) chegou! Partida concluída.") : String(localized: "Partida restaurada. Continue de onde parou.")
-            }
+            do { apply(try SaveStore(url: saveURL).load()) }
             catch {
                 unreadableSave = true
                 backupAvailable = (try? SaveStore(url: saveURL).loadBackup()) != nil
@@ -91,7 +89,7 @@ import Combine
             if attempt.game.path != before.path || attempt.game.marks != before.marks {
                 feedback = GameFeedback(attempt.game.won ? .victory : .action)
             }
-            message = attempt.game.won ? String(localized: "\(dogName) chegou! Todas as pistas foram atendidas.") : String(localized: "Continue seguindo as pistas.")
+            message = nil
             save()
         case .penalty:
             feedback = GameFeedback(.conflict)
@@ -109,11 +107,11 @@ import Combine
     public func undo() {
         guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
         hint = nil
-        attempt.game.undo(); feedback = GameFeedback(.action); message = String(localized: "Última ação desfeita. Vidas perdidas não são recuperadas."); save()
+        attempt.game.undo(); feedback = GameFeedback(.action); message = nil; save()
     }
     public func restart() {
         cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle))
-        message = String(localized: "Nova tentativa: 3 vidas para levar \(dogName) até a casinha."); save()
+        message = nil; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); parkCurrent(); activeDailyID = nil
@@ -126,14 +124,14 @@ import Combine
     public func continueNormal() {
         guard activeDailyID != nil, let normal = parkedAttempts["normal"] else { return }
         cancel(); parkCurrent(); activeDailyID = nil; attempt = normal
-        message = String(localized: "Passeio retomado. Continue de onde parou."); save()
+        message = nil; save()
     }
     public func openDaily(date: Date = Date()) async {
         let daily = DailyChallenge(date: date)
         if activeDailyID == daily.id { cancel(); return }
         if let saved = parkedAttempts[daily.id] {
             cancel(); parkCurrent(); activeDailyID = daily.id; attempt = saved
-            message = saved.game.won ? String(localized: "Desafio diário já concluído!") : String(localized: "Desafio diário retomado."); save()
+            message = nil; save()
             return
         }
         await generatePuzzle(difficulty: .relaxed, seed: daily.seed, dailyID: daily.id)
@@ -162,10 +160,9 @@ import Combine
                     rows: puzzle.rows, columns: puzzle.columns, start: puzzle.start, goal: puzzle.goal, obstacles: puzzle.obstacles)
             } else { destination = puzzle }
             parkCurrent(); activeDailyID = dailyID
+            // Reserve puzzles are verified like generated ones; the player never needs to know.
             attempt = GameAttempt(game: Game(puzzle: destination))
-            message = report.outcome == .fallback
-                ? String(localized: "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas.")
-                : String(localized: "Novo passeio preparado! Você tem 3 vidas para levar \(dogName) até a casinha.")
+            message = nil
             save()
         } catch {
             guard token == revision else { return }

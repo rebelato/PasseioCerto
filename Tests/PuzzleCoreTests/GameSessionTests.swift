@@ -48,7 +48,7 @@ final class GameSessionTests: XCTestCase {
         await s.select(Cell(0,1), marking: false)
         XCTAssertEqual(s.attempt.lives, 3)
         XCTAssertEqual(s.attempt.game.path.count, 1)
-        XCTAssertTrue(s.message.contains("sem perder vida"))
+        XCTAssertTrue(s.message?.contains("sem perder vida") == true)
     }
     @MainActor func testRestartDiscardsPendingResult() async {
         let s = GameSession()
