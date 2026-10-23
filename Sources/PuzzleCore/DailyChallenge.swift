@@ -16,6 +16,20 @@ public struct DailyChallenge: Equatable, Sendable {
         let calendar = calendar(timeZone)
         return calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: date))!
     }
+    /// Consecutive days with a finished challenge, ending today (or yesterday while today is still open).
+    public static func streak(completed: Set<String>, today: Date, timeZone: TimeZone = .current) -> Int {
+        let calendar = calendar(timeZone)
+        var day = calendar.startOfDay(for: today)
+        if !completed.contains(DailyChallenge(date: day, timeZone: timeZone).id) {
+            day = calendar.date(byAdding: .day, value: -1, to: day)!
+        }
+        var count = 0
+        while completed.contains(DailyChallenge(date: day, timeZone: timeZone).id) {
+            count += 1
+            day = calendar.date(byAdding: .day, value: -1, to: day)!
+        }
+        return count
+    }
     private static func calendar(_ timeZone: TimeZone) -> Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone

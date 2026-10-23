@@ -14,6 +14,24 @@ final class DailyChallengeTests: XCTestCase {
         XCTAssertEqual(DailyChallenge.nextReset(after: date("2026-10-22T21:00:00-03:00"), timeZone: brazil),
                        date("2026-10-23T00:00:00-03:00"))
     }
+    func testStreakCountsConsecutiveLocalDays() {
+        let brazil = TimeZone(identifier: "America/Sao_Paulo")!
+        let today = date("2026-10-23T22:00:00-03:00")
+        let done: Set<String> = ["daily-v1-2026-10-20", "daily-v1-2026-10-21", "daily-v1-2026-10-22"]
+        XCTAssertEqual(DailyChallenge.streak(completed: done, today: today, timeZone: brazil), 3, "Today still open keeps the streak")
+        XCTAssertEqual(DailyChallenge.streak(completed: done.union(["daily-v1-2026-10-23"]), today: today, timeZone: brazil), 4)
+        XCTAssertEqual(DailyChallenge.streak(completed: ["daily-v1-2026-10-20"], today: today, timeZone: brazil), 0)
+    }
+    @MainActor func testModeSwitchKeepsRouteAndResetsMistakes() async {
+        let s = GameSession()
+        await s.select(Cell(1,0), marking: false)
+        await s.select(Cell(0,1), marking: false)
+        s.setPlayMode(.relaxed)
+        XCTAssertEqual(s.attempt.mode, .relaxed)
+        XCTAssertEqual(s.attempt.mistakes, 0)
+        XCTAssertEqual(s.attempt.game.path.count, 2)
+        XCTAssertEqual(s.preferences.playMode, .relaxed)
+    }
     @MainActor func testDailyAndNormalKeepIndependentProgressAcrossRelaunch() async throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: folder) }

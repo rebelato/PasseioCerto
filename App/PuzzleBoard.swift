@@ -10,12 +10,17 @@ struct PuzzleBoard: View {
     var dogName = "Margot"
     var arrivalProgress: Double = 0
     var walking = false
+    /// Victory beats after the walk: a tail wag, then a hop into the house.
+    var wagging = false
+    var enteredHouse = false
     var highlighted: Set<Cell> = []
     var highlightedRow: Int?
     var highlightedColumn: Int?
     /// A visible mistake: the cell and clue blink in the error color before the move is undone.
     var violation: StrokeViolation?
     var onSelect: (Cell) -> Void = { _ in }
+    /// A touch that never leaves its cell; the game uses it to toggle ×.
+    var onTap: (Cell) -> Void = { _ in }
     var onStrokeStart: (Cell) -> Void = { _ in }
     var onStrokeMove: (Cell?) -> Void = { _ in }
     var onStrokeEnd: (Bool) -> Void = { _ in }
@@ -70,13 +75,18 @@ struct PuzzleBoard: View {
                     let center = CGPoint(x: (CGFloat(cell.col)+1.5)*cellSide, y: (CGFloat(cell.row)+1.5)*cellSide)
                     if index == 0 { p.move(to: center) } else { p.addLine(to: center) }
                 }
-            }.stroke(GardenTheme.accent, style: StrokeStyle(lineWidth: max(5, cellSide*0.12), lineCap: .round, lineJoin: .round))
+            }.stroke(GardenTheme.trail, style: StrokeStyle(lineWidth: max(6, cellSide*0.2), lineCap: .round, lineJoin: .round))
                 .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
             GardenHouse().padding(3)
                 .frame(width: cellSide-4, height: cellSide-4)
                 .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
                 .allowsHitTesting(false).accessibilityHidden(true)
             Puppy(pose: walking ? .walking : game.won ? .happy : .idle).padding(3).frame(width: cellSide-4, height: cellSide-4)
+                .rotationEffect(.degrees(wagging ? 12 : lean * 10))
+                .animation(wagging ? .easeInOut(duration: 0.12).repeatForever(autoreverses: true) : .spring(duration: 0.3), value: wagging)
+                .animation(.spring(duration: 0.3), value: lean)
+                .scaleEffect(enteredHouse ? 0.2 : 1).opacity(enteredHouse ? 0 : 1)
+                .offset(y: enteredHouse ? -cellSide*0.25 : 0)
                 .modifier(RouteArrival(path: game.path, side: cellSide, progress: arrivalProgress))
                 .allowsHitTesting(false).accessibilityHidden(true)
         }.frame(width: width, height: height)
@@ -91,16 +101,27 @@ struct PuzzleBoard: View {
             }
             .onDisappear { if strokeStarted { strokeStarted = false; onStrokeEnd(true) } }
     }
+    /// Margot leans toward where the route is heading: -1 left, 1 right.
+    private var lean: Double {
+        guard let tip = game.path.last, !game.won else { return 0 }
+        return Double((tip.col - game.start.col).signum())
+    }
+    /// Dragging draws; a touch that stays on its cell is a tap.
     private func stroke(start: Cell) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("puzzle-board"))
             .updating($touching) { _, active, _ in active = true }
             .onChanged { value in
-                if !strokeStarted { strokeStarted = true; onStrokeStart(start) }
-                onStrokeMove(BoardHitTest.cell(x: value.location.x, y: value.location.y,
-                    side: cellSide, rows: game.rows.count, columns: game.columns.count))
+                let cell = BoardHitTest.cell(x: value.location.x, y: value.location.y,
+                    side: cellSide, rows: game.rows.count, columns: game.columns.count)
+                if !strokeStarted {
+                    guard cell != start else { return }
+                    strokeStarted = true; onStrokeStart(start)
+                }
+                onStrokeMove(cell)
             }
             .onEnded { _ in
                 if strokeStarted { strokeStarted = false; onStrokeEnd(false) }
+                else { onTap(start) }
             }
     }
 

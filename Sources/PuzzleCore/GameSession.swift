@@ -61,7 +61,11 @@ import Combine
         stroke = GameStroke(game: attempt.game, marking: marking)
         stroke?.move(to: cell)
     }
-    public func move(to cell: Cell?) { stroke?.move(to: cell) }
+    public func move(to cell: Cell?) {
+        guard let before = stroke?.preview, stroke?.move(to: cell) == true, let after = stroke?.preview,
+              after.path.count > before.path.count else { return }
+        feedback = GameFeedback(Self.metClues(after) > Self.metClues(before) ? .clueMet : .step)
+    }
     public func cancel() {
         celebrating = false
         generationWorker?.cancel(); generationWorker = nil; generating = false
@@ -201,6 +205,27 @@ import Combine
     public func setPreferences(_ value: PlayerPreferences) {
         guard !generating, !hintChecking, stroke == nil else { return }
         preferences = value; preferences.dogName = PlayerPreferences.normalizedName(value.dogName); save()
+    }
+    private static func metClues(_ game: Game) -> Int {
+        let rows = zip(game.rowCounts, game.rows).filter { $0.0 == $0.1 }.count
+        let columns = zip(game.columnCounts, game.columns).filter { $0.0 == $0.1 }.count
+        return rows + columns
+    }
+    /// The mode you see is the mode you play: the unfinished normal walk switches too,
+    /// keeping its route and starting the mistake count fresh.
+    public func setPlayMode(_ mode: PlayMode) {
+        guard !generating, !hintChecking, stroke == nil else { return }
+        preferences.playMode = mode
+        func switched(_ current: GameAttempt) -> GameAttempt {
+            current.game.won || current.mode == mode ? current : GameAttempt(game: current.game, mode: mode)
+        }
+        if activeDailyID == nil { attempt = switched(attempt) }
+        else if let normal = parkedAttempts["normal"] { parkedAttempts["normal"] = switched(normal) }
+        save()
+    }
+    public var totalPaws: Int { bestPaws.values.reduce(0, +) }
+    public func dailyStreak(today: Date = Date()) -> Int {
+        DailyChallenge.streak(completed: completedPuzzleIDs, today: today)
     }
     public func setTutorialStep(_ step: Int) {
         guard step >= 0 else { return }
