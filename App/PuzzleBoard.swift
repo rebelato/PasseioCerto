@@ -9,6 +9,7 @@ struct PuzzleBoard: View {
     var onSelectMode: ((Cell, Bool) -> Void)?
     var dogName = "Margot"
     var arrivalProgress: Double = 0
+    var walking = false
     var highlighted: Set<Cell> = []
     var highlightedRow: Int?
     var highlightedColumn: Int?
@@ -68,11 +69,11 @@ struct PuzzleBoard: View {
                 }
             }.stroke(GardenTheme.accent, style: StrokeStyle(lineWidth: max(5, cellSide*0.12), lineCap: .round, lineJoin: .round))
                 .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
-            Image(systemName: "house.fill").font(.title2).foregroundStyle(GardenTheme.terracotta)
+            GardenHouse().padding(3)
                 .frame(width: cellSide-4, height: cellSide-4)
                 .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
                 .allowsHitTesting(false).accessibilityHidden(true)
-            Puppy().padding(5).frame(width: cellSide-4, height: cellSide-4)
+            Puppy(pose: walking ? .walking : game.won ? .happy : .idle).padding(3).frame(width: cellSide-4, height: cellSide-4)
                 .modifier(RouteArrival(path: game.path, side: cellSide, progress: arrivalProgress))
                 .allowsHitTesting(false).accessibilityHidden(true)
         }.frame(width: width, height: height)

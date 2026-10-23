@@ -68,3 +68,7 @@ As conexões são desenhadas somente entre células consecutivas da rota. IDs de
 Nome confirmado da protagonista: **Margot**. Texto principal: **Leve a Margot até a casinha**. As referências fotográficas adicionais mostram orelhas caídas com tons creme, cachos pequenos, olhos escuros e focinho alongado; a arte final continua em PC-022.
 
 Verificação local: build iOS aprovado; renderizações SwiftUI/macOS inspecionadas em 288 e 360 pt de largura de tabuleiro — [parcial](validation/board-partial.png), [arestas próximas](validation/board-touching.png), [obstáculo](validation/board-obstacle.png). Não são capturas de iPhone. Pendente conferir tela completa, rolagem, safe areas e VoiceOver no simulador/aparelho; CoreSimulatorService indisponível neste ambiente. PC-010 fica em revisão até essa validação.
+
+## Arte implementada · PC-022
+
+Margot agora usa três retratos originais, casinha terracota, arbusto e ícone próprio. [Fonte, estados, exportação e proveniência](artwork.md). As imagens e seus fallbacks vetoriais substituem a arte provisória; layout e regras permanecem nativos. PC-022 continua em revisão até compilar o catálogo no Xcode com runtime disponível e verificar em dispositivo.

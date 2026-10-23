@@ -61,7 +61,7 @@ struct GameView: View {
                 }.accessibilityElement(children: .ignore)
                     .accessibilityLabel(session.attempt.lives == 1 ? String(localized: "1 vida restante de 3") : String(localized: "\(session.attempt.lives) vidas restantes de 3"))
                 HStack(spacing: 12) {
-                    Puppy().frame(width: 52, height: 52)
+                    Puppy(pose: game.won ? .happy : .idle).frame(width: 52, height: 52)
                     Text(displayedGame.won ? String(localized: "Chegamos em casa!") : String(localized: "Leve \(session.dogName) até a casinha"))
                         .font(GardenTheme.heading).fixedSize(horizontal: false, vertical: true)
                 }.frame(maxWidth: .infinity, alignment: .leading).padding(12)
@@ -71,6 +71,7 @@ struct GameView: View {
                         marking: marking, interactionsEnabled: session.canInteract,
                         onSelectMode: { cell, marking in Task { await session.select(cell, marking: marking) } }, dogName: session.dogName,
                         arrivalProgress: game.won ? (session.celebrating ? arrivalProgress : 1) : 0,
+                        walking: session.celebrating && !reduceMotion,
                         highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
                         highlightedColumn: session.hint?.column, onSelect: select,
                         onStrokeStart: { session.begin(at: $0, marking: marking) },

@@ -118,7 +118,7 @@ struct GardenCell: View {
             .fill(occupied ? GardenTheme.sage : GardenTheme.surface)
             .overlay(RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(highlighted ? GardenTheme.accent : GardenTheme.border, lineWidth: highlighted ? 3 : 1))
             .overlay {
-                if obstacle { Image(systemName: "leaf.fill").foregroundStyle(GardenTheme.secondary) }
+                if obstacle { GardenShrub().padding(6) }
                 else if excluded { Image(systemName: "xmark").font(.title3).foregroundStyle(GardenTheme.secondary) }
                 else if highlighted { Image(systemName: "lightbulb.fill").font(.caption).foregroundStyle(GardenTheme.accent) }
             }

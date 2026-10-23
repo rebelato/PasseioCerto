@@ -524,7 +524,7 @@
     },
     {
       "n": 22,
-      "title": "Finalizar arte, ícone e animações do Bento",
+      "title": "Finalizar arte, ícone e animações do Margot",
       "area": "Design / Assets",
       "milestone": "M3 · Experiência pessoal",
       "depends": [
@@ -541,11 +541,11 @@
         "Revisar em tamanho real de dispositivo; nomes e textos permanecem nativos/localizáveis."
       ],
       "id": "PC-022",
-      "stage": "Backlog MVP",
+      "stage": "Em revisão",
       "trello": {
         "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98919000dfeed12313534",
         "url": "https://trello.com/c/pDZoW3Hv",
-        "name": "[PC-022] Finalizar arte, ícone e animações do Bento"
+        "name": "[PC-022] Finalizar arte, ícone e animações do Margot"
       }
     },
     {

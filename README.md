@@ -129,3 +129,9 @@ O String Catalog `App/Localizable.xcstrings` tem português brasileiro, com lín
 86 testes passaram e build iOS aprovado, incluindo compilação do catálogo no bundle. [Claro](docs/validation/accessibility-light.png) e [escuro](docs/validation/accessibility-dark.png) foram renderizados no macOS em largura de 320 pt; não são capturas de iPhone. [Contrastes calculados](docs/validation/accessibility-contrast.json) verificam pares de cores explícitos do tema; não cobrem todas as cores dinâmicas do sistema.
 
 **Pendente em iPhone pequeno/grande:** navegação completa por VoiceOver, foco de dica/vitória, Dynamic Type máximo, teclado/safe areas, rolagem do tabuleiro, Reduzir Movimento e interrupções. O simulador não pôde ser executado neste ambiente; build e snapshots estáticos não substituem essa revisão.
+
+### Arte da Margot (PC-022, em revisão)
+
+Retratos neutro, em passeio e feliz, casinha, arbusto e ícone em catálogo. Fonte vetorial original e exportação reproduzível; fotos pessoais não incluídas. [Arte e proveniência](docs/artwork.md).
+
+Renderizações claras/escuras e PNGs revisados. Código iOS compila com catálogo excluído da checagem; build completo do catálogo bloqueado por CoreSimulator indisponível, inclusive na tentativa para dispositivo. Ainda precisa de build completo e revisão em iPhone.
