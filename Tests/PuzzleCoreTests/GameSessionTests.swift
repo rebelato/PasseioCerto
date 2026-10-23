@@ -95,7 +95,7 @@ final class GameSessionTests: XCTestCase {
         valid.move(to: Cell(0,1))
         XCTAssertEqual(AttemptRules.assess(before: marked, stroke: valid), .accepted)
     }
-    @MainActor func testCompleteGestureWinsAndCanBeUndone() async {
+    @MainActor func testCompleteGestureFreezesVictoryUntilReplay() async {
         let s = GameSession()
         let route = PuzzleFixtures.approved.witnessRoutes[0]
         s.begin(at: route[0], marking: false)
@@ -103,9 +103,37 @@ final class GameSessionTests: XCTestCase {
         await s.finish()
         XCTAssertTrue(s.attempt.game.won)
         XCTAssertEqual(s.attempt.lives, 3)
+        XCTAssertTrue(s.celebrating)
         s.undo()
+        XCTAssertTrue(s.attempt.game.won)
+        s.finishCelebration()
+        XCTAssertFalse(s.celebrating)
+        XCTAssertTrue(s.attempt.game.won)
+        s.restart()
         XCTAssertFalse(s.attempt.game.won)
         XCTAssertEqual(s.attempt.game.path.count, 1)
+    }
+    @MainActor func testInterruptedCelebrationPersistsOneVictoryAndDoesNotReplay() async throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let url = folder.appendingPathComponent("save.json")
+        let session = GameSession(saveURL: url)
+        for cell in PuzzleFixtures.approved.witnessRoutes[0].dropFirst() {
+            await session.select(cell, marking: false)
+        }
+        XCTAssertTrue(session.celebrating)
+        XCTAssertEqual(session.completedPuzzleIDs.count, 1)
+        let route = session.attempt.game.path
+        await session.select(Cell(0,1), marking: true)
+        XCTAssertEqual(session.attempt.game.path, route)
+        session.suspend()
+        XCTAssertFalse(session.celebrating)
+        let restored = GameSession(saveURL: url)
+        XCTAssertTrue(restored.attempt.game.won)
+        XCTAssertFalse(restored.celebrating)
+        restored.finishCelebration(); restored.suspend()
+        XCTAssertEqual(restored.completedPuzzleIDs.count, 1)
+        XCTAssertEqual(restored.attempt.game.path, route)
     }
     func testInvalidLifeCountsRejected() throws {
         var json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(GameAttempt())) as? [String: Any])

@@ -77,3 +77,9 @@ O botão Dica apresenta a primeira dedução disponível, com coordenadas, desta
 Nova fase permite escolher Tranquilo ou Desafiador e pede confirmação antes de substituir a tentativa. A geração local roda fora da MainActor, mostra carregamento sem percentual inventado e oferece cancelamento. A partida atual permanece disponível se a geração for cancelada ou falhar; apenas um resultado atual substitui e salva a fase, com 3 vidas. Ao atingir o orçamento, usa uma reserva verificada do nível escolhido e informa isso na tela. Background e saída cancelam o pedido; respostas antigas são descartadas.
 
 67 testes passando e build iOS aprovado. Testes cobrem persistência, dificuldade, reserva por orçamento esgotado, falha, cancelamento, background e respostas fora de ordem. Pendente: verificar responsividade, confirmação, cancelamento e retomada em iPhone.
+
+### Chegada e conclusão (PC-016, em revisão)
+
+Após vitória validada, Margot percorre em dois segundos os segmentos da rota congelada. A conclusão é salva antes da animação; pular, suspender ou reabrir não repete o registro. Reduzir Movimento mostra diretamente o estado de chegada. A conclusão oferece próxima fase, jogar novamente e voltar a uma tela inicial simples (a tela completa segue na PC-018). Desfazer fica indisponível após vitória; jogar novamente inicia uma tentativa limpa da mesma fase.
+
+68 testes passaram e build iOS aprovado. [Estado final do tabuleiro](docs/validation/arrival-example.png) renderizado em SwiftUI no macOS. Pendente no iPhone: fluidez, pular, Reduce Motion, VoiceOver e navegação. A arte da Margot ainda é provisória (PC-022).

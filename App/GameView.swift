@@ -3,6 +3,10 @@ import SwiftUI
 struct GameView: View {
     @StateObject private var session = GameSession(saveURL: URL.applicationSupportDirectory.appending(path: "PasseioCerto/attempt.json"))
     private var game: Game { session.attempt.game }
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var arrivalProgress = 0.0
+    @State private var showingHome = false
+    @AccessibilityFocusState private var victoryFocused: Bool
     @Environment(\.scenePhase) private var scenePhase
     private var marking: Bool { session.preferences.marking }
     private var markingBinding: Binding<Bool> {
@@ -17,6 +21,16 @@ struct GameView: View {
     private var displayedGame: Game { session.displayedGame }
     private let green = GardenTheme.accent
     var body: some View {
+        Group {
+        if showingHome {
+            VStack(spacing: 24) {
+                Puppy().frame(width: 120, height: 120)
+                Text("Passeio Certo").font(GardenTheme.title)
+                Text("Um passeio de cada vez, com a Margot.").multilineTextAlignment(.center)
+                Button("Voltar ao passeio") { showingHome = false }.buttonStyle(GardenButtonStyle())
+            }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(GardenTheme.background).foregroundStyle(GardenTheme.ink)
+        } else {
         GeometryReader { screen in
         let side = max((min(screen.size.width, 420) - 32) / CGFloat(game.columns.count + 1), cellMinimum)
         ScrollView {
@@ -39,6 +53,7 @@ struct GameView: View {
                     .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
                 ScrollView(.horizontal) {
                     PuzzleBoard(game: displayedGame, cellSide: side,
+                        arrivalProgress: game.won ? (session.celebrating ? arrivalProgress : 1) : 0,
                         highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
                         highlightedColumn: session.hint?.column, onSelect: select,
                         onStrokeStart: { session.begin(at: $0, marking: marking) },
@@ -77,6 +92,25 @@ struct GameView: View {
                     Button("Tentar novamente", systemImage: "arrow.clockwise") { session.restart() }
                         .buttonStyle(GardenButtonStyle())
                 }
+                if game.won {
+                    VStack(spacing: 12) {
+                        Label("Passeio concluído!", systemImage: "heart.fill")
+                            .font(GardenTheme.heading).foregroundStyle(GardenTheme.accent)
+                            .accessibilityFocused($victoryFocused)
+                        Text("Você levou a Margot para casa. Obrigada pelo passeio!")
+                            .multilineTextAlignment(.center)
+                        if session.celebrating {
+                            Button("Pular animação") { session.finishCelebration() }
+                        }
+                        Button("Jogar novamente", systemImage: "arrow.clockwise") { session.restart() }
+                        Button("Voltar ao início", systemImage: "house") {
+                            session.suspend(); showingHome = true
+                        }
+                    }.buttonStyle(GardenButtonStyle()).padding(16)
+                        .frame(maxWidth: .infinity)
+                        .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
+                        .disabled(session.generating)
+                } else {
                 GardenTools(marking: markingBinding).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
                 HStack {
                     Button("Desfazer", systemImage: "arrow.uturn.backward") { session.undo() }.disabled(!game.canUndo)
@@ -87,12 +121,13 @@ struct GameView: View {
                 HStack {
                     Button("Reiniciar", systemImage: "arrow.clockwise") { reset = true }
                 }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                }
                 Picker("Dificuldade da próxima fase", selection: $difficulty) {
                     ForEach(PuzzleDifficulty.allCases, id: \.self) { level in
                         Text(level.title).tag(level)
                     }
                 }.pickerStyle(.segmented).disabled(session.generating)
-                Button("Nova fase", systemImage: "sparkles") { newPuzzle = true }
+                Button(game.won ? "Próxima fase" : "Nova fase", systemImage: "sparkles") { newPuzzle = true }
                     .buttonStyle(GardenButtonStyle())
                     .disabled(session.generating || session.checking || session.hintChecking || session.stroke != nil)
                 Text("Arraste ou toque nas casas vizinhas. Volte uma casa para apagar. Para rolar, arraste pelas pistas ou fora da grade.").font(.footnote).foregroundStyle(.secondary)
@@ -103,6 +138,22 @@ struct GameView: View {
                 Button("Reiniciar", role: .destructive) { session.restart() }
             }
         }
+        }
+        }
+        .task(id: session.celebrating) {
+            guard session.celebrating else { arrivalProgress = 0; return }
+            if reduceMotion { session.finishCelebration(); return }
+            arrivalProgress = 0
+            // Give the start position a render pass before beginning the route.
+            do { try await Task.sleep(for: .milliseconds(50)) } catch { return }
+            guard !Task.isCancelled else { return }
+            withAnimation(.linear(duration: 2)) { arrivalProgress = 1 }
+            do { try await Task.sleep(for: .seconds(2)) } catch { return }
+            guard !Task.isCancelled else { return }
+            session.finishCelebration()
+        }
+        .onChange(of: reduceMotion) { _, enabled in if enabled { session.finishCelebration() } }
+        .onChange(of: game.won) { _, won in victoryFocused = won }
         .confirmationDialog("Começar uma nova fase? A tentativa atual será substituída quando a nova fase estiver pronta.", isPresented: $newPuzzle, titleVisibility: .visible) {
             Button("Gerar fase · \(difficulty.title)") {
                 Task { await session.newPuzzle(difficulty: difficulty) }

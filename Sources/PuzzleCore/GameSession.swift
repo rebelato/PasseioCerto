@@ -11,6 +11,8 @@ import Combine
     @Published public private(set) var tutorialStep = 0
     @Published public private(set) var completedPuzzleIDs: Set<String> = []
     @Published public private(set) var backupAvailable = false
+    @Published public private(set) var celebrating = false
+    public func finishCelebration() { celebrating = false }
     private var unreadableSave = false
     @Published public private(set) var hint: HintAdvice?
     @Published public private(set) var hintChecking = false
@@ -51,6 +53,7 @@ import Combine
     }
     public func move(to cell: Cell?) { guard !checking else { return }; stroke?.move(to: cell) }
     public func cancel() {
+        celebrating = false
         generationWorker?.cancel(); generationWorker = nil; generating = false
         revision += 1; worker?.cancel(); worker = nil; stroke = nil; checking = false
         hintWorker?.cancel(); hintWorker = nil; hint = nil; hintChecking = false
@@ -74,6 +77,7 @@ import Combine
         switch assessment {
         case .accepted:
             attempt.game = draft.finish()
+            celebrating = attempt.game.won
             message = attempt.game.won ? "Margot chegou! Todas as pistas foram atendidas." : "Continue seguindo as pistas."
             save()
         case .penalty:
@@ -89,7 +93,7 @@ import Combine
         begin(at: cell, marking: marking); await finish()
     }
     public func undo() {
-        guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, attempt.game.canUndo else { return }
+        guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
         hint = nil
         attempt.game.undo(); message = "Última ação desfeita. Vidas perdidas não são recuperadas."; save()
     }

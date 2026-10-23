@@ -4,6 +4,7 @@ import SwiftUI
 struct PuzzleBoard: View {
     let game: Game
     let cellSide: CGFloat
+    var arrivalProgress: Double = 0
     var highlighted: Set<Cell> = []
     var highlightedRow: Int?
     var highlightedColumn: Int?
@@ -53,14 +54,13 @@ struct PuzzleBoard: View {
                 }
             }.stroke(GardenTheme.accent, style: StrokeStyle(lineWidth: max(5, cellSide*0.12), lineCap: .round, lineJoin: .round))
                 .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
-            ForEach([game.start, game.goal], id: \.self) { cell in
-                Group {
-                    if cell == game.start { Puppy().padding(5) }
-                    else { Image(systemName: "house.fill").font(.title2).foregroundStyle(GardenTheme.terracotta) }
-                }.frame(width: cellSide-4, height: cellSide-4)
-                    .offset(x: CGFloat(cell.col+1)*cellSide+2, y: CGFloat(cell.row+1)*cellSide+2)
-                    .allowsHitTesting(false).accessibilityHidden(true)
-            }
+            Image(systemName: "house.fill").font(.title2).foregroundStyle(GardenTheme.terracotta)
+                .frame(width: cellSide-4, height: cellSide-4)
+                .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
+                .allowsHitTesting(false).accessibilityHidden(true)
+            Puppy().padding(5).frame(width: cellSide-4, height: cellSide-4)
+                .modifier(RouteArrival(path: game.path, side: cellSide, progress: arrivalProgress))
+                .allowsHitTesting(false).accessibilityHidden(true)
         }.frame(width: width, height: height)
             .coordinateSpace(name: "puzzle-board")
             .onChange(of: touching) { _, active in
@@ -87,8 +87,8 @@ struct PuzzleBoard: View {
     }
     private func accessibleState(_ cell: Cell) -> String {
         let state: String
-        if cell == game.start { state = "Margot, início do caminho" }
-        else if cell == game.goal { state = game.path.last == cell ? "Casinha, caminho conectado" : "Casinha, ainda não conectada" }
+        if cell == game.start { state = game.won ? "Início do caminho concluído" : "Margot, início do caminho" }
+        else if cell == game.goal { state = game.won ? "Casinha, destino da Margot, passeio concluído" : game.path.last == cell ? "Casinha, caminho conectado" : "Casinha, ainda não conectada" }
         else if game.puzzle.obstacles.contains(cell) { state = "Obstáculo" }
         else if game.path.contains(cell) { state = "Caminho" }
         else if game.marks.contains(cell) { state = "Marcada com xis" }
@@ -120,5 +120,26 @@ struct BoardPreviews: PreviewProvider {
             PuzzleBoard(game: BoardSamples.partial, cellSide: 72, highlighted: [Cell(2,3)])
                 .environment(\.dynamicTypeSize, .accessibility2).previewDisplayName("Texto ampliado")
         }.padding(12).background(GardenTheme.background)
+    }
+}
+
+/// Interpolate each edge separately so corners never cut across other cells.
+private struct RouteArrival: AnimatableModifier {
+    let path: [Cell]
+    let side: CGFloat
+    nonisolated var progress: Double
+    nonisolated var animatableData: Double {
+        get { progress }
+        set { progress = newValue }
+    }
+    func body(content: Content) -> some View {
+        let distance = min(max(progress, 0), 1) * Double(max(0, path.count-1))
+        let index = min(Int(distance), path.count-1)
+        let start = path[index]
+        let end = path[min(index+1, path.count-1)]
+        let fraction = distance - Double(index)
+        content.offset(
+            x: (CGFloat(start.col+1) + CGFloat(end.col-start.col)*fraction)*side+2,
+            y: (CGFloat(start.row+1) + CGFloat(end.row-start.row)*fraction)*side+2)
     }
 }
