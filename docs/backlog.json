@@ -446,7 +446,7 @@
     },
     {
       "n": 19,
-      "title": "Personalizar Bento e criar progresso mínimo",
+      "title": "Personalizar Margot e criar progresso mínimo",
       "area": "Produto / Dados",
       "milestone": "M3 · Experiência pessoal",
       "depends": [
@@ -455,18 +455,18 @@
       ],
       "scope": "Tornar o jogo dela sem criar uma administração de abrigo ou economia paralela.",
       "accept": [
-        "Permitir nomear o cachorro, com fallback Bento; nome aparece no início, na partida e na conclusão.",
+        "Permitir nomear o cachorro, com fallback Margot; nome aparece no início, na partida e na conclusão.",
         "Persistir nome e preferências; testar nomes longos, caracteres especiais e acessibilidade.",
         "Mostrar contagem de passeios concluídos e uma pequena coleção preparada para expansão, sem inventar desbloqueios não implementados.",
         "Vitórias/recompensas são idempotentes por partida; repetir fase não gera duplicação acidental.",
         "Primeiro marco usa um cachorro e uma praça; coleção extensa fica para pós-MVP."
       ],
       "id": "PC-019",
-      "stage": "Backlog MVP",
+      "stage": "Em revisão",
       "trello": {
         "id": "ari:cloud:trello::card/workspace/6ad31145898f3997fd6784e2/6ad98913ece49e8daaf877ab",
         "url": "https://trello.com/c/a8bxpXkT",
-        "name": "[PC-019] Personalizar Bento e criar progresso mínimo"
+        "name": "[PC-019] Personalizar Margot e criar progresso mínimo"
       }
     },
     {

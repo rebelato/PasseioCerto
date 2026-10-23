@@ -8,19 +8,21 @@ import Combine
     @Published public private(set) var game: Game
     @Published public private(set) var feedback: String?
     @Published public private(set) var hint: HintAdvice?
-    public init(step: Int) {
+    public let dogName: String
+    public init(step: Int, dogName: String = "Margot") {
+        self.dogName = PlayerPreferences.normalizedName(dogName)
         let checkpoint = min(max(step, 0), Self.completedStep)
         self.step = checkpoint
         self.game = Self.setup(step: checkpoint)
     }
     public var instruction: String {
         switch step {
-        case 0: "Margot e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2 para completá-la."
+        case 0: "\(dogName) e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2 para completá-la."
         case 1: "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2."
         case 2: "A primeira linha já está completa. Use × na linha 1, coluna 3 para lembrar que ela fica fora do caminho."
         case 3: "Uma marcação pode ser desfeita. Toque em Desfazer para remover o × que você acabou de colocar."
         case 4: "Uma dica explica uma dedução, sem jogar por você. Toque em Dica para experimentar."
-        case 5: "Agora leve a Margot até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!"
+        case 5: "Agora leve \(dogName) até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!"
         default: "Você aprendeu! Na partida normal são 3 vidas: um caminho impossível custa uma vida; × e desfazer são livres."
         }
     }

@@ -4,6 +4,7 @@ import SwiftUI
 struct PuzzleBoard: View {
     let game: Game
     let cellSide: CGFloat
+    var dogName = "Margot"
     var arrivalProgress: Double = 0
     var highlighted: Set<Cell> = []
     var highlightedRow: Int?
@@ -87,8 +88,8 @@ struct PuzzleBoard: View {
     }
     private func accessibleState(_ cell: Cell) -> String {
         let state: String
-        if cell == game.start { state = game.won ? "Início do caminho concluído" : "Margot, início do caminho" }
-        else if cell == game.goal { state = game.won ? "Casinha, destino da Margot, passeio concluído" : game.path.last == cell ? "Casinha, caminho conectado" : "Casinha, ainda não conectada" }
+        if cell == game.start { state = game.won ? "Início do caminho concluído" : "\(dogName), início do caminho" }
+        else if cell == game.goal { state = game.won ? "Casinha, destino de \(dogName), passeio concluído" : game.path.last == cell ? "Casinha, caminho conectado" : "Casinha, ainda não conectada" }
         else if game.puzzle.obstacles.contains(cell) { state = "Obstáculo" }
         else if game.path.contains(cell) { state = "Caminho" }
         else if game.marks.contains(cell) { state = "Marcada com xis" }

@@ -15,6 +15,7 @@ struct GameView: View {
         Binding(get: { session.preferences.marking }, set: { session.setMarking($0) })
     }
     @AccessibilityFocusState private var hintFocused: Bool
+    @State private var nameDraft = ""
     @State private var recovery = false
     @State private var reset = false
     @State private var newPuzzle = false
@@ -48,12 +49,12 @@ struct GameView: View {
                     .accessibilityLabel("\(session.attempt.lives) vidas restantes de 3")
                 HStack(spacing: 12) {
                     Puppy().frame(width: 52, height: 52)
-                    Text(displayedGame.won ? "Chegamos em casa!" : "Leve a Margot até a casinha")
+                    Text(displayedGame.won ? "Chegamos em casa!" : "Leve \(session.dogName) até a casinha")
                         .font(GardenTheme.heading).fixedSize(horizontal: false, vertical: true)
                 }.frame(maxWidth: .infinity, alignment: .leading).padding(12)
                     .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
                 ScrollView(.horizontal) {
-                    PuzzleBoard(game: displayedGame, cellSide: side,
+                    PuzzleBoard(game: displayedGame, cellSide: side, dogName: session.dogName,
                         arrivalProgress: game.won ? (session.celebrating ? arrivalProgress : 1) : 0,
                         highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
                         highlightedColumn: session.hint?.column, onSelect: select,
@@ -98,7 +99,7 @@ struct GameView: View {
                         Label("Passeio concluído!", systemImage: "heart.fill")
                             .font(GardenTheme.heading).foregroundStyle(GardenTheme.accent)
                             .accessibilityFocused($victoryFocused)
-                        Text("Você levou a Margot para casa. Obrigada pelo passeio!")
+                        Text("Você levou \(session.dogName) para casa. Obrigada pelo passeio!")
                             .multilineTextAlignment(.center)
                         if session.celebrating {
                             Button("Pular animação") { session.finishCelebration() }
@@ -148,12 +149,24 @@ struct GameView: View {
         }
         .sheet(isPresented: $showingLearning) {
             if tutorialRequested {
-                TutorialView(step: session.tutorialStep,
+                TutorialView(step: session.tutorialStep, dogName: session.dogName,
                     onProgress: { session.setTutorialStep($0) },
                     onClose: { showingLearning = false; showingHome = false })
             } else {
+                ScrollView {
                 VStack(spacing: 24) {
                     Text("Ajustes").font(GardenTheme.title)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Nome da sua companhia").font(GardenTheme.heading)
+                        TextField("Margot", text: $nameDraft).textFieldStyle(.roundedBorder)
+                            .accessibilityLabel("Nome da cachorrinha")
+                            .onSubmit { session.renameDog(nameDraft); nameDraft = session.dogName }
+                        Text("Até 24 caracteres. Em branco, usamos Margot.").font(.footnote)
+                        Button("Salvar nome") { session.renameDog(nameDraft); nameDraft = session.dogName }
+                            .buttonStyle(GardenButtonStyle())
+                        Text("Nome atual: \(session.dogName)").fixedSize(horizontal: false, vertical: true)
+                        if let error = session.storageError { GardenNote(text: error, symbol: "exclamationmark.triangle") }
+                    }
                     Button(session.tutorialStep < TutorialSession.completedStep ? "Continuar tutorial" : "Repetir tutorial") {
                         if session.tutorialStep >= TutorialSession.completedStep { session.setTutorialStep(0) }
                         tutorialRequested = true
@@ -161,6 +174,7 @@ struct GameView: View {
                     Button("Fechar") { showingLearning = false }.buttonStyle(GardenButtonStyle())
                 }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(GardenTheme.background)
+                }.background(GardenTheme.background).onAppear { nameDraft = session.dogName }
             }
         }
         .task(id: session.celebrating) {
@@ -201,7 +215,17 @@ struct GameView: View {
                 VStack(spacing: 20) {
                     Puppy().frame(width: 110, height: 110)
                     Text("Passeio Certo").font(GardenTheme.title)
-                    Text("Um passeio de cada vez, com a Margot.").multilineTextAlignment(.center)
+                    Text("Um passeio de cada vez, com \(session.dogName).").multilineTextAlignment(.center)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Seu cantinho").font(GardenTheme.heading)
+                        Text(session.completedWalkCount == 1 ? "1 passeio diferente concluído" : "\(session.completedWalkCount) passeios diferentes concluídos")
+                            .font(.headline).fixedSize(horizontal: false, vertical: true)
+                        Label(session.dogName, systemImage: "pawprint.fill")
+                            .fixedSize(horizontal: false, vertical: true)
+                        Label("Praça das Flores", systemImage: "leaf.fill")
+                        Text("Repetir uma fase não aumenta a contagem.").font(.footnote).foregroundStyle(.secondary)
+                    }.padding(16).frame(maxWidth: .infinity, alignment: .leading)
+                        .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
                     Button("Continuar", systemImage: "play.fill") { showingHome = false }
                     if session.activeDailyID != nil {
                         Button("Voltar ao passeio normal") { session.continueNormal(); showingHome = false }
@@ -250,8 +274,8 @@ private struct TutorialView: View {
     let onClose: () -> Void
     @ScaledMetric(relativeTo: .headline) private var side: CGFloat = 60
     @AccessibilityFocusState private var instructionFocused: Bool
-    init(step: Int, onProgress: @escaping (Int) -> Void, onClose: @escaping () -> Void) {
-        _lesson = StateObject(wrappedValue: TutorialSession(step: step))
+    init(step: Int, dogName: String, onProgress: @escaping (Int) -> Void, onClose: @escaping () -> Void) {
+        _lesson = StateObject(wrappedValue: TutorialSession(step: step, dogName: dogName))
         self.onProgress = onProgress; self.onClose = onClose
     }
     var body: some View {
@@ -262,7 +286,7 @@ private struct TutorialView: View {
                 GardenNote(text: lesson.instruction, symbol: "pawprint")
                     .accessibilityFocused($instructionFocused)
                 ScrollView(.horizontal) {
-                    PuzzleBoard(game: lesson.game, cellSide: side,
+                    PuzzleBoard(game: lesson.game, cellSide: side, dogName: lesson.dogName,
                         arrivalProgress: lesson.game.won ? 1 : 0,
                         highlighted: lesson.target.map { Set([$0]) } ?? [],
                         onSelect: { lesson.select($0) },

@@ -101,3 +101,11 @@ O diário usa calendário gregoriano **UTC**, independente do fuso do aparelho: 
 Save v4 migra v3 e formatos antigos, guarda a tentativa ativa, o passeio normal e diários por ID. A grade completa, vidas, rota e histórico de um diário persistido são recuperados sem geração, mesmo após voltar o relógio ou atualizar o app. Abrir outro dia não troca a fase ativa automaticamente. Cancelar/falhar durante geração preserva a tentativa; o diário só passa a ativo quando pronto.
 
 76 testes passaram e build iOS aprovado. Cobertura inclui fronteira UTC, offsets de fuso, migração v3, independência dos progressos, reabertura sem regenerar, mudança de data e falha de geração. Pendente no iPhone: layout do início, navegação, Dynamic Type/VoiceOver e retomada real.
+
+### Personalização e progresso (PC-019, em revisão)
+
+Ajustes permite editar o nome da cachorrinha. O padrão é Margot (substitui Bento do plano inicial, conforme decisão do usuário). Nomes são normalizados, limitados a 24 caracteres Unicode completos e preservam acentos/emojis; vazio retorna a Margot. O nome aparece no início, partida, conclusão, tutorial e rótulos do tabuleiro. Preferências antigas sem nome continuam compatíveis com save v4.
+
+Seu cantinho reúne a companheira atual, a Praça das Flores e o total de passeios diferentes concluídos. A contagem usa IDs de fases já concluídas: repetir, retomar ou pular a animação não duplica; diário tem seu próprio ID. Não há moedas, novos animais ou desbloqueios fictícios.
+
+80 testes passaram e build iOS aprovado. Testes de nomes longos, acentos, emoji composto, fallback, preferências antigas, persistência entre diário/normal e vitória idempotente. Pendente no iPhone: teclado, nomes longos com Dynamic Type, VoiceOver e revisão visual do cantinho.

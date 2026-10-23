@@ -27,6 +27,13 @@ import Combine
     private var worker: Task<MoveAssessment, Never>?
     private let saveURL: URL?
     private let nodeLimit: Int
+    public var dogName: String { PlayerPreferences.normalizedName(preferences.dogName) }
+    public var completedWalkCount: Int { completedPuzzleIDs.count }
+    public func renameDog(_ name: String) {
+        guard !generating, !checking, !hintChecking, stroke == nil else { return }
+        preferences.dogName = PlayerPreferences.normalizedName(name)
+        message = "Nome salvo: \(dogName)."; save()
+    }
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
     public var canInteract: Bool { !generating && !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
     public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, nodeLimit: Int = 100_000,
@@ -38,7 +45,7 @@ import Combine
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do {
                 apply(try SaveStore(url: saveURL).load())
-                message = self.attempt.defeated ? "As vidas acabaram. Tente novamente com 3 vidas." : self.attempt.game.won ? "Margot chegou! Partida concluída." : "Partida restaurada. Continue de onde parou."
+                message = self.attempt.defeated ? "As vidas acabaram. Tente novamente com 3 vidas." : self.attempt.game.won ? "\(dogName) chegou! Partida concluída." : "Partida restaurada. Continue de onde parou."
             }
             catch {
                 unreadableSave = true
@@ -80,7 +87,7 @@ import Combine
         case .accepted:
             attempt.game = draft.finish()
             celebrating = attempt.game.won
-            message = attempt.game.won ? "Margot chegou! Todas as pistas foram atendidas." : "Continue seguindo as pistas."
+            message = attempt.game.won ? "\(dogName) chegou! Todas as pistas foram atendidas." : "Continue seguindo as pistas."
             save()
         case .penalty:
             attempt.lives = max(0, attempt.lives-1)
@@ -101,7 +108,7 @@ import Combine
     }
     public func restart() {
         cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle))
-        message = "Nova tentativa: 3 vidas para levar a Margot até a casinha."; save()
+        message = "Nova tentativa: 3 vidas para levar \(dogName) até a casinha."; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); parkCurrent(); activeDailyID = nil
@@ -153,7 +160,7 @@ import Combine
             attempt = GameAttempt(game: Game(puzzle: destination))
             message = report.outcome == .fallback
                 ? "Usamos uma fase de reserva verificada: a geração atingiu seu limite. Você tem 3 vidas."
-                : "Novo passeio preparado! Você tem 3 vidas para levar a Margot até a casinha."
+                : "Novo passeio preparado! Você tem 3 vidas para levar \(dogName) até a casinha."
             save()
         } catch {
             guard token == revision else { return }
@@ -187,7 +194,7 @@ import Combine
     }
     public func setPreferences(_ value: PlayerPreferences) {
         guard !generating, !checking, !hintChecking, stroke == nil else { return }
-        preferences = value; save()
+        preferences = value; preferences.dogName = PlayerPreferences.normalizedName(value.dogName); save()
     }
     public func setTutorialStep(_ step: Int) {
         guard step >= 0 else { return }

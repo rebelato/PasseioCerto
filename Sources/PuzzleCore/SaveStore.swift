@@ -1,10 +1,25 @@
 import Foundation
 
 public struct PlayerPreferences: Codable, Equatable, Sendable {
+    public var dogName = "Margot"
+    public static let nameLimit = 24
+    public static func normalizedName(_ value: String) -> String {
+        let words = value.split(whereSeparator: { $0.isWhitespace }).joined(separator: " ")
+        let clean = String(words.unicodeScalars.filter { $0.value >= 32 && $0.value != 127 })
+        return clean.isEmpty ? "Margot" : String(clean.prefix(nameLimit))
+    }
     public var marking = false
     public var soundEnabled = true
     public var hapticsEnabled = true
     public init() {}
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
+        marking = try c.decode(Bool.self, forKey: .marking)
+        soundEnabled = try c.decode(Bool.self, forKey: .soundEnabled)
+        hapticsEnabled = try c.decode(Bool.self, forKey: .hapticsEnabled)
+    }
 }
 public struct PlayerSave: Codable, Sendable {
     public let schemaVersion: Int
