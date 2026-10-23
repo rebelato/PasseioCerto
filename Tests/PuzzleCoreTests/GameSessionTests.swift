@@ -195,3 +195,20 @@ final class GameSessionTests: XCTestCase {
         XCTAssertEqual(AttemptRules.assess(stroke: stroke, isCancelled: { true }), .cancelled)
     }
 }
+
+final class TapTests: XCTestCase {
+    @MainActor func testTapsBesideTheTipDrawAndElsewhereMark() async {
+        let s = GameSession(attempt: GameAttempt(mode: .relaxed))
+        await s.tap(Cell(0,1))
+        XCTAssertEqual(s.attempt.game.path, [Cell(0,0), Cell(0,1)], "Tap next to the tip continues the route")
+        await s.tap(Cell(3,3))
+        XCTAssertEqual(s.attempt.game.marks, [Cell(3,3)], "Tap away from the tip marks ×")
+        await s.tap(Cell(3,3))
+        XCTAssertTrue(s.attempt.game.marks.isEmpty, "Tapping × again clears it")
+        await s.tap(Cell(0,2), held: true)
+        XCTAssertEqual(s.attempt.game.marks, [Cell(0,2)], "Holding marks even beside the tip")
+        await s.tap(Cell(0,0))
+        XCTAssertEqual(s.attempt.game.path, [Cell(0,0)], "Tapping the previous cell steps back")
+        XCTAssertEqual(s.attempt.mistakes, 0)
+    }
+}

@@ -128,6 +128,16 @@
         }
       }
     },
+    "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2, ou arraste até ela a partir de %@, para completá-la.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2, ou arraste até ela a partir de %@, para completá-la."
+          }
+        }
+      }
+    },
     "%@ fez uma paradinha estratégica na árvore… pronto, agora casa!": {
       "localizations": {
         "pt-BR": {
@@ -673,6 +683,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Arraste para desenhar o caminho; volte uma casa para apagar. Toque numa casa para marcar ×, e toque de novo para limpar. Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
+    "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."
           }
         }
       }

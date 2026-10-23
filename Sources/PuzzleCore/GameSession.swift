@@ -114,6 +114,16 @@ import Combine
         }
     }
     private func clearViolation() { violationWorker?.cancel(); violationWorker = nil; violation = nil }
+    /// A tap continues the route when it lands next to the tip (or steps back onto the previous
+    /// cell); anywhere else it toggles ×. Holding always toggles ×, even beside the tip.
+    public func tap(_ cell: Cell, held: Bool = false) async {
+        let game = attempt.game
+        let path = game.path
+        let continues = path.last.map { abs($0.row-cell.row) + abs($0.col-cell.col) == 1 } ?? false
+            && !path.contains(cell) && !game.marks.contains(cell) && !game.puzzle.blocked.contains(cell)
+        let retracts = path.count > 1 && path[path.count-2] == cell
+        await select(cell, marking: held || !(continues || retracts))
+    }
     public func select(_ cell: Cell, marking: Bool) async {
         guard canInteract, stroke == nil else { return }
         begin(at: cell, marking: marking); await finish()
