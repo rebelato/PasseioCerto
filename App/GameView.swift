@@ -52,6 +52,7 @@ struct GameView: View {
                     session.suspend(); tutorialRequested = false; showingLearning = true
                 }.buttonStyle(GardenButtonStyle())
                 Text(session.activeDailyID.map { String(localized: "Desafio diário · ") + $0.replacingOccurrences(of: "daily-v1-", with: "") } ?? String(localized: "Praça das Flores · 5 × 5")).font(.subheadline)
+                if session.attempt.mode.hasLives {
                 HStack(spacing: 10) {
                     ForEach(0..<3) { index in
                         Image(systemName: index < session.attempt.lives ? "heart.fill" : "heart")
@@ -60,6 +61,7 @@ struct GameView: View {
                     Text(String(localized: "\(session.attempt.lives) de 3 vidas")).font(.subheadline)
                 }.accessibilityElement(children: .ignore)
                     .accessibilityLabel(session.attempt.lives == 1 ? String(localized: "1 vida restante de 3") : String(localized: "\(session.attempt.lives) vidas restantes de 3"))
+                }
                 HStack(spacing: 12) {
                     Puppy(pose: game.won ? .happy : .idle).frame(width: 52, height: 52)
                     Text(displayedGame.won ? String(localized: "Chegamos em casa!") : String(localized: "Leve \(session.dogName) até a casinha"))
@@ -73,7 +75,7 @@ struct GameView: View {
                         arrivalProgress: game.won ? (session.celebrating ? arrivalProgress : 1) : 0,
                         walking: session.celebrating && !reduceMotion,
                         highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
-                        highlightedColumn: session.hint?.column, onSelect: select,
+                        highlightedColumn: session.hint?.column, violation: session.displayedViolation, onSelect: select,
                         onStrokeStart: { session.begin(at: $0, marking: marking) },
                         onStrokeMove: { session.move(to: $0) },
                         onStrokeEnd: finishStroke)
@@ -95,7 +97,6 @@ struct GameView: View {
                         .buttonStyle(GardenButtonStyle())
                 }
                 if session.hintChecking { ProgressView(String(localized: "Preparando dica…")) }
-                if session.checking { ProgressView(String(localized: "Verificando jogada…")) }
                 if let error = session.storageError {
                     GardenNote(text: error, symbol: "exclamationmark.triangle")
                     VStack {
@@ -129,21 +130,21 @@ struct GameView: View {
                         .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
                         .disabled(session.generating)
                 } else {
-                GardenTools(marking: markingBinding).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                GardenTools(marking: markingBinding).disabled(session.generating || session.stroke != nil || session.hintChecking || session.attempt.defeated)
                 HStack {
                     Button(String(localized: "Desfazer"), systemImage: "arrow.uturn.backward") { session.undo() }.disabled(!game.canUndo)
                     Button(String(localized: "Dica"), systemImage: "lightbulb") {
                         Task { await session.requestHint() }
                     }.disabled(!session.canInteract).accessibilityFocused($hintButtonFocused)
-                }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.hintChecking || session.attempt.defeated)
                 HStack {
                     Button(String(localized: "Reiniciar"), systemImage: "arrow.clockwise") { reset = true }
-                }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.checking || session.hintChecking || session.attempt.defeated)
+                }.buttonStyle(GardenButtonStyle()).disabled(session.generating || session.stroke != nil || session.hintChecking || session.attempt.defeated)
                 }
                 DifficultyPicker(selection: $difficulty).disabled(session.generating)
                 Button(game.won ? String(localized: "Próxima fase") : String(localized: "Nova fase"), systemImage: "sparkles") { newPuzzle = true }
                     .buttonStyle(GardenButtonStyle())
-                    .disabled(session.generating || session.checking || session.hintChecking || session.stroke != nil)
+                    .disabled(session.generating || session.hintChecking || session.stroke != nil)
                 Text(String(localized: "Arraste ou toque nas casas vizinhas. Volte uma casa para apagar. Para rolar, arraste pelas pistas ou fora da grade.")).font(.footnote).foregroundStyle(.secondary)
             }.padding(GardenTheme.spacing).frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)
@@ -211,7 +212,8 @@ struct GameView: View {
                             Text(String(localized: "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas."))
                             Text(String(localized: "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto."))
                             Text(String(localized: "Use × como lembrete. Desfazer remove sua última ação; Dica explica uma dedução sem jogar por você."))
-                            Text(String(localized: "Você tem 3 vidas. Um caminho impossível custa uma vida e é desfeito. ×, desfazer e gestos inválidos não custam vidas; desfazer não devolve vidas perdidas."))
+                            Text(String(localized: "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas."))
+                            Text(String(localized: "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."))
                         }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
                     }
                     VStack(alignment: .leading, spacing: 8) {

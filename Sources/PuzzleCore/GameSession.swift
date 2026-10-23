@@ -4,7 +4,6 @@ import Combine
 @MainActor public final class GameSession: ObservableObject {
     @Published public private(set) var attempt: GameAttempt
     @Published public private(set) var stroke: GameStroke?
-    @Published public private(set) var checking = false
     /// Player-facing notice; nil when there is nothing worth saying.
     @Published public private(set) var message: String?
     @Published public private(set) var storageError: String?
@@ -26,24 +25,27 @@ import Combine
     public typealias GenerationService = @Sendable (UInt64, PuzzleDifficulty) async throws -> GenerationReport
     private let generate: GenerationService
     private var revision = 0
-    private var worker: Task<MoveAssessment, Never>?
     private let saveURL: URL?
-    private let nodeLimit: Int
+    /// The last visible mistake, shown briefly on the board after the move is undone.
+    @Published public private(set) var violation: StrokeViolation?
+    private var violationWorker: Task<Void, Never>?
+    public var displayedViolation: StrokeViolation? { stroke?.violation ?? violation }
+    @Published public private(set) var bestPaws: [String: Int] = [:]
     public var dogName: String { PlayerPreferences.normalizedName(preferences.dogName) }
     public var completedWalkCount: Int { completedPuzzleIDs.count }
     public func renameDog(_ name: String) {
-        guard !generating, !checking, !hintChecking, stroke == nil else { return }
+        guard !generating, !hintChecking, stroke == nil else { return }
         preferences.dogName = PlayerPreferences.normalizedName(name)
         save()
     }
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
-    public var canInteract: Bool { !generating && !checking && !hintChecking && !attempt.defeated && !attempt.game.won }
-    public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, nodeLimit: Int = 100_000,
+    public var canInteract: Bool { !generating && !hintChecking && !attempt.defeated && !attempt.game.won }
+    public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil,
                 generate: @escaping GenerationService = { seed, difficulty in
                     await PuzzleGenerator.generateAsync(seed: seed, difficulty: difficulty)
                 }) {
         self.generate = generate
-        self.attempt = attempt; self.saveURL = saveURL; self.nodeLimit = nodeLimit
+        self.attempt = attempt; self.saveURL = saveURL
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do { apply(try SaveStore(url: saveURL).load()) }
             catch {
@@ -55,34 +57,23 @@ import Combine
     }
     public func begin(at cell: Cell, marking: Bool) {
         guard canInteract, stroke == nil else { return }
-        hint = nil
+        hint = nil; clearViolation()
         stroke = GameStroke(game: attempt.game, marking: marking)
         stroke?.move(to: cell)
     }
-    public func move(to cell: Cell?) { guard !checking else { return }; stroke?.move(to: cell) }
+    public func move(to cell: Cell?) { stroke?.move(to: cell) }
     public func cancel() {
         celebrating = false
         generationWorker?.cancel(); generationWorker = nil; generating = false
-        revision += 1; worker?.cancel(); worker = nil; stroke = nil; checking = false
+        revision += 1; stroke = nil; clearViolation()
         hintWorker?.cancel(); hintWorker = nil; hint = nil; hintChecking = false
     }
     public func finish(cancelled: Bool = false) async {
         if cancelled { cancel(); return }
-        guard let draft = stroke, !checking else { return }
-        checking = true
-        revision += 1
-        let token = revision
+        guard let draft = stroke else { return }
         let before = attempt.game
-        let limit = nodeLimit
-        let task = Task.detached(priority: .userInitiated) {
-            AttemptRules.assess(before: before, stroke: draft, nodeLimit: limit, isCancelled: { Task.isCancelled })
-        }
-        worker = task
-        let assessment = await withTaskCancellationHandler { await task.value } onCancel: { task.cancel() }
-        guard token == revision else { return }
-        if Task.isCancelled { cancel(); return }
-        stroke = nil; worker = nil; checking = false
-        switch assessment {
+        stroke = nil
+        switch AttemptRules.assess(stroke: draft, isCancelled: { Task.isCancelled }) {
         case .accepted:
             attempt.game = draft.finish()
             celebrating = attempt.game.won
@@ -91,31 +82,44 @@ import Combine
             }
             message = nil
             save()
-        case .penalty:
+        case .penalty(let mistake):
             feedback = GameFeedback(.conflict)
-            attempt.lives = max(0, attempt.lives-1)
-            message = attempt.defeated ? String(localized: "As vidas acabaram. Tente novamente com 3 vidas.") : String(localized: "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita.")
+            attempt.mistakes += 1
+            show(mistake)
+            let cost = !attempt.mode.hasLives ? "" : attempt.defeated
+                ? String(localized: " As vidas acabaram.") : String(localized: " −1 vida.")
+            message = mistake.explanation + cost
             save()
-        case .inconclusive: message = String(localized: "Não foi possível verificar a jogada agora. Ela foi desfeita sem perder vida.")
-        case .cancelled: message = String(localized: "Jogada cancelada sem perder vida.")
+        case .cancelled: cancel()
         }
     }
+    /// The mistake stays highlighted for a moment so the player sees what went wrong.
+    private func show(_ mistake: StrokeViolation) {
+        violationWorker?.cancel()
+        violation = mistake
+        violationWorker = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(600))
+            guard !Task.isCancelled, self?.violation == mistake else { return }
+            self?.violation = nil
+        }
+    }
+    private func clearViolation() { violationWorker?.cancel(); violationWorker = nil; violation = nil }
     public func select(_ cell: Cell, marking: Bool) async {
         guard canInteract, stroke == nil else { return }
         begin(at: cell, marking: marking); await finish()
     }
     public func undo() {
-        guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
+        guard !generating, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
         hint = nil
         attempt.game.undo(); feedback = GameFeedback(.action); message = nil; save()
     }
     public func restart() {
-        cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle))
+        cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle), mode: attempt.mode)
         message = nil; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); parkCurrent(); activeDailyID = nil
-        attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
+        attempt = GameAttempt(game: Game(puzzle: puzzle), mode: preferences.playMode); save()
     }
     /// Keep the current attempt until a complete replacement is ready.
     public func newPuzzle(difficulty: PuzzleDifficulty, seed: UInt64 = UInt64.random(in: .min ... .max)) async {
@@ -161,7 +165,7 @@ import Combine
             } else { destination = puzzle }
             parkCurrent(); activeDailyID = dailyID
             // Reserve puzzles are verified like generated ones; the player never needs to know.
-            attempt = GameAttempt(game: Game(puzzle: destination))
+            attempt = GameAttempt(game: Game(puzzle: destination), mode: dailyID == nil ? preferences.playMode : .relaxed)
             message = nil
             save()
         } catch {
@@ -191,11 +195,11 @@ import Combine
     }
     public func dismissHint() { hint = nil }
     public func setMarking(_ value: Bool) {
-        guard !generating, !checking, !hintChecking, stroke == nil else { return }
+        guard !generating, !hintChecking, stroke == nil else { return }
         preferences.marking = value; save()
     }
     public func setPreferences(_ value: PlayerPreferences) {
-        guard !generating, !checking, !hintChecking, stroke == nil else { return }
+        guard !generating, !hintChecking, stroke == nil else { return }
         preferences = value; preferences.dogName = PlayerPreferences.normalizedName(value.dogName); save()
     }
     public func setTutorialStep(_ step: Int) {
@@ -225,15 +229,19 @@ import Combine
         } catch { storageError = String(localized: "Não foi possível salvar a recuperação. O arquivo original foi preservado.") }
     }
     private var snapshot: PlayerSave {
-        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts)
+        PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts, bestPaws: bestPaws)
     }
     private func apply(_ saved: PlayerSave) {
         activeDailyID = saved.activeDailyID; parkedAttempts = saved.parkedAttempts
         attempt = saved.attempt; preferences = saved.preferences
-        tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs
+        tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs; bestPaws = saved.bestPaws
     }
     private func save() {
-        if attempt.game.won { completedPuzzleIDs.insert(attempt.game.puzzle.puzzleID) }
+        if attempt.game.won {
+            let id = attempt.game.puzzle.puzzleID
+            completedPuzzleIDs.insert(id)
+            bestPaws[id] = max(bestPaws[id] ?? 0, attempt.paws)
+        }
         guard let saveURL, !unreadableSave else { return }
         do {
             try SaveStore(url: saveURL).save(snapshot)

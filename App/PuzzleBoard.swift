@@ -13,6 +13,8 @@ struct PuzzleBoard: View {
     var highlighted: Set<Cell> = []
     var highlightedRow: Int?
     var highlightedColumn: Int?
+    /// A visible mistake: the cell and clue blink in the error color before the move is undone.
+    var violation: StrokeViolation?
     var onSelect: (Cell) -> Void = { _ in }
     var onStrokeStart: (Cell) -> Void = { _ in }
     var onStrokeMove: (Cell?) -> Void = { _ in }
@@ -27,14 +29,14 @@ struct PuzzleBoard: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             ForEach(game.columns.indices, id: \.self) { col in
-                GardenClue(target: game.columns[col], count: game.columnCounts[col], label: String(localized: "Coluna \(col+1)"))
+                GardenClue(target: game.columns[col], count: game.columnCounts[col], label: String(localized: "Coluna \(col+1)"), blocked: violation?.column == col)
                     .overlay { if highlightedColumn == col { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.accent, lineWidth: 3) } }
                     .padding(2).frame(width: cellSide, height: cellSide)
                     .offset(x: CGFloat(col+1)*cellSide)
                     .accessibilitySortPriority(Double(1000-col))
             }
             ForEach(game.rows.indices, id: \.self) { row in
-                GardenClue(target: game.rows[row], count: game.rowCounts[row], label: String(localized: "Linha \(row+1)"))
+                GardenClue(target: game.rows[row], count: game.rowCounts[row], label: String(localized: "Linha \(row+1)"), blocked: violation?.row == row)
                     .overlay { if highlightedRow == row { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.accent, lineWidth: 3) } }
                     .padding(2).frame(width: cellSide, height: cellSide)
                     .offset(y: CGFloat(row+1)*cellSide)
@@ -42,7 +44,8 @@ struct PuzzleBoard: View {
             }
             ForEach(cells, id: \.self) { cell in
                 GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
-                               obstacle: game.puzzle.obstacles.contains(cell), highlighted: highlighted.contains(cell))
+                               obstacle: game.puzzle.obstacles.contains(cell), highlighted: highlighted.contains(cell),
+                               blocked: violation?.cell == cell)
                         .padding(2).contentShape(Rectangle())
                     .frame(width: cellSide, height: cellSide)
                     .highPriorityGesture(stroke(start: cell))

@@ -1,3 +1,21 @@
+/// A mistake the player can see: the offending cell plus the clue it broke, if any.
+public struct StrokeViolation: Equatable, Sendable {
+    public enum Kind: Equatable, Sendable { case rowExceeded, columnExceeded, arrivedEarly, obstacle, crossedPath }
+    public let kind: Kind
+    public let cell: Cell
+    public var row: Int?
+    public var column: Int?
+    public var explanation: String {
+        switch kind {
+        case .rowExceeded: return String(localized: "A linha \((row ?? 0)+1) passou do número.")
+        case .columnExceeded: return String(localized: "A coluna \((column ?? 0)+1) passou do número.")
+        case .arrivedEarly: return String(localized: "Ainda faltam pistas antes da casinha.")
+        case .obstacle: return String(localized: "Arbusto no caminho!")
+        case .crossedPath: return String(localized: "O caminho não pode se cruzar.")
+        }
+    }
+}
+
 /// A draft transaction: the live session is only replaced when the gesture ends.
 public struct GameStroke: Sendable {
     private let original: Game
@@ -5,7 +23,8 @@ public struct GameStroke: Sendable {
     private var visited: Set<Cell> = []
     private var lastInput: Cell?
     public private(set) var preview: Game
-    public private(set) var penaltyDetected = false
+    public private(set) var violation: StrokeViolation?
+    public var penaltyDetected: Bool { violation != nil }
     public init(game: Game, marking: Bool) {
         original = game; preview = game; self.marking = marking
         preview.discardStrokeHistory()
@@ -18,19 +37,30 @@ public struct GameStroke: Sendable {
         if marking && !visited.insert(cell).inserted { return false }
         // Game rejects diagonals/skips, obstacles, conflicts and exceeded clues.
         // We never interpolate a route the player did not actually draw.
-        if !marking, let tip = preview.path.last, !preview.won,
-           preview.puzzle.contains(cell), !preview.puzzle.obstacles.contains(cell),
-           !preview.path.contains(cell), !preview.marks.contains(cell), tip != preview.goal,
-           abs(tip.row-cell.row)+abs(tip.col-cell.col) == 1 {
-            switch RouteValidator.evaluate(puzzle: preview.puzzle, path: preview.path + [cell]) {
-            case .contradiction(.rowExceeded), .contradiction(.columnExceeded), .contradiction(.arrivedBeforeClues):
-                penaltyDetected = true; return false
-            default: break
-            }
+        if !marking, let violation = visibleViolation(stepping: cell) {
+            self.violation = violation; return false
         }
         let accepted = preview.play(cell, marking: marking)
         preview.discardStrokeHistory()
         return accepted
+    }
+    /// Orthogonal steps from the tip that break a rule shown on the board.
+    private func visibleViolation(stepping cell: Cell) -> StrokeViolation? {
+        let path = preview.path
+        guard let tip = path.last, !preview.won, tip != preview.goal, preview.puzzle.contains(cell),
+              abs(tip.row-cell.row)+abs(tip.col-cell.col) == 1 else { return nil }
+        if preview.puzzle.obstacles.contains(cell) { return StrokeViolation(kind: .obstacle, cell: cell) }
+        if path.contains(cell) {
+            // Stepping back onto the previous cell erases; anything else crosses the route.
+            return path.count > 1 && path[path.count-2] == cell ? nil : StrokeViolation(kind: .crossedPath, cell: cell)
+        }
+        guard !preview.marks.contains(cell) else { return nil }
+        switch RouteValidator.evaluate(puzzle: preview.puzzle, path: path + [cell]) {
+        case .contradiction(.rowExceeded(let r)): return StrokeViolation(kind: .rowExceeded, cell: cell, row: r)
+        case .contradiction(.columnExceeded(let c)): return StrokeViolation(kind: .columnExceeded, cell: cell, column: c)
+        case .contradiction(.arrivedBeforeClues): return StrokeViolation(kind: .arrivedEarly, cell: cell)
+        default: return nil
+        }
     }
     public func finish(cancelled: Bool = false) -> Game {
         var result = original

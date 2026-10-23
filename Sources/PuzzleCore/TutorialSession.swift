@@ -24,7 +24,7 @@ import Combine
         case 3: String(localized: "Uma marcação pode ser desfeita. Toque em Desfazer para remover o × que você acabou de colocar.")
         case 4: String(localized: "Uma dica explica uma dedução, sem jogar por você. Toque em Dica para experimentar.")
         case 5: String(localized: "Agora leve \(dogName) até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!")
-        default: String(localized: "Você aprendeu! Na partida normal são 3 vidas: um caminho impossível custa uma vida; × e desfazer são livres.")
+        default: String(localized: "Você aprendeu! No modo Desafiador são 3 vidas: passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma. No Tranquilo, erre à vontade.")
         }
     }
     public var target: Cell? {

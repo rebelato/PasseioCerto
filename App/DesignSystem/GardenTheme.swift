@@ -57,6 +57,7 @@ struct GardenClue: View {
     let target: Int
     let count: Int
     let label: String
+    var blocked = false
     private var symbol: String? { count > target ? "exclamationmark" : count == target ? "checkmark" : nil }
     var body: some View {
         VStack(spacing: 0) {
@@ -66,6 +67,7 @@ struct GardenClue: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(count == target ? GardenTheme.sage : GardenTheme.surface,
                         in: RoundedRectangle(cornerRadius: GardenTheme.cellRadius))
+            .overlay { if blocked { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(GardenTheme.error, lineWidth: 3) } }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(label)
             .accessibilityValue(String(localized: "\(count) de \(target) casas ocupadas. \(count > target ? "Pista excedida" : count == target ? "Contagem atingida" : "Pendente")"))
@@ -113,10 +115,12 @@ struct GardenCell: View {
     var excluded = false
     var obstacle = false
     var highlighted = false
+    var blocked = false
     var body: some View {
         RoundedRectangle(cornerRadius: GardenTheme.cellRadius)
             .fill(occupied ? GardenTheme.sage : GardenTheme.surface)
             .overlay(RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(highlighted ? GardenTheme.accent : GardenTheme.border, lineWidth: highlighted ? 3 : 1))
+            .overlay { if blocked { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).fill(GardenTheme.error.opacity(0.35)).strokeBorder(GardenTheme.error, lineWidth: 3) } }
             .overlay {
                 if obstacle { GardenShrub().padding(6) }
                 else if excluded { Image(systemName: "xmark").font(.title3).foregroundStyle(GardenTheme.secondary) }
