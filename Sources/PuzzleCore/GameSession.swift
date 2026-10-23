@@ -15,6 +15,7 @@ import Combine
     @Published public private(set) var parkedAttempts: [String: GameAttempt] = [:]
     @Published public private(set) var celebrating = false
     public func finishCelebration() { celebrating = false }
+    @Published public private(set) var feedback: GameFeedback?
     private var unreadableSave = false
     @Published public private(set) var hint: HintAdvice?
     @Published public private(set) var hintChecking = false
@@ -87,9 +88,13 @@ import Combine
         case .accepted:
             attempt.game = draft.finish()
             celebrating = attempt.game.won
+            if attempt.game.path != before.path || attempt.game.marks != before.marks {
+                feedback = GameFeedback(attempt.game.won ? .victory : .action)
+            }
             message = attempt.game.won ? "\(dogName) chegou! Todas as pistas foram atendidas." : "Continue seguindo as pistas."
             save()
         case .penalty:
+            feedback = GameFeedback(.conflict)
             attempt.lives = max(0, attempt.lives-1)
             message = attempt.defeated ? "As vidas acabaram. Tente novamente com 3 vidas." : "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita."
             save()
@@ -104,7 +109,7 @@ import Combine
     public func undo() {
         guard !generating, !checking, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
         hint = nil
-        attempt.game.undo(); message = "Última ação desfeita. Vidas perdidas não são recuperadas."; save()
+        attempt.game.undo(); feedback = GameFeedback(.action); message = "Última ação desfeita. Vidas perdidas não são recuperadas."; save()
     }
     public func restart() {
         cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle))

@@ -109,3 +109,11 @@ Ajustes permite editar o nome da cachorrinha. O padrão é Margot (substitui Ben
 Seu cantinho reúne a companheira atual, a Praça das Flores e o total de passeios diferentes concluídos. A contagem usa IDs de fases já concluídas: repetir, retomar ou pular a animação não duplica; diário tem seu próprio ID. Não há moedas, novos animais ou desbloqueios fictícios.
 
 80 testes passaram e build iOS aprovado. Testes de nomes longos, acentos, emoji composto, fallback, preferências antigas, persistência entre diário/normal e vitória idempotente. Pendente no iPhone: teclado, nomes longos com Dynamic Type, VoiceOver e revisão visual do cantinho.
+
+### Sons, hápticos e regras (PC-020, em revisão)
+
+Ajustes oferece controles independentes e persistentes de Sons e Feedback tátil, tutorial e consulta das regras. Eventos transitórios sinalizam ação confirmada, conflito com perda de vida e vitória; não são salvos nem reproduzidos ao restaurar. Um arraste gera no máximo um sinal; gesto cancelado e toque sem efeito não geram sinal. Desfazer válido usa o sinal de ação. Mensagens, pistas e vidas continuam sendo a fonte de informação com tudo desligado.
+
+No iOS, tons PCM originais curtos e de baixo volume são reproduzidos sem sobreposição. A sessão usa [AVAudioSession ambient](https://developer.apple.com/documentation/avfaudio/avaudiosession/category-swift.struct/ambient), configurada para misturar com áudio externo e respeitar o modo silencioso. Sons param ao desativar a opção, abrir Ajustes, voltar ao início ou sair da atividade. Feedback tátil usa impacto suave, aviso e sucesso; ausência de hardware não impede jogar.
+
+83 testes passaram e build iOS aprovado. Cobertura de eventos por gesto, cancelamento, conflito, vitória sem repetição, preferências restauradas e mensagens preservadas com opções desligadas. Pendente em iPhone: volume, vibração, silencioso, fones, interrupção por chamada, música externa, VoiceOver e interface dos ajustes.

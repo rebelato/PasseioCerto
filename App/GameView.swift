@@ -15,6 +15,7 @@ struct GameView: View {
         Binding(get: { session.preferences.marking }, set: { session.setMarking($0) })
     }
     @AccessibilityFocusState private var hintFocused: Bool
+    @State private var feedbackPlayer = GameFeedbackPlayer()
     @State private var nameDraft = ""
     @State private var recovery = false
     @State private var reset = false
@@ -24,6 +25,17 @@ struct GameView: View {
     private var displayedGame: Game { session.displayedGame }
     private let green = GardenTheme.accent
     var body: some View {
+        gameContent
+        .onChange(of: session.feedback) { _, event in
+            guard let event, scenePhase == .active, !showingHome, !showingLearning else { return }
+            feedbackPlayer.play(event.kind, preferences: session.preferences)
+        }
+        .onChange(of: session.preferences.soundEnabled) { _, enabled in if !enabled { feedbackPlayer.stop() } }
+        .onChange(of: showingLearning) { _, visible in if visible { feedbackPlayer.stop() } }
+        .onChange(of: showingHome) { _, visible in if visible { feedbackPlayer.stop() } }
+        .onDisappear { feedbackPlayer.stop(); session.suspend() }
+    }
+    private var gameContent: some View {
         Group {
         if showingHome {
             home
@@ -153,28 +165,7 @@ struct GameView: View {
                     onProgress: { session.setTutorialStep($0) },
                     onClose: { showingLearning = false; showingHome = false })
             } else {
-                ScrollView {
-                VStack(spacing: 24) {
-                    Text("Ajustes").font(GardenTheme.title)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Nome da sua companhia").font(GardenTheme.heading)
-                        TextField("Margot", text: $nameDraft).textFieldStyle(.roundedBorder)
-                            .accessibilityLabel("Nome da cachorrinha")
-                            .onSubmit { session.renameDog(nameDraft); nameDraft = session.dogName }
-                        Text("Até 24 caracteres. Em branco, usamos Margot.").font(.footnote)
-                        Button("Salvar nome") { session.renameDog(nameDraft); nameDraft = session.dogName }
-                            .buttonStyle(GardenButtonStyle())
-                        Text("Nome atual: \(session.dogName)").fixedSize(horizontal: false, vertical: true)
-                        if let error = session.storageError { GardenNote(text: error, symbol: "exclamationmark.triangle") }
-                    }
-                    Button(session.tutorialStep < TutorialSession.completedStep ? "Continuar tutorial" : "Repetir tutorial") {
-                        if session.tutorialStep >= TutorialSession.completedStep { session.setTutorialStep(0) }
-                        tutorialRequested = true
-                    }.buttonStyle(GardenButtonStyle())
-                    Button("Fechar") { showingLearning = false }.buttonStyle(GardenButtonStyle())
-                }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(GardenTheme.background)
-                }.background(GardenTheme.background).onAppear { nameDraft = session.dogName }
+                settings
             }
         }
         .task(id: session.celebrating) {
@@ -203,10 +194,52 @@ struct GameView: View {
         .confirmationDialog("Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente.", isPresented: $recovery, titleVisibility: .visible) {
             Button("Preservar original e salvar esta partida") { session.preserveOriginalAndSaveCurrent() }
         }
-        .onChange(of: scenePhase) { _, phase in if phase != .active { session.suspend() } }
+        .onChange(of: scenePhase) { _, phase in if phase != .active { feedbackPlayer.stop(); session.suspend() } }
         .onChange(of: session.hint) { _, value in hintFocused = value != nil }
         .onChange(of: marking) { _, _ in finishStroke(true) }
-        .onDisappear { session.suspend() }
+    }
+    private var settings: some View {
+                ScrollView {
+                VStack(spacing: 24) {
+                    Text("Ajustes").font(GardenTheme.title)
+                    Toggle("Sons", isOn: preferenceBinding(\.soundEnabled))
+                    Toggle("Feedback tátil", isOn: preferenceBinding(\.hapticsEnabled))
+                    Text("Sons suaves e vibrações opcionais. As pistas e mensagens continuam disponíveis com tudo desligado.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                    DisclosureGroup("Como jogar") {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas.")
+                            Text("As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto.")
+                            Text("Use × como lembrete. Desfazer remove sua última ação; Dica explica uma dedução sem jogar por você.")
+                            Text("Você tem 3 vidas. Um caminho impossível custa uma vida e é desfeito. ×, desfazer e gestos inválidos não custam vidas; desfazer não devolve vidas perdidas.")
+                        }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Nome da sua companhia").font(GardenTheme.heading)
+                        TextField("Margot", text: $nameDraft).textFieldStyle(.roundedBorder)
+                            .accessibilityLabel("Nome da cachorrinha")
+                            .onSubmit { session.renameDog(nameDraft); nameDraft = session.dogName }
+                        Text("Até 24 caracteres. Em branco, usamos Margot.").font(.footnote)
+                        Button("Salvar nome") { session.renameDog(nameDraft); nameDraft = session.dogName }
+                            .buttonStyle(GardenButtonStyle())
+                        Text("Nome atual: \(session.dogName)").fixedSize(horizontal: false, vertical: true)
+                        if let error = session.storageError { GardenNote(text: error, symbol: "exclamationmark.triangle") }
+                    }
+                    Button(session.tutorialStep < TutorialSession.completedStep ? "Continuar tutorial" : "Repetir tutorial") {
+                        if session.tutorialStep >= TutorialSession.completedStep { session.setTutorialStep(0) }
+                        tutorialRequested = true
+                    }.buttonStyle(GardenButtonStyle())
+                    Button("Fechar") { showingLearning = false }.buttonStyle(GardenButtonStyle())
+                }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(GardenTheme.background)
+                }.background(GardenTheme.background).onAppear { nameDraft = session.dogName }
+    }
+    private func preferenceBinding(_ keyPath: WritableKeyPath<PlayerPreferences, Bool>) -> Binding<Bool> {
+        Binding(get: { session.preferences[keyPath: keyPath] }, set: { value in
+            var preferences = session.preferences
+            preferences[keyPath: keyPath] = value
+            session.setPreferences(preferences)
+        })
     }
     private var home: some View {
         TimelineView(.periodic(from: .now, by: 60)) { timeline in
