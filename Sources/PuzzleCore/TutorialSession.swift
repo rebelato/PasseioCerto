@@ -18,13 +18,13 @@ import Combine
     }
     public var instruction: String {
         switch step {
-        case 0: String(localized: "\(dogName) e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2 para completá-la.")
+        case 0: String(localized: "\(dogName) e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2, ou arraste até ela a partir de \(dogName), para completá-la.")
         case 1: String(localized: "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2.")
-        case 2: String(localized: "A primeira linha já está completa. Use × na linha 1, coluna 3 para lembrar que ela fica fora do caminho.")
+        case 2: String(localized: "A primeira linha já está completa. Toque na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho.")
         case 3: String(localized: "Uma marcação pode ser desfeita. Toque em Desfazer para remover o × que você acabou de colocar.")
         case 4: String(localized: "Uma dica explica uma dedução, sem jogar por você. Toque em Dica para experimentar.")
         case 5: String(localized: "Agora leve \(dogName) até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!")
-        default: String(localized: "Você aprendeu! Na partida normal são 3 vidas: um caminho impossível custa uma vida; × e desfazer são livres.")
+        default: String(localized: "Você aprendeu! No modo Desafiador são 3 vidas: passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma. No Tranquilo, erre à vontade.")
         }
     }
     public var target: Cell? {
@@ -44,6 +44,16 @@ import Combine
         if step == 5 {
             if game.won { advance() }
         } else { advance() }
+    }
+    /// Taps work like in the game: the indicated cell continues the route (or gets × on step 3).
+    public func tap(_ cell: Cell) {
+        guard target != nil else { return }
+        select(cell)
+    }
+    /// Cells crossed while dragging; only the indicated one counts.
+    public func drag(to cell: Cell?) {
+        guard step != 2, let cell, cell == target else { return }
+        select(cell)
     }
     public func undo() {
         guard step == 3 else { return }

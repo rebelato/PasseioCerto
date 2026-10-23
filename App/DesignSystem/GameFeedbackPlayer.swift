@@ -8,6 +8,7 @@ import UIKit
     #if os(iOS)
     private var player: AVAudioPlayer?
     private let impact = UIImpactFeedbackGenerator(style: .soft)
+    private let tick = UIImpactFeedbackGenerator(style: .rigid)
     private let notification = UINotificationFeedbackGenerator()
     private var sounds: [GameFeedback.Kind: Data] = [:]
     #endif
@@ -18,9 +19,12 @@ import UIKit
             case .action: impact.impactOccurred(intensity: 0.45)
             case .conflict: notification.notificationOccurred(.warning)
             case .victory: notification.notificationOccurred(.success)
+            case .step: impact.impactOccurred(intensity: 0.25)
+            case .clueMet: tick.impactOccurred(intensity: 0.6)
             }
         }
-        guard preferences.soundEnabled else { stop(); return }
+        // Each drawn cell only gets a light haptic; sound would be noise.
+        guard preferences.soundEnabled, kind != .step else { if !preferences.soundEnabled { stop() }; return }
         do {
             // Ambient mixes with other apps and respects Silent/lock:
             // https://developer.apple.com/documentation/avfaudio/avaudiosession/category-swift.struct/ambient
@@ -47,6 +51,8 @@ import UIKit
         case .action: notes = [660]
         case .conflict: notes = [240, 200]
         case .victory: notes = [523.25, 659.25, 783.99]
+        case .step: notes = []
+        case .clueMet: notes = [1046.5]
         }
         let rate = 22_050
         let count = Int(Double(rate) * 0.085)

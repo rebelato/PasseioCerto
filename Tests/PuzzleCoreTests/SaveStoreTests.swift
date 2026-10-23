@@ -50,10 +50,26 @@ final class SaveStoreTests: XCTestCase {
     func testMigratesBothOldFormats() throws {
         for bytes in [try JSONEncoder().encode(Game()), try JSONEncoder().encode(GameAttempt())] {
             let loaded = try JSONDecoder().decode(PlayerSave.self, from: bytes)
-            XCTAssertEqual(loaded.schemaVersion, 4)
+            XCTAssertEqual(loaded.schemaVersion, 5)
             XCTAssertEqual(loaded.attempt.lives, 3)
             XCTAssertEqual(loaded.preferences, PlayerPreferences())
         }
+    }
+    func testMigratesV2LivesAndV4CompletedWalks() throws {
+        let v2 = Data(#"{"schemaVersion":2,"lives":1,"game":\#(String(decoding: try JSONEncoder().encode(Game()), as: UTF8.self))}"#.utf8)
+        let attempt = try JSONDecoder().decode(GameAttempt.self, from: v2)
+        XCTAssertEqual(attempt.mode, .challenging)
+        XCTAssertEqual(attempt.lives, 1)
+        XCTAssertEqual(attempt.mistakes, 2)
+        var json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(PlayerSave(completedPuzzleIDs: ["a", "b"]))) as? [String: Any])
+        json["schemaVersion"] = 4
+        json.removeValue(forKey: "bestPaws")
+        var preferences = try XCTUnwrap(json["preferences"] as? [String: Any])
+        preferences.removeValue(forKey: "playMode")
+        json["preferences"] = preferences
+        let save = try JSONDecoder().decode(PlayerSave.self, from: JSONSerialization.data(withJSONObject: json))
+        XCTAssertEqual(save.bestPaws, ["a": 1, "b": 1])
+        XCTAssertEqual(save.preferences.playMode, .relaxed)
     }
     @MainActor func testSuspendingDiscardsDraftAndPersistsPreferences() async throws {
         let url = location(); defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
