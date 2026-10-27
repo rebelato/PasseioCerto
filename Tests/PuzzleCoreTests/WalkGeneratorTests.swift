@@ -10,6 +10,7 @@ final class WalkGeneratorTests: XCTestCase {
             XCTAssertFalse(p.rows.contains(0), "\(difficulty) rows")
             XCTAssertFalse(p.columns.contains(0), "\(difficulty) columns")
             XCTAssertTrue(p.obstacles.isEmpty)
+            if difficulty.size >= 15 { XCTAssertTrue(p.givenEdges.isEmpty, "No pre-drawn pieces on the big grids") }
             XCTAssertEqual(p.hiddenGoal, difficulty != .easy, "Only Fácil shows the house")
             let route = try XCTUnwrap(PuzzleSolution.route(for: p))
             XCTAssertEqual(route.first, p.start)

@@ -35,7 +35,7 @@ public enum WalkGenerator {
             return Int((state >> 33) % UInt64(max(1, bound)))
         }
     }
-    public static func generate(_ difficulty: Difficulty, variation: UInt64, id: String? = nil, candidateLimit: Int = 40,
+    public static func generate(_ difficulty: Difficulty, variation: UInt64, id: String? = nil, candidateLimit: Int = 200,
                                 isCancelled: () -> Bool = { false }) -> GenerationReport {
         var rng = Random(state: variation &* 0x9E3779B97F4A7C15 &+ UInt64(difficulty.size))
         var attempted = 0, logicRejected = 0
@@ -54,7 +54,8 @@ public enum WalkGenerator {
             let puzzleID = id ?? "walk-v\(version)-\(difficulty.rawValue)-\(variation)-\(index)"
             var given: [GivenEdge] = []
             // Reveal route pieces where logic stalls, up to a budget that keeps grids interesting.
-            let budget = max(1, n*n/9)
+            // Difícil and Especialista get none: their compact routes are solved by logic alone.
+            let budget = n >= 15 ? 0 : max(1, n*n/9)
             let perRound = max(1, n/6)
             while given.count <= budget {
                 if isCancelled() { return report(.cancelled, nil, attempted, logicRejected) }
@@ -121,8 +122,11 @@ public enum WalkGenerator {
     /// what lets 15×15 and 20×20 be solved without guessing. Also touches every row and column.
     private static func looseRoute(_ n: Int, rng: inout Random) -> [Cell]? {
         let inside = { (c: Cell) in (0..<n).contains(c.row) && (0..<n).contains(c.col) }
-        // Big grids get relatively shorter routes: fewer crossings keep their lines more together.
-        let target = n >= 15 ? n*n*20/100 + rng.next(max(1, n*n*8/100)) : n*n*30/100 + rng.next(max(1, n*n*12/100))
+        // Big grids get relatively short, compact routes: each line's cells stay together, and logic
+        // finishes them without any pre-drawn piece (20×20 about 40–56 cells, 15×15 about 31–40).
+        let target = n >= 20 ? n*n*10/100 + rng.next(max(1, n*n*4/100))
+            : n >= 15 ? n*n*14/100 + rng.next(max(1, n*n*4/100))
+            : n*n*30/100 + rng.next(max(1, n*n*12/100))
         for _ in 0..<60 {
             var route = [Cell(rng.next(n), rng.next(n))]
             var taken: Set<Cell> = [route[0]]

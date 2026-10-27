@@ -248,3 +248,12 @@ Capturas: [início](docs/validation/design-review/home-difficulties.png) e [Espe
   | Especialista | 2,1 | ~17 | ~0,2 s |
 
   [Exemplo 15×15](docs/validation/design-review/hard-15x15.png).
+
+**Sem trechos tracejados no Difícil e no Especialista.** Nessas grades, os caminhos passaram a ser curtos e compactos: cerca de 31–40 casas no 15×15 e 40–56 no 20×20, ainda passando por todas as linhas e colunas. Assim a lógica fecha a fase sozinha, sem nenhum trecho pré-desenhado, e as casas de cada linha ficam juntas.
+
+| Nível | Pedaços por linha | Tempo (macOS, Release) |
+|---|---|---|
+| Difícil | 1,05 | ~0,02 s |
+| Especialista | 1,05 | ~0,09 s |
+
+O custo é que as pistas dessas grades ficam baixas (muitos 1 e 2), o que deixa o desafio mais parecido com o de achar o caminho numa grade grande e vazia. O Médio raramente revela um trecho.
