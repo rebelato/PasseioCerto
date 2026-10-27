@@ -32,18 +32,21 @@ struct GameScreen: View {
             GeometryReader { space in board(in: space.size) }
             if let error = session.storageError { storageRecovery(error) }
             if session.attempt.defeated {
-                Button(String(localized: "Tentar de novo"), systemImage: "arrow.clockwise") { session.restart() }
+                Button(String(localized: "Tentar de novo"), systemImage: "arrow.clockwise") { Task { await session.replay() } }
                     .buttonStyle(GardenButtonStyle(prominent: true))
             } else {
-                GameToolbar(canUndo: game.canUndo, canPlay: session.canInteract && !busy,
-                            onUndo: session.undo, onHint: { Task { await session.requestHint() } }, onRestart: { reset = true })
+                GameToolbar(canPlay: session.canInteract && !busy, isDaily: session.activeDailyID != nil,
+                            onHint: { Task { await session.requestHint() } }, onRestart: { reset = true })
             }
         }
         .padding(.horizontal, GardenTheme.spacing).padding(.bottom, 8)
         .frame(maxWidth: 560).frame(maxWidth: .infinity)
         .background(GardenTheme.background).foregroundStyle(GardenTheme.ink).tint(GardenTheme.accent)
-        .confirmationDialog(String(localized: "Reiniciar esta fase?"), isPresented: $reset, titleVisibility: .visible) {
-            Button(String(localized: "Reiniciar"), role: .destructive) { session.restart() }
+        .confirmationDialog(session.activeDailyID != nil ? String(localized: "Reiniciar o desafio do dia?") : String(localized: "Trocar por outra fase deste lugar?"),
+                            isPresented: $reset, titleVisibility: .visible) {
+            Button(session.activeDailyID != nil ? String(localized: "Reiniciar") : String(localized: "Outra fase"), role: .destructive) {
+                Task { await session.replay() }
+            }
         }
         .confirmationDialog(String(localized: "Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente."), isPresented: $recovery, titleVisibility: .visible) {
             Button(String(localized: "Preservar original e salvar esta partida")) { session.preserveOriginalAndSaveCurrent() }
@@ -52,7 +55,7 @@ struct GameScreen: View {
             VictorySheet(dogName: session.dogName, paws: session.attempt.paws,
                          best: session.bestPaws[game.puzzle.puzzleID] ?? session.attempt.paws,
                          isDaily: session.activeDailyID != nil, generating: session.generating,
-                         onNext: onNext, onReplay: { session.restart() }, onHome: onHome)
+                         onNext: onNext, onReplay: { Task { await session.replay() } }, onHome: onHome)
         }
         .task(id: session.celebrating) { await celebrate() }
         .onChange(of: game.won) { _, won in if !won { enteredHouse = false; wagging = false } }
@@ -69,6 +72,9 @@ struct GameScreen: View {
         if game.won { return String(localized: "Chegamos em casa!") }
         if session.attempt.defeated { return String(localized: "As vidas acabaram. Vamos tentar de novo?") }
         if let message = session.message { return message }
+        if game.puzzle.hiddenGoal && game.path.count == 1 && game.marks.isEmpty {
+            return String(localized: "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.")
+        }
         // First walk of a new place: Margot introduces its rule.
         if let level = session.attempt.level, level.level == 0, let rule = level.world.newRule, game.path.count == 1, game.marks.isEmpty {
             return String(localized: "Novidade, \(rule.title.lowercased())! \(rule.explanation)")
@@ -197,17 +203,17 @@ struct MargotBubble: View {
     }
 }
 
+/// No undo: steps are final. Restarting a level means a new grid, so lives can't be refilled on the same one.
 struct GameToolbar: View {
-    let canUndo: Bool
     let canPlay: Bool
-    let onUndo: () -> Void
+    let isDaily: Bool
     let onHint: () -> Void
     let onRestart: () -> Void
     var body: some View {
         HStack(spacing: 4) {
-            Button(String(localized: "Desfazer"), systemImage: "arrow.uturn.backward", action: onUndo).disabled(!canPlay || !canUndo)
             Button(String(localized: "Dica"), systemImage: "lightbulb", action: onHint).disabled(!canPlay)
-            Button(String(localized: "Reiniciar"), systemImage: "arrow.clockwise", action: onRestart).disabled(!canPlay)
+            Button(isDaily ? String(localized: "Reiniciar") : String(localized: "Outra fase"),
+                   systemImage: isDaily ? "arrow.clockwise" : "arrow.triangle.2.circlepath", action: onRestart).disabled(!canPlay)
         }.buttonStyle(GardenIconButtonStyle())
             .padding(4).background(GardenTheme.surface, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
             .overlay(RoundedRectangle(cornerRadius: GardenTheme.radius).strokeBorder(GardenTheme.border.opacity(0.5)))

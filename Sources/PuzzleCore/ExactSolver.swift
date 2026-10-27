@@ -52,15 +52,15 @@ public enum ExactSolver {
             var reachable: Set<Cell> = []
             var pending = [path.last!]
             while let cell = pending.popLast() {
-                if cell == puzzle.goal { continue }
+                if cell == puzzle.knownGoal { continue }
                 for next in Cell.neighbors(cell) where puzzle.contains(next) && !unusable.contains(next) && !used.contains(next) {
                     if reachable.insert(next).inserted { pending.append(next) }
                 }
             }
-            guard reachable.contains(puzzle.goal) else { return false }
+            if let goal = puzzle.knownGoal, !reachable.contains(goal) { return false }
             let counts = RouteValidator.counts(puzzle: puzzle, path: path)
             var rows = counts.rows, columns = counts.columns
-            for cell in reachable where cell != puzzle.goal { rows[cell.row] += 1; columns[cell.col] += 1 }
+            for cell in reachable where cell != puzzle.knownGoal { rows[cell.row] += 1; columns[cell.col] += 1 }
             guard zip(rows, puzzle.rows).allSatisfy({ $0 >= $1 }), zip(columns, puzzle.columns).allSatisfy({ $0 >= $1 }) else { return false }
             let open = used.union(reachable)
             return puzzle.bones.isSubset(of: open)
@@ -70,5 +70,15 @@ public enum ExactSolver {
         search(prefix ?? [puzzle.start])
         let classification: SolverClassification = solutions.count >= 2 ? .multiple : interrupted ? .indeterminate : solutions.isEmpty ? .noSolution : .unique
         return SolverResult(classification: classification, solutions: solutions, visitedNodes: visited)
+    }
+}
+
+public enum PuzzleSolution {
+    /// The only route that solves a certified puzzle, or nil if it cannot be pinned down.
+    public static func route(for puzzle: Puzzle) -> [Cell]? {
+        let logic = LogicEngine.analyze(puzzle: puzzle)
+        if logic.outcome == .solved { return logic.path }
+        let exact = ExactSolver.solve(puzzle: puzzle, nodeLimit: 200_000)
+        return exact.classification == .unique ? exact.solutions.first : nil
     }
 }

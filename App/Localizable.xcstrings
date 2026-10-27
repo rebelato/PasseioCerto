@@ -377,6 +377,26 @@
         }
       }
     },
+    "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha."
+          }
+        }
+      }
+    },
+    "A casinha só aparece quando o caminho termina. Vale para os próximos passeios.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A casinha só aparece quando o caminho termina. Vale para os próximos passeios."
+          }
+        }
+      }
+    },
     "A coluna %lld": {
       "localizations": {
         "pt-BR": {
@@ -687,6 +707,16 @@
         }
       }
     },
+    "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
     "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
       "localizations": {
         "pt-BR": {
@@ -746,6 +776,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bandana"
+          }
+        }
+      }
+    },
+    "Cada fase tem um único caminho certo. No Desafiador você tem 3 vidas: um passo fora dele, passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma, e o passo é recusado. No Tranquilo os erros só contam para as patinhas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada fase tem um único caminho certo. No Desafiador você tem 3 vidas: um passo fora dele, passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma, e o passo é recusado. No Tranquilo os erros só contam para as patinhas."
           }
         }
       }
@@ -833,6 +873,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Casinha conectada"
+          }
+        }
+      }
+    },
+    "Casinha escondida": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha escondida"
           }
         }
       }
@@ -1096,6 +1146,16 @@
         }
       }
     },
+    "Escolher uma fase deste lugar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolher uma fase deste lugar"
+          }
+        }
+      }
+    },
     "Esse caminho não pode completar as pistas. Você perdeu 1 vida; a jogada foi desfeita.": {
       "extractionState": "stale",
       "localizations": {
@@ -1155,6 +1215,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Este trecho já vem desenhado: o caminho segue por ele."
+          }
+        }
+      }
+    },
+    "Fase %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fase %lld"
+          }
+        }
+      }
+    },
+    "Fase %lld · a mais difícil": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fase %lld · a mais difícil"
           }
         }
       }
@@ -1282,6 +1362,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geração cancelada. Sua partida foi mantida."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld, com a casinha escondida.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld, com a casinha escondida."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld."
           }
         }
       }
@@ -1546,6 +1646,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Modo do passeio"
+          }
+        }
+      }
+    },
+    "Mudou de ideia? Toque de novo no × da linha 1, coluna 3 para limpá-lo. Já os passos do caminho são definitivos.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mudou de ideia? Toque de novo no × da linha 1, coluna 3 para limpá-lo. Já os passos do caminho são definitivos."
           }
         }
       }
@@ -1901,6 +2011,16 @@
         }
       }
     },
+    "Onde tudo começa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onde tudo começa."
+          }
+        }
+      }
+    },
     "Osso": {
       "localizations": {
         "pt-BR": {
@@ -1927,6 +2047,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osso: o caminho precisa passar aqui"
+          }
+        }
+      }
+    },
+    "Outra fase": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outra fase"
           }
         }
       }
@@ -2075,6 +2205,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ponta atual do caminho."
+          }
+        }
+      }
+    },
+    "Por aí não! O caminho certo segue por outra casa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Por aí não! O caminho certo segue por outra casa."
           }
         }
       }
@@ -2292,6 +2432,16 @@
         }
       }
     },
+    "Reiniciar o desafio do dia?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reiniciar o desafio do dia?"
+          }
+        }
+      }
+    },
     "Repetir tutorial": {
       "extractionState": "stale",
       "localizations": {
@@ -2486,6 +2636,16 @@
         }
       }
     },
+    "Toda fase é nova: jogar de novo, tentar de novo ou pedir outra fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toda fase é nova: jogar de novo, tentar de novo ou pedir outra fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo."
+          }
+        }
+      }
+    },
     "Toque duas vezes para alternar a marcação xis": {
       "extractionState": "stale",
       "localizations": {
@@ -2518,6 +2678,16 @@
         }
       }
     },
+    "Toque num lugar para escolher a fase, mesmo antes de chegar nele. Isso não muda o seu progresso.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toque num lugar para escolher a fase, mesmo antes de chegar nele. Isso não muda o seu progresso."
+          }
+        }
+      }
+    },
     "Tranquilo": {
       "extractionState": "stale",
       "localizations": {
@@ -2535,6 +2705,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tranquilo · termina em %@"
+          }
+        }
+      }
+    },
+    "Trocar por outra fase deste lugar?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trocar por outra fase deste lugar?"
           }
         }
       }

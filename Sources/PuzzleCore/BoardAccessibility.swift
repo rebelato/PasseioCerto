@@ -8,7 +8,7 @@ public enum BoardAccessibility {
         let state: String
         if cell == game.start {
             state = game.won ? String(localized: "Início do caminho concluído") : String(localized: "\(dogName), início do caminho")
-        } else if cell == game.goal {
+        } else if cell == game.puzzle.knownGoal || (game.won && cell == game.goal) {
             state = game.won ? String(localized: "Casinha, passeio concluído") : game.path.last == cell ? String(localized: "Casinha conectada") : String(localized: "Casinha ainda não conectada")
         } else if game.puzzle.trees.contains(cell) { state = String(localized: "Árvore: o caminho precisa passar ao lado") }
         else if game.puzzle.cats.contains(cell) { state = String(localized: "Gato: o caminho não pode passar ao lado") }
