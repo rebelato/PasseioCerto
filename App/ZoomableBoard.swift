@@ -2,8 +2,22 @@ import SwiftUI
 #if canImport(UIKit)
 import UIKit
 
-/// Pinch to zoom and two-finger pan for the big grids, while one finger keeps drawing on the
-/// board. The board is hosted inside a UIScrollView whose pan needs two touches.
+/// One-finger touches on a zoomable board, in board coordinates (row/column 0 are the clues).
+struct BoardTouchHandlers {
+    var cellSide: CGFloat
+    var rows: Int
+    var columns: Int
+    var enabled: Bool
+    var onTap: (Cell, Bool) -> Void
+    var onStrokeStart: (Cell) -> Void
+    var onStrokeMove: (Cell?) -> Void
+    var onStrokeEnd: (Bool) -> Void
+}
+
+/// Pinch to zoom and two-finger pan for the big grids, while one finger keeps drawing.
+/// SwiftUI's drawing gesture swallowed every touch and kept the pinch from starting over the
+/// grid, so here both live in UIKit: the scroll view pinches and pans with two fingers, and a
+/// one-finger recognizer on the board does what PuzzleBoard's gesture does elsewhere.
 struct ZoomableBoard<Content: View>: UIViewRepresentable {
     let contentSize: CGSize
     var maximumZoom: CGFloat = 3
@@ -11,14 +25,14 @@ struct ZoomableBoard<Content: View>: UIViewRepresentable {
     @Binding var zoomed: Bool
     /// Changing this value zooms back out to the whole grid.
     var resetToken = 0
-    /// Called when a pinch or two-finger pan starts (true) and ends (false).
-    var onGesture: (Bool) -> Void = { _ in }
+    var touches: BoardTouchHandlers
     @ViewBuilder var content: () -> Content
 
-    func makeCoordinator() -> Coordinator { Coordinator(host: UIHostingController(rootView: content()), zoomed: $zoomed) }
+    func makeCoordinator() -> Coordinator { Coordinator(host: UIHostingController(rootView: content()), zoomed: $zoomed, touches: touches) }
     func makeUIView(context: Context) -> UIScrollView {
-        let scroll = BoardScrollView()
-        scroll.delegate = context.coordinator
+        let coordinator = context.coordinator
+        let scroll = UIScrollView()
+        scroll.delegate = coordinator
         scroll.minimumZoomScale = 1
         scroll.maximumZoomScale = maximumZoom
         scroll.bouncesZoom = true
@@ -27,21 +41,27 @@ struct ZoomableBoard<Content: View>: UIViewRepresentable {
         scroll.backgroundColor = .clear
         scroll.panGestureRecognizer.minimumNumberOfTouches = 2
         scroll.delaysContentTouches = false
-        let host = context.coordinator.host
+        let host = coordinator.host
         host.view.backgroundColor = .clear
         host.view.frame = CGRect(origin: .zero, size: contentSize)
         if #available(iOS 16.4, *) { host.safeAreaRegions = [] }
         scroll.addSubview(host.view)
         scroll.contentSize = contentSize
-        scroll.pinchGestureRecognizer?.addTarget(context.coordinator, action: #selector(Coordinator.zoomGesture(_:)))
-        scroll.panGestureRecognizer.addTarget(context.coordinator, action: #selector(Coordinator.zoomGesture(_:)))
+        // A press with no delay and unlimited movement follows one finger from down to up.
+        let finger = UILongPressGestureRecognizer(target: coordinator, action: #selector(Coordinator.finger(_:)))
+        finger.minimumPressDuration = 0
+        finger.allowableMovement = .greatestFiniteMagnitude
+        finger.delegate = coordinator
+        host.view.addGestureRecognizer(finger)
+        scroll.pinchGestureRecognizer?.addTarget(coordinator, action: #selector(Coordinator.twoFingers(_:)))
+        scroll.panGestureRecognizer.addTarget(coordinator, action: #selector(Coordinator.twoFingers(_:)))
         return scroll
     }
     func updateUIView(_ scroll: UIScrollView, context: Context) {
         let coordinator = context.coordinator
         coordinator.host.rootView = content()
         coordinator.zoomed = $zoomed
-        coordinator.onGesture = onGesture
+        coordinator.touches = touches
         scroll.maximumZoomScale = maximumZoom
         if coordinator.host.view.bounds.size != contentSize {
             scroll.zoomScale = 1
@@ -55,19 +75,56 @@ struct ZoomableBoard<Content: View>: UIViewRepresentable {
         coordinator.center(in: scroll)
     }
 
-    final class Coordinator: NSObject, UIScrollViewDelegate {
+    final class Coordinator: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
         let host: UIHostingController<Content>
         var zoomed: Binding<Bool>
+        var touches: BoardTouchHandlers
         var resetToken = 0
-        var onGesture: (Bool) -> Void = { _ in }
-        init(host: UIHostingController<Content>, zoomed: Binding<Bool>) { self.host = host; self.zoomed = zoomed }
-        @objc func zoomGesture(_ recognizer: UIGestureRecognizer) {
+        private var startCell: Cell?
+        private var startTime = Date()
+        private var stroking = false
+        /// Set when a second finger turns the touch into a zoom: nothing is drawn or tapped.
+        private var abandoned = false
+        init(host: UIHostingController<Content>, zoomed: Binding<Bool>, touches: BoardTouchHandlers) {
+            self.host = host; self.zoomed = zoomed; self.touches = touches
+        }
+        private func cell(at point: CGPoint) -> Cell? {
+            BoardHitTest.cell(x: point.x, y: point.y, side: touches.cellSide, rows: touches.rows, columns: touches.columns)
+        }
+        @objc func finger(_ recognizer: UILongPressGestureRecognizer) {
+            let current = cell(at: recognizer.location(in: host.view))
             switch recognizer.state {
-            case .began: onGesture(true)
-            case .ended, .cancelled, .failed: onGesture(false)
+            case .began:
+                abandoned = !touches.enabled || recognizer.numberOfTouches > 1
+                stroking = false; startCell = current; startTime = Date()
+            case .changed:
+                if recognizer.numberOfTouches > 1 { abandon(); return }
+                guard !abandoned, let start = startCell else { return }
+                if !stroking {
+                    guard current != start else { return }
+                    stroking = true; touches.onStrokeStart(start)
+                }
+                touches.onStrokeMove(current)
+            case .ended:
+                defer { startCell = nil; stroking = false }
+                guard !abandoned, let start = startCell else { return }
+                if stroking { touches.onStrokeEnd(false) }
+                else { touches.onTap(start, Date().timeIntervalSince(startTime) >= 0.45) }
+            case .cancelled, .failed:
+                if stroking && !abandoned { touches.onStrokeEnd(true) }
+                startCell = nil; stroking = false
             default: break
             }
         }
+        /// A pinch or two-finger pan beginning abandons whatever the first finger was doing.
+        @objc func twoFingers(_ recognizer: UIGestureRecognizer) {
+            if recognizer.state == .began { abandon() }
+        }
+        private func abandon() {
+            if stroking && !abandoned { touches.onStrokeEnd(true) }
+            abandoned = true; stroking = false
+        }
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
         func viewForZooming(in scrollView: UIScrollView) -> UIView? { host.view }
         func scrollViewDidZoom(_ scrollView: UIScrollView) {
             center(in: scrollView)
@@ -81,16 +138,6 @@ struct ZoomableBoard<Content: View>: UIViewRepresentable {
             let y = max(0, (scroll.bounds.height - size.height) / 2)
             scroll.contentInset = UIEdgeInsets(top: y, left: x, bottom: y, right: x)
         }
-    }
-}
-
-/// The board's own drawing gesture grabs every touch as soon as a finger lands, which kept the
-/// pinch from ever starting over the grid. Letting pinch and two-finger pan run alongside it fixes
-/// that; the screen drops any half-drawn stroke when they begin, and ignores the lifting fingers.
-private final class BoardScrollView: UIScrollView {
-    @objc func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                    shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
-        gestureRecognizer === pinchGestureRecognizer || gestureRecognizer === panGestureRecognizer
     }
 }
 #endif

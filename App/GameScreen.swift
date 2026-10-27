@@ -18,10 +18,7 @@ struct GameScreen: View {
     @State private var reset = false
     @State private var zoomed = false
     @State private var zoomReset = 0
-    /// While two fingers zoom or pan, and a moment after, touches are not taps or strokes.
-    @State private var zoomGestureActive = false
-    @State private var lastZoomGesture = Date.distantPast
-    private var zoomGestureRecent: Bool { zoomGestureActive || Date().timeIntervalSince(lastZoomGesture) < 0.4 }
+
     @State private var recovery = false
     @AccessibilityFocusState private var bubbleFocused: Bool
     private var game: Game { session.attempt.game }
@@ -102,15 +99,8 @@ struct GameScreen: View {
             highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
             highlightedColumn: session.hint?.column, violation: session.displayedViolation,
             onSelect: { cell in Task { await session.select(cell, marking: false) } },
-            onTap: { cell, held in
-                guard !zoomGestureRecent else { return }
-                Task { await session.tap(cell, held: held) }
-            },
-            onStrokeStart: { if !zoomGestureRecent { session.begin(at: $0, marking: false) } },
-            onStrokeMove: { session.move(to: $0) },
-            onStrokeEnd: { cancelled in
-                if cancelled { session.cancel() } else { Task { await session.finish() } }
-            })
+            onTap: tap, onStrokeStart: { session.begin(at: $0, marking: false) },
+            onStrokeMove: { session.move(to: $0) }, onStrokeEnd: endStroke)
             .allowsHitTesting(session.canInteract)
             .accessibilityHidden(session.attempt.defeated)
             .overlay { if session.generating { ProgressView().controlSize(.large) } }
@@ -118,11 +108,15 @@ struct GameScreen: View {
             ScrollView([.horizontal, .vertical]) { content }
         } else if fitted < GardenTheme.minTarget {
             // Big grids fit whole on screen; pinch to zoom, two fingers to pan, one finger draws.
+            // Touches are handled in UIKit here (see ZoomableBoard), so the SwiftUI gesture is off.
             ZoomableBoard(contentSize: CGSize(width: fitted * columns, height: fitted * rows), maximumZoom: max(1, 44 / fitted),
-                          zoomed: $zoomed, resetToken: zoomReset, onGesture: { active in
-                if active { zoomGestureActive = true; session.dropStroke() }
-                else { zoomGestureActive = false; lastZoomGesture = Date() }
-            }) { content }
+                          zoomed: $zoomed, resetToken: zoomReset,
+                          touches: BoardTouchHandlers(cellSide: fitted, rows: game.rows.count, columns: game.columns.count,
+                                                      enabled: session.canInteract, onTap: tap,
+                                                      onStrokeStart: { session.begin(at: $0, marking: false) },
+                                                      onStrokeMove: { session.move(to: $0) }, onStrokeEnd: endStroke)) {
+                content.allowsHitTesting(false)
+            }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(alignment: .bottomTrailing) {
                     if zoomed {
@@ -140,6 +134,10 @@ struct GameScreen: View {
         }
     }
 
+    private func tap(_ cell: Cell, held: Bool) { Task { await session.tap(cell, held: held) } }
+    private func endStroke(_ cancelled: Bool) {
+        if cancelled { session.dropStroke() } else { Task { await session.finish() } }
+    }
     @ViewBuilder private func storageRecovery(_ error: String) -> some View {
         VStack(spacing: 8) {
             GardenNote(text: error, symbol: "exclamationmark.triangle")
