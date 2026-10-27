@@ -196,3 +196,64 @@ Decisão do Lucas depois de jogar a Lagoa 8/8. Ela substitui a regra do design r
 - **Fases sempre novas:** cada vez que uma fase é jogada, a grade é gerada de novo com uma variação aleatória. "Outra fase" (no lugar de "Reiniciar"), "Tentar de novo" e "Jogar de novo" trazem outra grade do mesmo lugar. Por isso, reiniciar não devolve as vidas na mesma grade. O desafio do dia continua igual o dia todo, e reiniciá-lo recomeça a mesma grade.
 
 [Captura da barra sem Desfazer](docs/validation/design-review/toolbar-no-undo.png).
+
+### Quatro dificuldades, vidas sempre e gerador rápido
+
+Ajustes do Lucas depois de jogar. Eles substituem mundos, regras temáticas, obstáculos e os modos Tranquilo/Desafiador.
+
+- **Dificuldades:**
+
+  | Nível | Grade | Casinha |
+  |---|---|---|
+  | Fácil | 5×5 | à vista |
+  | Médio | 7×7 | escondida |
+  | Difícil | 15×15 | escondida |
+  | Especialista | 20×20 | escondida |
+
+  Todos os níveis têm 3 vidas, inclusive o desafio do dia (política `daily-v2`: um Médio, igual o dia todo; os dias v1 já jogados continuam valendo na sequência).
+- **Sem pista 0 e sem obstáculos:** o caminho passa por todas as linhas e colunas. O código das regras temáticas continua no núcleo, mas o gerador não as usa.
+- **Toques:** qualquer toque numa casa fora do caminho certo custa uma vida, seja ao lado da ponta ou longe dela. Tocar e segurar marca ✕, sem custo.
+- **"Outra fase":** pede confirmação num bottom sheet, com os botões "Trocar de fase" e "Continuar nesta".
+- **Zoom:** nas grades 15×15 e 20×20, pinça para ampliar e dois dedos para arrastar; um dedo continua desenhando.
+- **Gerador (`WalkGenerator`):**
+  - **Rota:** sorteia uma rota que nunca encosta em si mesma e passa por todas as linhas e colunas.
+  - **Unicidade:** se a lógica resolve a fase inteira, a solução é única, então a busca exaustiva é dispensada.
+  - **Conserto:** onde a lógica trava, revela um trecho do caminho; no fim, remove os trechos revelados que não fazem falta.
+  - **Técnicas novas** (camada 5, fora do padrão v1, para não mudar fases antigas): ligações obrigatórias em toda a grade e olhar um passo à frente na ponta.
+  - **Tempos** (macOS, Release), mediana e máximo de 10 fases por nível:
+
+    | Nível | Mediana | Máximo | Trechos revelados |
+    |---|---|---|---|
+    | Fácil | ~1 ms | ~4 ms | 0 |
+    | Médio | ~1,5 ms | ~6 ms | 0–3 |
+    | Difícil | ~0,1 s | ~0,2 s | cerca de 11 |
+    | Especialista | ~0,8 s | ~1,1 s | cerca de 22 |
+
+  - **Reservas:** quando falha (cerca de 2 em 10 no Especialista), usa uma reserva certificada.
+  - **Preparo antecipado:** enquanto você joga, a próxima fase do mesmo nível já é gerada em segundo plano.
+  - **Reproduzir:** `swift run -c release Calibration sizes`.
+
+Capturas: [início](docs/validation/design-review/home-difficulties.png) e [Especialista 20×20](docs/validation/design-review/expert-20x20.png). **Pendente:** o zoom com pinça, os toques que custam vida e o bottom sheet não foram exercitados com toques reais. A geração no build Debug é cerca de 10 vezes mais lenta que no Release, e o preparo antecipado esconde isso a partir da segunda fase.
+
+**Atualização:**
+
+- **Tentar de novo e vitória:** "Tentar de novo" (depois de perder) recomeça a mesma grade. Ao completar, a fase oferece "Nova fase" ou "Jogar esta de novo".
+- **Casas juntas:** o gerador prefere caminhos com as casas de cada linha e coluna juntas, sem garantir em todas. Ele sorteia 8 caminhos (16 nas grades grandes) e fica com o menos picado, descartando os que correm mais de 30% pela borda, que jogariam como uma moldura. As grades grandes também passaram a ter caminhos relativamente mais curtos (20–28% das casas).
+- **Resultado** (média de pedaços por linha e coluna; 1 = tudo junto):
+
+  | Nível | Pedaços por linha | Trechos revelados | Tempo (macOS, Release) |
+  |---|---|---|---|
+  | Médio | 1,06 | ~0 | ~1 ms |
+  | Difícil | 1,8 | ~9 | ~0,05 s |
+  | Especialista | 2,1 | ~17 | ~0,2 s |
+
+  [Exemplo 15×15](docs/validation/design-review/hard-15x15.png).
+
+**Sem trechos tracejados no Difícil e no Especialista.** Nessas grades, os caminhos passaram a ser curtos e compactos: cerca de 31–40 casas no 15×15 e 40–56 no 20×20, ainda passando por todas as linhas e colunas. Assim a lógica fecha a fase sozinha, sem nenhum trecho pré-desenhado, e as casas de cada linha ficam juntas.
+
+| Nível | Pedaços por linha | Tempo (macOS, Release) |
+|---|---|---|
+| Difícil | 1,05 | ~0,02 s |
+| Especialista | 1,05 | ~0,09 s |
+
+O custo é que as pistas dessas grades ficam baixas (muitos 1 e 2), o que deixa o desafio mais parecido com o de achar o caminho numa grade grande e vazia. O Médio raramente revela um trecho.

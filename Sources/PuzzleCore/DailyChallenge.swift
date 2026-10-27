@@ -1,10 +1,13 @@
 import Foundation
 
 /// Civil date in the player's own time zone, so the challenge turns over at local midnight.
-/// Keep v1 generation policy stable; persisted attempts always win over regeneration.
+/// Policy v2: a Médio walk (hidden house, three lives). Persisted attempts always win over
+/// regeneration, and v1 challenges already played keep their own id.
 public struct DailyChallenge: Equatable, Sendable {
+    public static let difficulty = Difficulty.medium
     public let dateKey: String
-    public var id: String { "daily-v1-\(dateKey)" }
+    public var id: String { "daily-v2-\(dateKey)" }
+    public static func isDailyID(_ id: String) -> Bool { id.hasPrefix("daily-v1-") || id.hasPrefix("daily-v2-") }
     public let seed: UInt64
     public init(date: Date, timeZone: TimeZone = .current) {
         let c = Self.calendar(timeZone).dateComponents([.year, .month, .day], from: date)
@@ -20,11 +23,15 @@ public struct DailyChallenge: Equatable, Sendable {
     public static func streak(completed: Set<String>, today: Date, timeZone: TimeZone = .current) -> Int {
         let calendar = calendar(timeZone)
         var day = calendar.startOfDay(for: today)
-        if !completed.contains(DailyChallenge(date: day, timeZone: timeZone).id) {
+        func done(_ day: Date) -> Bool {
+            let key = DailyChallenge(date: day, timeZone: timeZone).dateKey
+            return completed.contains("daily-v2-\(key)") || completed.contains("daily-v1-\(key)")
+        }
+        if !done(day) {
             day = calendar.date(byAdding: .day, value: -1, to: day)!
         }
         var count = 0
-        while completed.contains(DailyChallenge(date: day, timeZone: timeZone).id) {
+        while done(day) {
             count += 1
             day = calendar.date(byAdding: .day, value: -1, to: day)!
         }

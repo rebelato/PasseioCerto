@@ -20,7 +20,7 @@ public struct GivenEdge: Hashable, Codable, Sendable {
 /// - hiddenGoal: the house is not shown, so the clues alone must fix where the walk ends.
 ///   Clues then count only the route, and the house appears when the walk is complete.
 public struct Puzzle: Codable, Equatable, Sendable {
-    public static let sizes = 2...10
+    public static let sizes = 2...20
     public let puzzleID: String
     public let schemaVersion: Int
     public let generatorVersion: Int

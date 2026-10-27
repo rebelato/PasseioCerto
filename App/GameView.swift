@@ -43,13 +43,7 @@ struct GameView: View {
             }
         }
         .sheet(isPresented: $showingCorner) {
-            CornerView(session: session, onClose: { showingCorner = false }) { level in
-                showingCorner = false
-                Task {
-                    await session.play(level)
-                    if session.attempt.level == level { showingHome = false }
-                }
-            }
+            CornerView(session: session) { showingCorner = false }
         }
         .sheet(isPresented: $showingLearning) {
             if tutorialRequested {
@@ -62,7 +56,9 @@ struct GameView: View {
         }
     }
     private var walkTitle: String {
-        session.activeDailyID != nil ? String(localized: "Desafio do dia") : session.attempt.level?.title ?? String(localized: "Praça das Flores")
+        if session.activeDailyID != nil { return String(localized: "Desafio do dia") }
+        let size = session.attempt.game.puzzle.rows.count
+        return (session.attempt.difficulty?.title).map { "\($0) · \(size) × \(size)" } ?? String(localized: "Passeio · \(size) × \(size)")
     }
 
     // MARK: Home
@@ -92,13 +88,8 @@ struct GameView: View {
                                 Text(nextWalkTitle).font(.footnote.weight(.medium)).opacity(0.85)
                             }
                         }.buttonStyle(GardenButtonStyle(prominent: true)).disabled(session.generating)
-                        PlayModePicker(selection: Binding(get: { session.preferences.playMode }, set: { session.setPlayMode($0) }))
-                        Text(session.preferences.playMode.hasLives ? String(localized: "3 vidas por passeio. Erros custam uma.") : String(localized: "Sem vidas e sem pressa."))
-                            .font(.footnote).foregroundStyle(GardenTheme.secondary)
-                        Toggle(isOn: Binding(get: { session.preferences.hiddenHouse }, set: { session.setHiddenHouse($0) })) {
-                            Label(String(localized: "Casinha escondida"), systemImage: "eye.slash")
-                        }.font(GardenTheme.heading).padding(.horizontal, 4).padding(.top, 4)
-                        Text(String(localized: "A casinha só aparece quando o caminho termina. Vale para os próximos passeios."))
+                        DifficultyPicker(selection: Binding(get: { session.preferences.difficulty }, set: { session.setDifficulty($0) }))
+                        Text(difficultyNote(session.preferences.difficulty))
                             .font(.footnote).foregroundStyle(GardenTheme.secondary).multilineTextAlignment(.center)
                     }
                     dailyCard(daily, now: timeline.date)
@@ -120,9 +111,15 @@ struct GameView: View {
         if session.activeDailyID == nil && !session.generating { showingHome = false }
     }
     private var nextWalkTitle: String {
+        let chosen = session.preferences.difficulty
         let normal = session.activeDailyID == nil ? session.attempt : session.parkedAttempts["normal"]
-        if let normal, !normal.game.won { return normal.level?.title ?? String(localized: "Continuar passeio") }
-        return session.progress.title
+        if let normal, !normal.game.won, !normal.defeated, normal.difficulty == chosen { return String(localized: "Continuar · \(chosen.title)") }
+        return "\(chosen.title) · \(chosen.size) × \(chosen.size)"
+    }
+    private func difficultyNote(_ difficulty: Difficulty) -> String {
+        difficulty.hiddenHouse
+            ? String(localized: "Grade \(difficulty.size) × \(difficulty.size), casinha escondida, 3 vidas.")
+            : String(localized: "Grade \(difficulty.size) × \(difficulty.size), casinha à vista, 3 vidas.")
     }
     private func dailyCard(_ daily: DailyChallenge, now: Date) -> some View {
         let done = session.completedPuzzleIDs.contains(daily.id)
@@ -139,7 +136,7 @@ struct GameView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(String(localized: "Desafio do dia")).font(GardenTheme.heading)
                     Text(done ? String(localized: "Concluído! Novo desafio em \(DailyCountdown.text(from: now))")
-                              : String(localized: "Tranquilo · termina em \(DailyCountdown.text(from: now))"))
+                              : String(localized: "Médio · termina em \(DailyCountdown.text(from: now))"))
                         .font(.subheadline).foregroundStyle(GardenTheme.secondary)
                     if streak > 0 {
                         Label(streak == 1 ? String(localized: "1 dia seguido") : String(localized: "\(streak) dias seguidos"), systemImage: "flame.fill")
@@ -191,10 +188,10 @@ struct GameView: View {
                 DisclosureGroup(String(localized: "Como jogar")) {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(String(localized: "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas."))
-                        Text(String(localized: "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto."))
-                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."))
-                        Text(String(localized: "Cada fase tem um único caminho certo. No Desafiador você tem 3 vidas: um passo fora dele, passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma, e o passo é recusado. No Tranquilo os erros só contam para as patinhas."))
-                        Text(String(localized: "Toda fase é nova: jogar de novo, tentar de novo ou pedir outra fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo."))
+                        Text(String(localized: "As pistas contam as casas do caminho em cada linha e coluna, incluindo o início. No Fácil a casinha aparece e também conta; nos outros níveis ela fica escondida e só aparece quando o caminho fecha."))
+                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo: não dá para voltar. Toque e segure numa casa para marcar ×, e de novo para limpar. Dica explica uma dedução sem jogar por você."))
+                        Text(String(localized: "Cada fase tem um único caminho certo, e você tem 3 vidas em todos os níveis e no desafio do dia. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma vida."))
+                        Text(String(localized: "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento."))
                         Text(String(localized: "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."))
                     }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
                 }

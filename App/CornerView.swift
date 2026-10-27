@@ -1,12 +1,9 @@
 import SwiftUI
 
-/// The meta layer: places reached, Margot's accessories, and a polaroid of every finished walk.
+/// The meta layer: Margot's accessories and a polaroid of every finished walk.
 struct CornerView: View {
     @ObservedObject var session: GameSession
     let onClose: () -> Void
-    /// Plays any level directly, reached or not.
-    let onPlay: (WorldLevel) -> Void
-    @State private var choosingWorld: World?
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: 14)]
     var body: some View {
         NavigationStack {
@@ -20,7 +17,6 @@ struct CornerView: View {
                                 .foregroundStyle(GardenTheme.terracotta).font(GardenTheme.heading)
                         }
                     }
-                    places
                     accessories
                     album
                 }.padding(20).frame(maxWidth: 640).frame(maxWidth: .infinity)
@@ -29,45 +25,6 @@ struct CornerView: View {
             .navigationTitle(String(localized: "Seu cantinho")).navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(String(localized: "Fechar"), action: onClose) } }
         }.tint(GardenTheme.ink)
-    }
-
-    private var places: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(String(localized: "Lugares")).font(GardenTheme.heading)
-            Text(String(localized: "Toque num lugar para escolher a fase, mesmo antes de chegar nele. Isso não muda o seu progresso."))
-                .font(.footnote).foregroundStyle(GardenTheme.secondary)
-            ForEach(World.allCases, id: \.self) { world in
-                let reached = session.unlockedWorlds.contains(world)
-                let done = world < session.progress.world ? World.levelsPerWorld : world == session.progress.world ? session.progress.level : 0
-                Button { choosingWorld = world } label: {
-                HStack(spacing: 14) {
-                    Image(systemName: reached ? world.symbol : "lock.fill").font(.title2).frame(width: 36)
-                        .foregroundStyle(reached ? GardenTheme.accent : GardenTheme.secondary)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(world.title).font(GardenTheme.heading)
-                        Text((world.newRule.map { $0.explanation } ?? String(localized: "Onde tudo começa.")) + " " + String(localized: "Grade \(world.size) × \(world.size)."))
-                            .font(.footnote).foregroundStyle(GardenTheme.secondary).fixedSize(horizontal: false, vertical: true)
-                    }.frame(maxWidth: .infinity, alignment: .leading)
-                    if reached { Text("\(done)/\(World.levelsPerWorld)").font(.subheadline.monospacedDigit()).foregroundStyle(GardenTheme.secondary) }
-                    Image(systemName: "chevron.forward").foregroundStyle(GardenTheme.secondary)
-                }.padding(14)
-                    .background(reached ? GardenTheme.surface : GardenTheme.background, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
-                    .overlay(RoundedRectangle(cornerRadius: GardenTheme.radius).strokeBorder(GardenTheme.border.opacity(0.5)))
-                    .contentShape(RoundedRectangle(cornerRadius: GardenTheme.radius))
-                }.buttonStyle(.plain)
-                    .accessibilityHint(String(localized: "Escolher uma fase deste lugar"))
-            }
-        }
-        .confirmationDialog(choosingWorld?.title ?? "", isPresented: Binding(get: { choosingWorld != nil }, set: { if !$0 { choosingWorld = nil } }),
-                            titleVisibility: .visible, presenting: choosingWorld) { world in
-            ForEach(0..<World.levelsPerWorld, id: \.self) { level in
-                Button(level == World.levelsPerWorld - 1 ? String(localized: "Fase \(level+1) · a mais difícil") : String(localized: "Fase \(level+1)")) {
-                    onPlay(WorldLevel(world: world, level: level))
-                }
-            }
-        } message: { world in
-            Text(session.preferences.hiddenHouse ? String(localized: "Grade \(world.size) × \(world.size), com a casinha escondida.") : String(localized: "Grade \(world.size) × \(world.size)."))
-        }
     }
 
     private var accessories: some View {
@@ -124,7 +81,7 @@ struct Polaroid: View {
             }.aspectRatio(CGFloat(walk.puzzle.columns.count + 1) / CGFloat(walk.puzzle.rows.count + 1), contentMode: .fit)
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(walk.place?.title ?? String(localized: "Passeio")).font(.caption.weight(.semibold))
+                    Text(walk.difficulty?.title ?? String(localized: "Passeio")).font(.caption.weight(.semibold))
                     Text(walk.date, format: .dateTime.day().month()).font(.caption2).foregroundStyle(.secondary)
                 }
                 Spacer()
@@ -136,7 +93,7 @@ struct Polaroid: View {
             .shadow(color: .black.opacity(0.12), radius: 4, y: 2)
             .rotationEffect(.degrees(Double(walk.path.count % 5) - 2))
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(String(localized: "Foto do passeio em \(walk.place?.title ?? String(localized: "Passeio")), \(walk.paws) patinhas"))
+            .accessibilityLabel(String(localized: "Foto do passeio \(walk.difficulty?.title ?? String(localized: "livre")), \(walk.paws) patinhas"))
     }
 }
 
