@@ -665,6 +665,16 @@
         }
       }
     },
+    "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento."
+          }
+        }
+      }
+    },
     "Arbusto no caminho!": {
       "localizations": {
         "pt-BR": {
@@ -1606,6 +1616,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jogar de novo"
+          }
+        }
+      }
+    },
+    "Jogar esta de novo": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogar esta de novo"
           }
         }
       }

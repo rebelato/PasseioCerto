@@ -191,7 +191,7 @@ struct GameView: View {
                         Text(String(localized: "As pistas contam as casas do caminho em cada linha e coluna, incluindo o início. No Fácil a casinha aparece e também conta; nos outros níveis ela fica escondida e só aparece quando o caminho fecha."))
                         Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo: não dá para voltar. Toque e segure numa casa para marcar ×, e de novo para limpar. Dica explica uma dedução sem jogar por você."))
                         Text(String(localized: "Cada fase tem um único caminho certo, e você tem 3 vidas em todos os níveis e no desafio do dia. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma vida."))
-                        Text(String(localized: "Toda fase é nova: jogar de novo, tentar de novo ou trocar de fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo."))
+                        Text(String(localized: "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento."))
                         Text(String(localized: "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."))
                     }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
                 }

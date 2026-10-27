@@ -234,3 +234,17 @@ Ajustes do Lucas depois de jogar. Eles substituem mundos, regras temáticas, obs
   - **Reproduzir:** `swift run -c release Calibration sizes`.
 
 Capturas: [início](docs/validation/design-review/home-difficulties.png) e [Especialista 20×20](docs/validation/design-review/expert-20x20.png). **Pendente:** o zoom com pinça, os toques que custam vida e o bottom sheet não foram exercitados com toques reais. A geração no build Debug é cerca de 10 vezes mais lenta que no Release, e o preparo antecipado esconde isso a partir da segunda fase.
+
+**Atualização:**
+
+- **Tentar de novo e vitória:** "Tentar de novo" (depois de perder) recomeça a mesma grade. Ao completar, a fase oferece "Nova fase" ou "Jogar esta de novo".
+- **Casas juntas:** o gerador prefere caminhos com as casas de cada linha e coluna juntas, sem garantir em todas. Ele sorteia 8 caminhos (16 nas grades grandes) e fica com o menos picado, descartando os que correm mais de 30% pela borda, que jogariam como uma moldura. As grades grandes também passaram a ter caminhos relativamente mais curtos (20–28% das casas).
+- **Resultado** (média de pedaços por linha e coluna; 1 = tudo junto):
+
+  | Nível | Pedaços por linha | Trechos revelados | Tempo (macOS, Release) |
+  |---|---|---|---|
+  | Médio | 1,06 | ~0 | ~1 ms |
+  | Difícil | 1,8 | ~9 | ~0,05 s |
+  | Especialista | 2,1 | ~17 | ~0,2 s |
+
+  [Exemplo 15×15](docs/validation/design-review/hard-15x15.png).

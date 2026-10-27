@@ -35,7 +35,8 @@ struct GameScreen: View {
             GeometryReader { space in board(in: space.size) }
             if let error = session.storageError { storageRecovery(error) }
             if session.attempt.defeated {
-                Button(String(localized: "Tentar de novo"), systemImage: "arrow.clockwise") { Task { await session.replay() } }
+                // After losing, the same grid again: only a finished walk offers a new one.
+                Button(String(localized: "Tentar de novo"), systemImage: "arrow.clockwise") { session.restart() }
                     .buttonStyle(GardenButtonStyle(prominent: true))
             } else {
                 GameToolbar(canPlay: session.canInteract && !busy, isDaily: session.activeDailyID != nil,
@@ -58,7 +59,7 @@ struct GameScreen: View {
             VictorySheet(dogName: session.dogName, paws: session.attempt.paws,
                          best: session.bestPaws[game.puzzle.puzzleID] ?? session.attempt.paws,
                          isDaily: session.activeDailyID != nil, generating: session.generating,
-                         onNext: onNext, onReplay: { Task { await session.replay() } }, onHome: onHome)
+                         onNext: onNext, onReplay: { session.restart() }, onHome: onHome)
         }
         .task(id: session.celebrating) { await celebrate() }
         .onChange(of: game.won) { _, won in if !won { enteredHouse = false; wagging = false } }
@@ -270,10 +271,10 @@ struct VictorySheet: View {
                     Button(String(localized: "Voltar ao início"), systemImage: "house", action: onHome)
                         .buttonStyle(GardenButtonStyle(prominent: true))
                 } else {
-                    Button(String(localized: "Próximo passeio"), systemImage: "arrow.forward", action: onNext)
+                    Button(String(localized: "Nova fase"), systemImage: "sparkles", action: onNext)
                         .buttonStyle(GardenButtonStyle(prominent: true)).disabled(generating)
                 }
-                Button(String(localized: "Jogar de novo"), systemImage: "arrow.clockwise", action: onReplay)
+                Button(String(localized: "Jogar esta de novo"), systemImage: "arrow.clockwise", action: onReplay)
                     .buttonStyle(GardenButtonStyle()).disabled(generating)
                 if !isDaily {
                     Button(String(localized: "Início"), action: onHome).font(GardenTheme.heading).padding(.top, 2)

@@ -43,7 +43,12 @@ public enum WalkGenerator {
         for index in 0..<max(0, candidateLimit) {
             if isCancelled() { return report(.cancelled, nil, attempted, logicRejected) }
             attempted += 1
-            guard let route = looseRoute(n, rng: &rng) ?? Optional(coveringRoute(n, rng: &rng)) else { continue }
+            // Of a few candidate routes, keep the one whose rows and columns are least broken up.
+            let options = (0..<(n >= 15 ? 16 : 8)).compactMap { _ in looseRoute(n, rng: &rng) }
+            // Routes that mostly run along the border would win that contest but play like a frame.
+            let border = { (route: [Cell]) in route.filter { $0.row == 0 || $0.col == 0 || $0.row == n-1 || $0.col == n-1 }.count }
+            let inland = options.filter { border($0) * 100 <= $0.count * 30 }
+            guard let route = (inland.isEmpty ? options : inland).min(by: { pieces($0) < pieces($1) }) ?? Optional(coveringRoute(n, rng: &rng)) else { continue }
             let rows = (0..<n).map { r in route.filter { $0.row == r }.count }
             let columns = (0..<n).map { c in route.filter { $0.col == c }.count }
             let puzzleID = id ?? "walk-v\(version)-\(difficulty.rawValue)-\(variation)-\(index)"
@@ -102,24 +107,48 @@ public enum WalkGenerator {
         GenerationReport(outcome: outcome, puzzle: puzzle, candidates: attempted, rejectedBySolver: 0, rejectedByLogic: logic, rejectedByDifficulty: 0)
     }
 
+    /// How many separate runs the route makes across all rows and columns (2n means every line is in one piece).
+    static func pieces(_ route: [Cell]) -> Int {
+        func runs(_ values: [Int]) -> Int {
+            let sorted = values.sorted()
+            return sorted.isEmpty ? 0 : 1 + zip(sorted, sorted.dropFirst()).filter { $1 - $0 > 1 }.count
+        }
+        return Dictionary(grouping: route, by: \.row).values.map { runs($0.map(\.col)) }.reduce(0, +)
+            + Dictionary(grouping: route, by: \.col).values.map { runs($0.map(\.row)) }.reduce(0, +)
+    }
     /// A route that never brushes against itself: each cell touches only the cells before and
-    /// after it. Once logic knows which cells are on the route, their order follows, which is
+    /// after it, and that keeps the cells of each row and column together where it can. Once logic knows which cells are on the route, their order follows, which is
     /// what lets 15×15 and 20×20 be solved without guessing. Also touches every row and column.
     private static func looseRoute(_ n: Int, rng: inout Random) -> [Cell]? {
         let inside = { (c: Cell) in (0..<n).contains(c.row) && (0..<n).contains(c.col) }
-        let target = n*n*30/100 + rng.next(max(1, n*n*12/100))
+        // Big grids get relatively shorter routes: fewer crossings keep their lines more together.
+        let target = n >= 15 ? n*n*20/100 + rng.next(max(1, n*n*8/100)) : n*n*30/100 + rng.next(max(1, n*n*12/100))
         for _ in 0..<60 {
             var route = [Cell(rng.next(n), rng.next(n))]
             var taken: Set<Cell> = [route[0]]
+            var rowCount = Array(repeating: 0, count: n), columnCount = Array(repeating: 0, count: n)
+            rowCount[route[0].row] = 1; columnCount[route[0].col] = 1
             while route.count < target {
                 let tip = route.last!
                 let options = Cell.neighbors(tip).filter { next in
                     inside(next) && !taken.contains(next) && Cell.neighbors(next).allSatisfy { $0 == tip || !taken.contains($0) }
                 }
                 if options.isEmpty { break }
-                // Mostly straight-ish wandering; sometimes the most constrained way, to avoid traps.
+                // Prefer cells that keep each row and column in one piece (a cell starts a new piece
+                // when its line already has route cells and none beside it); sometimes take the most
+                // constrained way to avoid traps, sometimes wander for variety.
                 let exits = { (c: Cell) in Cell.neighbors(c).filter { inside($0) && !taken.contains($0) }.count }
-                let pick = rng.next(3) == 0 ? options.min(by: { exits($0) < exits($1) })! : options[rng.next(options.count)]
+                let pieces = { (c: Cell) -> Int in
+                    let row = rowCount[c.row] > 0 && !taken.contains(Cell(c.row, c.col-1)) && !taken.contains(Cell(c.row, c.col+1))
+                    let column = columnCount[c.col] > 0 && !taken.contains(Cell(c.row-1, c.col)) && !taken.contains(Cell(c.row+1, c.col))
+                    return (row ? 1 : 0) + (column ? 1 : 0)
+                }
+                let fewest = options.map(pieces).min()!
+                let together = options.filter { pieces($0) == fewest }
+                let roll = rng.next(6)
+                let pick = roll < 4 ? together[rng.next(together.count)]
+                    : roll == 4 ? options.min(by: { exits($0) < exits($1) })! : options[rng.next(options.count)]
+                rowCount[pick.row] += 1; columnCount[pick.col] += 1
                 route.append(pick); taken.insert(pick)
             }
             if route.count >= target * 3 / 4, Set(route.map(\.row)).count == n, Set(route.map(\.col)).count == n { return route }

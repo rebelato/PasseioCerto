@@ -37,17 +37,22 @@ if CommandLine.arguments.contains("sizes") {
     // Generation time and revealed pieces per difficulty (10 variations each).
     let clock = ContinuousClock()
     for difficulty in Difficulty.allCases {
-        var times: [Double] = [], pieces: [Int] = [], candidates = 0, failed = 0
+        var times: [Double] = [], pieces: [Int] = [], candidates = 0, failed = 0, blocks = 0, linesSeen = 0, together = 0, multi = 0
         for variation in UInt64(1)...10 {
             let start = clock.now
             let r = WalkGenerator.generate(difficulty, variation: variation)
             let t = start.duration(to: clock.now).components
             times.append(Double(t.seconds)*1000 + Double(t.attoseconds)/1e15)
             candidates += r.candidates
-            if let p = r.puzzle { pieces.append(p.givenEdges.count) } else { failed += 1 }
+            if let p = r.puzzle, let route = PuzzleSolution.route(for: p) {
+                pieces.append(p.givenEdges.count)
+                // Pieces per line: 1 means the line's route cells are all together.
+                let lines = (0..<p.rows.count).map { r in route.filter { $0.row == r }.map(\.col) } + (0..<p.columns.count).map { c in route.filter { $0.col == c }.map(\.row) }
+                for line in lines { let sorted = line.sorted(); blocks += 1 + zip(sorted, sorted.dropFirst()).filter { $1 - $0 > 1 }.count; linesSeen += 1
+                    if sorted.count > 1 && zip(sorted, sorted.dropFirst()).allSatisfy({ $1 - $0 == 1 }) { together += 1; multi += 1 } else if sorted.count > 1 { multi += 1 } }
+            } else { failed += 1 }
         }
-        let zeros = 0
-        print("\(difficulty) median=\(times.sorted()[5])ms max=\(times.max()!)ms candidates=\(candidates) failed=\(failed) pieces=\(pieces) zeros=\(zeros)")
+        print("\(difficulty) median=\(times.sorted()[5])ms max=\(times.max()!)ms candidates=\(candidates) failed=\(failed) pieces=\(pieces) blocksPerLine=\(Double(blocks)/Double(max(1, linesSeen))) linesTogether=\(together)/\(multi)")
     }
     exit(0)
 }
