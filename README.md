@@ -186,3 +186,13 @@ Capturas: [Parque 10×10](docs/validation/design-review/park-10x10.png), [iníci
 - **Calibração com a casinha escondida:** 38 de 40 fases saem do gerador; cada mundo tem 2 reservas escondidas certificadas. Para reproduzir: `swift run -c release Calibration worlds hidden`. O desafio diário continua com a casinha visível.
 
 Capturas: [Lagoa 8/8 com a casinha escondida](docs/validation/design-review/hidden-house-pond.png), [início](docs/validation/design-review/home-hidden-toggle.png) e [escolha de lugar](docs/validation/design-review/corner-choose-level.png). **Pendente:** o seletor de fases e o surgimento da casinha não foram tocados no simulador.
+
+### Passos definitivos, um único caminho certo e fases sempre novas
+
+Decisão do Lucas depois de jogar a Lagoa 8/8. Ela substitui a regra do design review de "punir só o que é visível".
+
+- **Passos só no caminho certo:** cada fase tem uma única solução certificada (`PuzzleSolution.route`). Um passo para fora dela é recusado e custa uma vida; no Tranquilo, conta só como erro para as patinhas. A parte certa do traço é mantida.
+- **Sem desfazer:** o botão sumiu e voltar uma casa é ignorado. Marcar ✕ continua livre, e o tutorial agora ensina a limpar o ✕ tocando de novo.
+- **Fases sempre novas:** cada vez que uma fase é jogada, a grade é gerada de novo com uma variação aleatória. "Outra fase" (no lugar de "Reiniciar"), "Tentar de novo" e "Jogar de novo" trazem outra grade do mesmo lugar. Por isso, reiniciar não devolve as vidas na mesma grade. O desafio do dia continua igual o dia todo, e reiniciá-lo recomeça a mesma grade.
+
+[Captura da barra sem Desfazer](docs/validation/design-review/toolbar-no-undo.png).

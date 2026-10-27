@@ -1,6 +1,6 @@
 /// A mistake the player can see: the offending cell plus the clue it broke, if any.
 public struct StrokeViolation: Equatable, Sendable {
-    public enum Kind: Equatable, Sendable { case rowExceeded, columnExceeded, arrivedEarly, obstacle, tree, nearCat, puddleTurn, givenEdge, crossedPath }
+    public enum Kind: Equatable, Sendable { case rowExceeded, columnExceeded, arrivedEarly, obstacle, tree, nearCat, puddleTurn, givenEdge, crossedPath, offRoute }
     public let kind: Kind
     public let cell: Cell
     public var row: Int?
@@ -16,6 +16,7 @@ public struct StrokeViolation: Equatable, Sendable {
         case .puddleTurn: return String(localized: "Na poça, só em linha reta.")
         case .givenEdge: return String(localized: "Esse trecho já estava desenhado.")
         case .crossedPath: return String(localized: "O caminho não pode se cruzar.")
+        case .offRoute: return String(localized: "Por aí não! O caminho certo segue por outra casa.")
         }
     }
 }
@@ -24,13 +25,16 @@ public struct StrokeViolation: Equatable, Sendable {
 public struct GameStroke: Sendable {
     private let original: Game
     private let marking: Bool
+    /// The puzzle's only solution. When the route so far follows it, every step must too.
+    private let solution: [Cell]?
     private var visited: Set<Cell> = []
     private var lastInput: Cell?
     public private(set) var preview: Game
     public private(set) var violation: StrokeViolation?
     public var penaltyDetected: Bool { violation != nil }
-    public init(game: Game, marking: Bool) {
+    public init(game: Game, marking: Bool, solution: [Cell]? = nil) {
         original = game; preview = game; self.marking = marking
+        self.solution = solution.flatMap { $0.starts(with: game.path) ? $0 : nil }
         preview.discardStrokeHistory()
     }
     @discardableResult public mutating func move(to cell: Cell?) -> Bool {
@@ -41,12 +45,21 @@ public struct GameStroke: Sendable {
         if marking && !visited.insert(cell).inserted { return false }
         // Game rejects diagonals/skips, obstacles, conflicts and exceeded clues.
         // We never interpolate a route the player did not actually draw.
-        if !marking, let violation = visibleViolation(stepping: cell) {
+        // Steps are never taken back: the route only grows.
+        if !marking, preview.path.count > 1, cell == preview.path[preview.path.count-2] { return false }
+        if !marking, let violation = visibleViolation(stepping: cell) ?? offRoute(stepping: cell) {
             self.violation = violation; return false
         }
         let accepted = preview.play(cell, marking: marking)
         preview.discardStrokeHistory()
         return accepted
+    }
+    /// A legal-looking step that leaves the solution.
+    private func offRoute(stepping cell: Cell) -> StrokeViolation? {
+        guard let solution, let tip = preview.path.last, !preview.won, preview.puzzle.contains(cell), tip.isAdjacent(to: cell),
+              !preview.path.contains(cell), !preview.marks.contains(cell), preview.path.count < solution.count,
+              solution[preview.path.count] != cell else { return nil }
+        return StrokeViolation(kind: .offRoute, cell: cell)
     }
     /// Orthogonal steps from the tip that break a rule shown on the board.
     private func visibleViolation(stepping cell: Cell) -> StrokeViolation? {

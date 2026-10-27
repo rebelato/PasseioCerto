@@ -707,6 +707,16 @@
         }
       }
     },
+    "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
     "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
       "localizations": {
         "pt-BR": {
@@ -766,6 +776,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bandana"
+          }
+        }
+      }
+    },
+    "Cada fase tem um único caminho certo. No Desafiador você tem 3 vidas: um passo fora dele, passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma, e o passo é recusado. No Tranquilo os erros só contam para as patinhas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada fase tem um único caminho certo. No Desafiador você tem 3 vidas: um passo fora dele, passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma, e o passo é recusado. No Tranquilo os erros só contam para as patinhas."
           }
         }
       }
@@ -1630,6 +1650,16 @@
         }
       }
     },
+    "Mudou de ideia? Toque de novo no × da linha 1, coluna 3 para limpá-lo. Já os passos do caminho são definitivos.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mudou de ideia? Toque de novo no × da linha 1, coluna 3 para limpá-lo. Já os passos do caminho são definitivos."
+          }
+        }
+      }
+    },
     "Na coluna %lld, todas as casas restantes são necessárias para completar a pista.": {
       "extractionState": "stale",
       "localizations": {
@@ -2021,6 +2051,16 @@
         }
       }
     },
+    "Outra fase": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outra fase"
+          }
+        }
+      }
+    },
     "Para desenhar, arraste a partir da ponta do caminho.": {
       "localizations": {
         "pt-BR": {
@@ -2165,6 +2205,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ponta atual do caminho."
+          }
+        }
+      }
+    },
+    "Por aí não! O caminho certo segue por outra casa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Por aí não! O caminho certo segue por outra casa."
           }
         }
       }
@@ -2382,6 +2432,16 @@
         }
       }
     },
+    "Reiniciar o desafio do dia?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reiniciar o desafio do dia?"
+          }
+        }
+      }
+    },
     "Repetir tutorial": {
       "extractionState": "stale",
       "localizations": {
@@ -2576,6 +2636,16 @@
         }
       }
     },
+    "Toda fase é nova: jogar de novo, tentar de novo ou pedir outra fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toda fase é nova: jogar de novo, tentar de novo ou pedir outra fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo."
+          }
+        }
+      }
+    },
     "Toque duas vezes para alternar a marcação xis": {
       "extractionState": "stale",
       "localizations": {
@@ -2635,6 +2705,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tranquilo · termina em %@"
+          }
+        }
+      }
+    },
+    "Trocar por outra fase deste lugar?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trocar por outra fase deste lugar?"
           }
         }
       }

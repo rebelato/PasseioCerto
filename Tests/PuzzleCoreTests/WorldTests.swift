@@ -76,7 +76,7 @@ final class ProgressionSessionTests: XCTestCase {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: folder) }
         let url = folder.appendingPathComponent("save.json")
-        let s = GameSession(saveURL: url, generateLevel: { level, _ in
+        let s = GameSession(saveURL: url, generateLevel: { level, _, _ in
             GenerationReport(outcome: .generated, puzzle: try Self.tiny.renamed("level-\(level.level)", seed: nil), candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
         })
         await s.play()
@@ -98,7 +98,7 @@ final class ProgressionSessionTests: XCTestCase {
         XCTAssertEqual(restored.attempt.level, .first)
     }
     @MainActor func testChosenLevelsDontMoveProgressAndNextFollowsThem() async {
-        let s = GameSession(generateLevel: { level, hidden in
+        let s = GameSession(generateLevel: { level, _, hidden in
             let id = "level-\(level.world.rawValue)-\(level.level)" + (hidden ? "-hidden" : "")
             return GenerationReport(outcome: .generated, puzzle: try Self.tiny.renamed(id, seed: nil), candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
         })

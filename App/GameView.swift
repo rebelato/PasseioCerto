@@ -192,8 +192,9 @@ struct GameView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(String(localized: "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas."))
                         Text(String(localized: "As pistas contam as casas ocupadas em cada linha e coluna, incluindo o início e a casa. Uma pista atendida não garante que o caminho inteiro esteja correto."))
-                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."))
-                        Text(String(localized: "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas."))
+                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."))
+                        Text(String(localized: "Cada fase tem um único caminho certo. No Desafiador você tem 3 vidas: um passo fora dele, passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma, e o passo é recusado. No Tranquilo os erros só contam para as patinhas."))
+                        Text(String(localized: "Toda fase é nova: jogar de novo, tentar de novo ou pedir outra fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo."))
                         Text(String(localized: "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."))
                     }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
                 }
@@ -251,9 +252,6 @@ private struct TutorialView: View {
                 }.frame(height: side*4)
                 if let feedback = lesson.feedback { GardenNote(text: feedback, symbol: "info.circle") }
                 if let hint = lesson.hint { GardenNote(text: hint.text, symbol: "lightbulb") }
-                if lesson.step == 3 {
-                    Button(String(localized: "Desfazer"), systemImage: "arrow.uturn.backward") { lesson.undo() }
-                }
                 if lesson.step == 4 {
                     Button(String(localized: "Dica"), systemImage: "lightbulb") { lesson.requestHint() }
                 }
