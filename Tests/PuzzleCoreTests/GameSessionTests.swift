@@ -54,14 +54,13 @@ final class GameSessionTests: XCTestCase {
         s.begin(at: Cell(0,1), marking: false)
         XCTAssertNil(s.displayedViolation)
     }
-    @MainActor func testRelaxedModeCountsMistakesWithoutDefeat() async {
-        let s = GameSession(attempt: GameAttempt(mode: .relaxed))
-        for _ in 0..<4 { await s.select(Cell(1,0), marking: false) }
-        XCTAssertEqual(s.attempt.mistakes, 4)
-        XCTAssertFalse(s.attempt.defeated)
-        XCTAssertTrue(s.canInteract)
+    @MainActor func testEveryWalkEndsAfterThreeMistakes() async {
+        let s = GameSession(attempt: GameAttempt(difficulty: .easy))
+        for _ in 0..<3 { await s.select(Cell(1,0), marking: false) }
+        XCTAssertTrue(s.attempt.defeated)
+        XCTAssertFalse(s.canInteract)
         s.restart()
-        XCTAssertEqual(s.attempt.mode, .relaxed)
+        XCTAssertEqual(s.attempt.difficulty, .easy)
         XCTAssertEqual(s.attempt.mistakes, 0)
     }
     @MainActor func testPawsRewardCleanWalksAndKeepBest() async {
@@ -82,16 +81,16 @@ final class GameSessionTests: XCTestCase {
     }
     @MainActor func testReplayBringsANewGridOfTheSameLevel() async {
         let made = ManagedCounter()
-        let s = GameSession(generateLevel: { level, variation, _ in
+        let s = GameSession(generateWalk: { difficulty, variation, _ in
             await made.add()
-            let p = try Puzzle(puzzleID: "level-\(level.level)-\(variation)", rows: [2,0], columns: [1,1], start: Cell(0,0), goal: Cell(0,1))
+            let p = try Puzzle(puzzleID: "walk-\(difficulty.rawValue)-\(variation)", rows: [2,0], columns: [1,1], start: Cell(0,0), goal: Cell(0,1))
             return GenerationReport(outcome: .generated, puzzle: p, candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
         })
-        await s.play(.first)
+        await s.play(.hard)
         let first = s.attempt.game.puzzle.puzzleID
         await s.select(Cell(0,1), marking: false)
         await s.replay()
-        XCTAssertEqual(s.attempt.level, .first)
+        XCTAssertEqual(s.attempt.difficulty, .hard)
         XCTAssertNotEqual(s.attempt.game.puzzle.puzzleID, first)
         XCTAssertFalse(s.attempt.game.won)
         let calls = await made.value
@@ -214,22 +213,24 @@ final class GameSessionTests: XCTestCase {
 }
 
 final class TapTests: XCTestCase {
-    @MainActor func testTapsBesideTheTipDrawAndElsewhereMark() async {
-        let s = GameSession(attempt: GameAttempt(mode: .relaxed))
+    @MainActor func testEveryTapIsAnAttemptAndHoldingMarks() async {
+        // Approved route: (0,0) (0,1) (0,2) (1,2) (2,2) (2,3) (2,4) (3,4) (4,4)
+        let s = GameSession()
         await s.tap(Cell(0,1))
         XCTAssertEqual(s.attempt.game.path, [Cell(0,0), Cell(0,1)], "Tap next to the tip continues the route")
-        await s.tap(Cell(3,3))
-        XCTAssertEqual(s.attempt.game.marks, [Cell(3,3)], "Tap away from the tip marks ×")
-        await s.tap(Cell(3,3))
-        XCTAssertTrue(s.attempt.game.marks.isEmpty, "Tapping × again clears it")
-        await s.tap(Cell(0,2), held: true)
-        XCTAssertEqual(s.attempt.game.marks, [Cell(0,2)], "Holding marks even beside the tip")
+        await s.tap(Cell(3,3), held: true)
+        XCTAssertEqual(s.attempt.game.marks, [Cell(3,3)], "Holding marks ×, for free")
+        await s.tap(Cell(3,3), held: true)
+        XCTAssertTrue(s.attempt.game.marks.isEmpty, "Holding again clears it")
+        await s.tap(Cell(2,3))
+        XCTAssertEqual(s.attempt.mistakes, 0, "A far cell that is on the route is not a mistake, just not next yet")
         await s.tap(Cell(0,0))
         XCTAssertEqual(s.attempt.game.path, [Cell(0,0), Cell(0,1)], "Steps are never taken back")
-        XCTAssertEqual(s.attempt.mistakes, 0)
+        await s.tap(Cell(4,0))
+        XCTAssertEqual(s.attempt.mistakes, 1, "A far tap off the route costs a life")
+        XCTAssertEqual(s.violation?.kind, .offRoute)
         await s.tap(Cell(1,1))
-        XCTAssertEqual(s.attempt.mistakes, 1, "A wrong step by tap is a mistake")
-        XCTAssertNotNil(s.violation)
+        XCTAssertEqual(s.attempt.mistakes, 2, "A wrong step beside the tip costs a life")
         XCTAssertEqual(s.attempt.game.path.count, 2)
     }
 }

@@ -17,7 +17,7 @@ public enum HintProvider {
         if case .contradiction(let explanation) = LogicEngine.analyze(puzzle: game.puzzle, prefix: game.path, marks: game.marks).outcome {
             return HintAdvice(kind: .conflict, text: explanation, cells: [], row: nil, column: nil)
         }
-        let found = (1...LogicEngine.maxTier).lazy.compactMap {
+        let found = (1...LogicEngine.fullTier).lazy.compactMap {
             LogicEngine.analyze(puzzle: game.puzzle, prefix: game.path, marks: game.marks, maxTier: $0).deductions.first
         }.first
         guard let deduction = found else {
