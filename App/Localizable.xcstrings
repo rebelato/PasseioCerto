@@ -3097,6 +3097,16 @@
         }
       }
     },
+    "Ver a grade inteira": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver a grade inteira"
+          }
+        }
+      }
+    },
     "Verificando jogada…": {
       "extractionState": "stale",
       "localizations": {

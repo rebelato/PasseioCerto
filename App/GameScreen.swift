@@ -16,6 +16,12 @@ struct GameScreen: View {
     @State private var wagging = false
     @State private var enteredHouse = false
     @State private var reset = false
+    @State private var zoomed = false
+    @State private var zoomReset = 0
+    /// While two fingers zoom or pan, and a moment after, touches are not taps or strokes.
+    @State private var zoomGestureActive = false
+    @State private var lastZoomGesture = Date.distantPast
+    private var zoomGestureRecent: Bool { zoomGestureActive || Date().timeIntervalSince(lastZoomGesture) < 0.4 }
     @State private var recovery = false
     @AccessibilityFocusState private var bubbleFocused: Bool
     private var game: Game { session.attempt.game }
@@ -96,8 +102,11 @@ struct GameScreen: View {
             highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
             highlightedColumn: session.hint?.column, violation: session.displayedViolation,
             onSelect: { cell in Task { await session.select(cell, marking: false) } },
-            onTap: { cell, held in Task { await session.tap(cell, held: held) } },
-            onStrokeStart: { session.begin(at: $0, marking: false) },
+            onTap: { cell, held in
+                guard !zoomGestureRecent else { return }
+                Task { await session.tap(cell, held: held) }
+            },
+            onStrokeStart: { if !zoomGestureRecent { session.begin(at: $0, marking: false) } },
             onStrokeMove: { session.move(to: $0) },
             onStrokeEnd: { cancelled in
                 if cancelled { session.cancel() } else { Task { await session.finish() } }
@@ -109,8 +118,23 @@ struct GameScreen: View {
             ScrollView([.horizontal, .vertical]) { content }
         } else if fitted < GardenTheme.minTarget {
             // Big grids fit whole on screen; pinch to zoom, two fingers to pan, one finger draws.
-            ZoomableBoard(contentSize: CGSize(width: fitted * columns, height: fitted * rows), maximumZoom: max(1, 44 / fitted)) { content }
+            ZoomableBoard(contentSize: CGSize(width: fitted * columns, height: fitted * rows), maximumZoom: max(1, 44 / fitted),
+                          zoomed: $zoomed, resetToken: zoomReset, onGesture: { active in
+                if active { zoomGestureActive = true; session.dropStroke() }
+                else { zoomGestureActive = false; lastZoomGesture = Date() }
+            }) { content }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .overlay(alignment: .bottomTrailing) {
+                    if zoomed {
+                        Button { zoomReset += 1 } label: {
+                            Label(String(localized: "Ver a grade inteira"), systemImage: "arrow.down.right.and.arrow.up.left")
+                                .labelStyle(.iconOnly).font(.title3.weight(.semibold))
+                                .frame(width: GardenTheme.minTarget, height: GardenTheme.minTarget)
+                                .background(GardenTheme.surface, in: Circle())
+                                .overlay(Circle().strokeBorder(GardenTheme.border))
+                        }.foregroundStyle(GardenTheme.ink).padding(8)
+                    }
+                }
         } else {
             content.frame(maxWidth: .infinity, maxHeight: .infinity)
         }

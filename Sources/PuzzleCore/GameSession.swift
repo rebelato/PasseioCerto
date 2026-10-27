@@ -151,6 +151,11 @@ import Combine
         guard canInteract, stroke == nil else { return }
         begin(at: cell, marking: marking); await finish()
     }
+    /// Drops a stroke in progress without judging it (a pinch started over the board).
+    public func dropStroke() {
+        guard stroke != nil else { return }
+        stroke = nil; clearViolation()
+    }
     public func undo() {
         guard !generating, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
         hint = nil
