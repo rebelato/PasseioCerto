@@ -24,7 +24,7 @@ struct GameScreen: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            GameTopBar(title: title, lives: session.attempt.mode.hasLives ? session.attempt.lives : nil,
+            GameTopBar(title: title, lives: session.attempt.lives,
                        onHome: onHome, onSettings: onSettings)
             MargotBubble(text: bubbleText, symbol: bubbleSymbol, pose: game.won ? .happy : .idle, accessory: session.preferences.accessory,
                          onClose: session.hint == nil ? nil : { session.dismissHint() })
@@ -42,11 +42,11 @@ struct GameScreen: View {
         .padding(.horizontal, GardenTheme.spacing).padding(.bottom, 8)
         .frame(maxWidth: 560).frame(maxWidth: .infinity)
         .background(GardenTheme.background).foregroundStyle(GardenTheme.ink).tint(GardenTheme.accent)
-        .confirmationDialog(session.activeDailyID != nil ? String(localized: "Reiniciar o desafio do dia?") : String(localized: "Trocar por outra fase deste lugar?"),
-                            isPresented: $reset, titleVisibility: .visible) {
-            Button(session.activeDailyID != nil ? String(localized: "Reiniciar") : String(localized: "Outra fase"), role: .destructive) {
+        .sheet(isPresented: $reset) {
+            ChangeWalkSheet(isDaily: session.activeDailyID != nil, onConfirm: {
+                reset = false
                 Task { await session.replay() }
-            }
+            }, onCancel: { reset = false })
         }
         .confirmationDialog(String(localized: "Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente."), isPresented: $recovery, titleVisibility: .visible) {
             Button(String(localized: "Preservar original e salvar esta partida")) { session.preserveOriginalAndSaveCurrent() }
@@ -72,12 +72,10 @@ struct GameScreen: View {
         if game.won { return String(localized: "Chegamos em casa!") }
         if session.attempt.defeated { return String(localized: "As vidas acabaram. Vamos tentar de novo?") }
         if let message = session.message { return message }
-        if game.puzzle.hiddenGoal && game.path.count == 1 && game.marks.isEmpty {
-            return String(localized: "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.")
-        }
-        // First walk of a new place: Margot introduces its rule.
-        if let level = session.attempt.level, level.level == 0, let rule = level.world.newRule, game.path.count == 1, game.marks.isEmpty {
-            return String(localized: "Novidade, \(rule.title.lowercased())! \(rule.explanation)")
+        if game.puzzle.hiddenGoal {
+            return game.path.count == 1 && game.marks.isEmpty
+                ? String(localized: "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.")
+                : String(localized: "Siga as pistas até achar a casinha")
         }
         return String(localized: "Leve \(session.dogName) até a casinha")
     }
@@ -109,6 +107,10 @@ struct GameScreen: View {
             .overlay { if session.generating { ProgressView().controlSize(.large) } }
         if textSize.isAccessibilitySize && fitted < accessibleCell {
             ScrollView([.horizontal, .vertical]) { content }
+        } else if fitted < GardenTheme.minTarget {
+            // Big grids fit whole on screen; pinch to zoom, two fingers to pan, one finger draws.
+            ZoomableBoard(contentSize: CGSize(width: fitted * columns, height: fitted * rows), maximumZoom: max(1, 44 / fitted)) { content }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
             content.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -262,5 +264,30 @@ struct VictorySheet: View {
         .presentationDragIndicator(.hidden)
         .interactiveDismissDisabled()
         .onAppear { titleFocused = true }
+    }
+}
+
+/// Asks before trading the current walk for a new one, as a short sheet instead of an alert.
+struct ChangeWalkSheet: View {
+    let isDaily: Bool
+    let onConfirm: () -> Void
+    let onCancel: () -> Void
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: isDaily ? "arrow.clockwise" : "arrow.triangle.2.circlepath").font(.title).foregroundStyle(GardenTheme.accent)
+            Text(isDaily ? String(localized: "Recomeçar o desafio do dia?") : String(localized: "Trocar de fase?"))
+                .font(.title3.weight(.bold)).fontDesign(.serif)
+            Text(isDaily ? String(localized: "O caminho volta ao início. A grade de hoje é a mesma e as vidas voltam a 3.")
+                         : String(localized: "Você recebe uma grade nova do mesmo nível. O caminho desta fase se perde."))
+                .font(.subheadline).foregroundStyle(GardenTheme.secondary).multilineTextAlignment(.center)
+            Button(isDaily ? String(localized: "Recomeçar") : String(localized: "Trocar de fase"), action: onConfirm)
+                .buttonStyle(GardenButtonStyle(prominent: true))
+            Button(String(localized: "Continuar nesta"), action: onCancel)
+                .buttonStyle(GardenButtonStyle())
+        }.padding(24).frame(maxWidth: .infinity)
+            .foregroundStyle(GardenTheme.ink).tint(GardenTheme.ink)
+            .background(GardenTheme.background)
+            .presentationDetents([.height(330), .medium])
+            .presentationDragIndicator(.visible)
     }
 }
