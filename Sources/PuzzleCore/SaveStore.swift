@@ -11,14 +11,17 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
     public var marking = false
     public var soundEnabled = true
     public var hapticsEnabled = true
+    /// Mode for the next normal walk; daily challenges are always Tranquilo.
+    public var playMode = PlayMode.relaxed
     public init() {}
-    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled }
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, playMode }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
         marking = try c.decode(Bool.self, forKey: .marking)
         soundEnabled = try c.decode(Bool.self, forKey: .soundEnabled)
         hapticsEnabled = try c.decode(Bool.self, forKey: .hapticsEnabled)
+        playMode = try c.decodeIfPresent(PlayMode.self, forKey: .playMode) ?? .relaxed
     }
 }
 public struct PlayerSave: Codable, Sendable {
@@ -29,31 +32,41 @@ public struct PlayerSave: Codable, Sendable {
     public var completedPuzzleIDs: Set<String>
     public var activeDailyID: String?
     public var parkedAttempts: [String: GameAttempt]
-    public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:]) {
-        schemaVersion = 4; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
+    /// Best paw score per completed puzzle (1–3).
+    public var bestPaws: [String: Int]
+    public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:], bestPaws: [String: Int] = [:]) {
+        schemaVersion = 5; self.bestPaws = bestPaws; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
         self.tutorialStep = tutorialStep; self.completedPuzzleIDs = completedPuzzleIDs
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.attempt) {
             let version = try c.decode(Int.self, forKey: .schemaVersion)
-            schemaVersion = 4
-            guard version == 3 || version == 4 else { throw PuzzleError.invalidSession }
+            schemaVersion = 5
+            guard (3...5).contains(version) else { throw PuzzleError.invalidSession }
             attempt = try c.decode(GameAttempt.self, forKey: .attempt)
             preferences = try c.decode(PlayerPreferences.self, forKey: .preferences)
             tutorialStep = try c.decode(Int.self, forKey: .tutorialStep)
             completedPuzzleIDs = try c.decode(Set<String>.self, forKey: .completedPuzzleIDs)
-            activeDailyID = version == 4 ? try c.decodeIfPresent(String.self, forKey: .activeDailyID) : nil
-            parkedAttempts = version == 4 ? try c.decode([String: GameAttempt].self, forKey: .parkedAttempts) : [:]
+            activeDailyID = version >= 4 ? try c.decodeIfPresent(String.self, forKey: .activeDailyID) : nil
+            parkedAttempts = version >= 4 ? try c.decode([String: GameAttempt].self, forKey: .parkedAttempts) : [:]
             guard parkedAttempts.allSatisfy({ $0.key == "normal" || ($0.key.hasPrefix("daily-v1-") && $0.value.game.puzzle.puzzleID == $0.key) }),
                   activeDailyID == nil || (activeDailyID == attempt.game.puzzle.puzzleID && activeDailyID!.hasPrefix("daily-v1-") && parkedAttempts["normal"] != nil) else { throw PuzzleError.invalidSession }
-            guard tutorialStep >= 0, completedPuzzleIDs.allSatisfy({ !$0.isEmpty }) else { throw PuzzleError.invalidSession }
+            // Walks finished before scores existed count as one paw.
+            bestPaws = version == 5 ? try c.decode([String: Int].self, forKey: .bestPaws)
+                : Dictionary(uniqueKeysWithValues: completedPuzzleIDs.map { ($0, 1) })
+            guard tutorialStep >= 0, completedPuzzleIDs.allSatisfy({ !$0.isEmpty }),
+                  bestPaws.values.allSatisfy((1...GameAttempt.maxLives).contains) else { throw PuzzleError.invalidSession }
         } else {
-            schemaVersion = 4; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
+            schemaVersion = 5; bestPaws = [:]; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
             preferences = PlayerPreferences(); tutorialStep = 0; completedPuzzleIDs = []
         }
-        if attempt.game.won { completedPuzzleIDs.insert(attempt.game.puzzle.puzzleID) }
+        if attempt.game.won {
+            let id = attempt.game.puzzle.puzzleID
+            completedPuzzleIDs.insert(id)
+            bestPaws[id] = max(bestPaws[id] ?? 0, attempt.paws)
+        }
     }
 }
 

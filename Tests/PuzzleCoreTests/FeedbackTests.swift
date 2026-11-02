@@ -8,7 +8,9 @@ final class FeedbackTests: XCTestCase {
         XCTAssertNil(s.feedback)
         s.begin(at: Cell(0,1), marking: false)
         s.move(to: Cell(0,2))
-        XCTAssertNil(s.feedback) // never emit during drag preview
+        XCTAssertEqual(s.feedback?.kind, .clueMet) // row 1 reaches its clue mid-stroke
+        s.move(to: Cell(0,2))
+        XCTAssertEqual(s.feedback?.kind, .clueMet, "Repeated input over the same cell is silent")
         await s.finish()
         XCTAssertEqual(s.feedback?.kind, .action)
         let first = s.feedback
@@ -52,7 +54,7 @@ final class FeedbackTests: XCTestCase {
         XCTAssertEqual(restored.attempt.game.path, route)
         XCTAssertNil(restored.feedback)
         await restored.select(Cell(1,1), marking: false)
-        XCTAssertTrue(restored.message.contains("perdeu 1 vida"))
+        XCTAssertTrue(restored.message?.contains("−1 vida") == true)
         XCTAssertEqual(restored.attempt.lives, 2)
     }
 }

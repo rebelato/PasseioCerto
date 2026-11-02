@@ -139,3 +139,18 @@ Renderizações claras/escuras e PNGs revisados. Código iOS compila com catálo
 ### Integração contínua (PC-023)
 
 GitHub Actions verifica testes do núcleo, build iOS completo com assets e instalação/abertura em simulador. Ambiente fixado em macOS 15, Xcode 26.3 e iOS 26.2, sem assinatura ou credenciais pessoais. [Comandos, limites e evidências](docs/ci.md).
+
+### Design review de 23/10/2026 · parte 1
+
+Aplicação das prioridades 1–5 do design review.
+
+- **Sem mensagens de dev:** a fase de reserva é usada em silêncio. O balão da Margot só fala quando há algo a dizer: erro, dica ou vitória.
+- **Desafio diário no fuso local:** vira à meia-noite do aparelho, com contagem regressiva ("Novo desafio em 3h 12min") e sequência de dias. O id `daily-v1-AAAA-MM-DD` não mudou.
+- **Vidas:** só custam vida os erros visíveis: passar do número de uma pista, chegar à casinha cedo, pisar num arbusto ou cruzar o caminho. Becos sem saída ficam para a pessoa descobrir; o solver não é consultado. A casa e a pista culpadas piscam por 600 ms antes de a jogada ser desfeita. No Tranquilo não há vidas. Ao chegar, as vidas restantes viram de 1 a 3 patinhas, e o recorde por fase fica salvo.
+- **Tela de jogo sem rolagem:** barra fina (← · nome e corações · ⚙), balão da Margot, a maior grade que couber e a barra Desfazer · Dica · Reiniciar. Arrastar, ou tocar na casa vizinha à ponta, desenha; tocar em outra casa (ou tocar e segurar) alterna ×. O caminho é cor de terra e os arbustos ficam sobre solo. Há haptic leve por casa desenhada e um "tic" quando uma pista é atendida.
+- **Vitória:** a Margot anda, abana o rabo e entra na casinha, com o haptic de sucesso na chegada. Depois sobe um sheet com as patinhas e "Próximo passeio".
+- **Início:** "Jogar" é o único botão preenchido, com o modo ao lado. Abaixo ficam o card do Desafio do dia e o resumo do cantinho. Nos Ajustes, o nome salva sozinho.
+
+Formatos: tentativa v3 (`mode`, `mistakes`) e save v5 (`bestPaws`, `playMode`). Saves antigos migram: vidas v2 viram erros, e passeios já concluídos valem 1 patinha.
+
+Capturas no simulador (iPhone 17 Pro, iOS 26.5): [início](docs/validation/design-review/home.png), [partida](docs/validation/design-review/game.png), [escuro](docs/validation/design-review/game-dark.png), [vitória](docs/validation/design-review/victory.png). Para abrir a partida direto: `xcrun simctl launch <id> com.rebelato.PasseioCerto -PCOpenWalk YES`. **Pendente:** arrastar, tocar, a animação de vitória e os hápticos não foram exercitados de forma automatizada; conferir no iPhone.

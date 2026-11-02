@@ -2,7 +2,6 @@ import SwiftUI
 
 /// Gallery of visual states, including components reserved for later features.
 struct GardenGallery: View {
-    @State private var marking = false
     var body: some View {
         VStack(alignment: .leading, spacing: GardenTheme.spacing) {
             Text("Passeio Certo").font(GardenTheme.title)
@@ -24,7 +23,7 @@ struct GardenGallery: View {
                 GardenCell(highlighted: true)
             }.frame(height: 48)
             GardenNote(text: "A coluna 3 já está completa. Marque as outras casas com ×.", symbol: "lightbulb")
-            GardenTools(marking: $marking)
+            PawScore(paws: 2)
             HStack {
                 Button("Desfazer", systemImage: "arrow.uturn.backward") {}
                 Button("Dica", systemImage: "lightbulb") {}
