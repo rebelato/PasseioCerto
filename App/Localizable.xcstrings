@@ -531,6 +531,16 @@
         }
       }
     },
+    "A primeira linha já está completa. Toque e segure na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho. No jogo, tocar rápido numa casa fora do caminho custa uma vida.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A primeira linha já está completa. Toque e segure na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho. No jogo, tocar rápido numa casa fora do caminho custa uma vida."
+          }
+        }
+      }
+    },
     "A primeira linha já está completa. Toque na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho.": {
       "localizations": {
         "pt-BR": {
@@ -655,6 +665,16 @@
         }
       }
     },
+    "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento."
+          }
+        }
+      }
+    },
     "Arbusto no caminho!": {
       "localizations": {
         "pt-BR": {
@@ -707,6 +727,16 @@
         }
       }
     },
+    "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo: não dá para voltar. Toque e segure numa casa para marcar ×, e de novo para limpar. Dica explica uma dedução sem jogar por você.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo: não dá para voltar. Toque e segure numa casa para marcar ×, e de novo para limpar. Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
     "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho. Cada passo é definitivo: não dá para voltar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você.": {
       "localizations": {
         "pt-BR": {
@@ -723,6 +753,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Arraste, ou toque na casa vizinha à ponta, para desenhar o caminho; volte uma casa para apagar. Toque em outra casa para marcar ×, ou toque e segure em qualquer casa livre; toque de novo para limpar. Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
+    "As pistas contam as casas do caminho em cada linha e coluna, incluindo o início. No Fácil a casinha aparece e também conta; nos outros níveis ela fica escondida e só aparece quando o caminho fecha.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As pistas contam as casas do caminho em cada linha e coluna, incluindo o início. No Fácil a casinha aparece e também conta; nos outros níveis ela fica escondida e só aparece quando o caminho fecha."
           }
         }
       }
@@ -776,6 +816,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bandana"
+          }
+        }
+      }
+    },
+    "Cada fase tem um único caminho certo, e você tem 3 vidas em todos os níveis e no desafio do dia. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma vida.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada fase tem um único caminho certo, e você tem 3 vidas em todos os níveis e no desafio do dia. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma vida."
           }
         }
       }
@@ -973,6 +1023,16 @@
         }
       }
     },
+    "Continuar nesta": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar nesta"
+          }
+        }
+      }
+    },
     "Continuar passeio": {
       "localizations": {
         "pt-BR": {
@@ -990,6 +1050,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Continuar tutorial"
+          }
+        }
+      }
+    },
+    "Continuar · %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar · %@"
           }
         }
       }
@@ -1125,6 +1195,16 @@
         }
       }
     },
+    "Dificuldade": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dificuldade"
+          }
+        }
+      }
+    },
     "Dificuldade do próximo passeio": {
       "extractionState": "stale",
       "localizations": {
@@ -1132,6 +1212,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dificuldade do próximo passeio"
+          }
+        }
+      }
+    },
+    "Difícil": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Difícil"
+          }
+        }
+      }
+    },
+    "Duas casas do caminho ficaram com uma saída só.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duas casas do caminho ficaram com uma saída só."
           }
         }
       }
@@ -1152,6 +1252,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Escolher uma fase deste lugar"
+          }
+        }
+      }
+    },
+    "Especialista": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Especialista"
           }
         }
       }
@@ -1293,12 +1403,32 @@
         }
       }
     },
+    "Foto do passeio %@, %lld patinhas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Foto do passeio %@, %lld patinhas"
+          }
+        }
+      }
+    },
     "Foto do passeio em %@, %lld patinhas": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Foto do passeio em %@, %lld patinhas"
+          }
+        }
+      }
+    },
+    "Fácil": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fácil"
           }
         }
       }
@@ -1362,6 +1492,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geração cancelada. Sua partida foi mantida."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld, casinha escondida, 3 vidas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld, casinha escondida, 3 vidas."
+          }
+        }
+      }
+    },
+    "Grade %lld × %lld, casinha à vista, 3 vidas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grade %lld × %lld, casinha à vista, 3 vidas."
           }
         }
       }
@@ -1466,6 +1616,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jogar de novo"
+          }
+        }
+      }
+    },
+    "Jogar esta de novo": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jogar esta de novo"
           }
         }
       }
@@ -1656,6 +1816,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mudou de ideia? Toque de novo no × da linha 1, coluna 3 para limpá-lo. Já os passos do caminho são definitivos."
+          }
+        }
+      }
+    },
+    "Médio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Médio"
+          }
+        }
+      }
+    },
+    "Médio · termina em %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Médio · termina em %@"
           }
         }
       }
@@ -1959,6 +2139,16 @@
         }
       }
     },
+    "O caminho ou as marcações quebram uma regra. Revise as marcações.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho ou as marcações quebram uma regra. Revise as marcações."
+          }
+        }
+      }
+    },
     "O caminho ou as marcações quebram uma regra. Revise o estado atual ou use Desfazer.": {
       "localizations": {
         "pt-BR": {
@@ -1996,6 +2186,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "O caminho precisa passar pelo osso."
+          }
+        }
+      }
+    },
+    "O caminho volta ao início. A grade de hoje é a mesma e as vidas voltam a 3.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O caminho volta ao início. A grade de hoje é a mesma e as vidas voltam a 3."
           }
         }
       }
@@ -2177,6 +2377,16 @@
         }
       }
     },
+    "Passeio · %lld × %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passeio · %lld × %lld"
+          }
+        }
+      }
+    },
     "Passo %lld de 6": {
       "extractionState": "stale",
       "localizations": {
@@ -2215,6 +2425,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Por aí não! O caminho certo segue por outra casa."
+          }
+        }
+      }
+    },
+    "Por qualquer outro lado, uma casa que o caminho ainda precisa ficaria sem saída.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Por qualquer outro lado, uma casa que o caminho ainda precisa ficaria sem saída."
           }
         }
       }
@@ -2399,6 +2619,26 @@
         }
       }
     },
+    "Recomeçar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recomeçar"
+          }
+        }
+      }
+    },
+    "Recomeçar o desafio do dia?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recomeçar o desafio do dia?"
+          }
+        }
+      }
+    },
     "Recuperar cópia anterior": {
       "extractionState": "stale",
       "localizations": {
@@ -2560,6 +2800,16 @@
         }
       }
     },
+    "Siga as pistas até achar a casinha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Siga as pistas até achar a casinha"
+          }
+        }
+      }
+    },
     "Sons": {
       "extractionState": "stale",
       "localizations": {
@@ -2646,6 +2896,16 @@
         }
       }
     },
+    "Toda fase é nova: jogar de novo, tentar de novo ou trocar de fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toda fase é nova: jogar de novo, tentar de novo ou trocar de fase sempre traz uma grade diferente. Só o desafio do dia é igual o dia todo."
+          }
+        }
+      }
+    },
     "Toque duas vezes para alternar a marcação xis": {
       "extractionState": "stale",
       "localizations": {
@@ -2709,6 +2969,26 @@
         }
       }
     },
+    "Trocar de fase": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trocar de fase"
+          }
+        }
+      }
+    },
+    "Trocar de fase?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trocar de fase?"
+          }
+        }
+      }
+    },
     "Trocar por outra fase deste lugar?": {
       "localizations": {
         "pt-BR": {
@@ -2737,6 +3017,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Um passeio de cada vez, com %@."
+          }
+        }
+      }
+    },
+    "Uma casa do caminho ficou sem saída.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma casa do caminho ficou sem saída."
+          }
+        }
+      }
+    },
+    "Uma casa do caminho só tem estas saídas livres, então o caminho passa por elas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma casa do caminho só tem estas saídas livres, então o caminho passa por elas."
           }
         }
       }
@@ -2817,6 +3117,16 @@
         }
       }
     },
+    "Ver a grade inteira": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver a grade inteira"
+          }
+        }
+      }
+    },
     "Verificando jogada…": {
       "extractionState": "stale",
       "localizations": {
@@ -2882,6 +3192,16 @@
         }
       }
     },
+    "Você recebe uma grade nova do mesmo nível. O caminho desta fase se perde.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você recebe uma grade nova do mesmo nível. O caminho desta fase se perde."
+          }
+        }
+      }
+    },
     "Você tem 3 vidas. Um caminho impossível custa uma vida e é desfeito. ×, desfazer e gestos inválidos não custam vidas; desfazer não devolve vidas perdidas.": {
       "extractionState": "stale",
       "localizations": {
@@ -2911,6 +3231,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voltar ao passeio normal"
+          }
+        }
+      }
+    },
+    "livre": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "livre"
           }
         }
       }

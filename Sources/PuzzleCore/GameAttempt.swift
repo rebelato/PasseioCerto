@@ -1,61 +1,55 @@
 import Foundation
 
-/// Tranquilo never ends a walk; Desafiador ends it after three visible mistakes.
-public enum PlayMode: String, Codable, CaseIterable, Sendable {
-    case relaxed, challenging
-    public var title: String { self == .relaxed ? String(localized: "Tranquilo") : String(localized: "Desafiador") }
-    public var hasLives: Bool { self == .challenging }
-}
-
 /// Mistakes are outside Game's undo history. Defeat and score are derived, never separately mutable.
+/// Every walk has three lives, the daily challenge included.
 public struct GameAttempt: Codable, Sendable {
     public static let maxLives = 3
     public let schemaVersion: Int
     public internal(set) var game: Game
-    public let mode: PlayMode
     public internal(set) var mistakes: Int
-    /// The progression level this walk belongs to; nil for daily and older free walks.
-    public let level: WorldLevel?
+    /// The difficulty this walk was made for; nil for daily and older free walks.
+    public let difficulty: Difficulty?
     public var lives: Int { max(0, Self.maxLives - mistakes) }
-    public var defeated: Bool { mode.hasLives && lives == 0 }
+    public var defeated: Bool { lives == 0 }
     /// Score shown as paw prints: 3 for a clean walk, never below 1 once home.
     public var paws: Int { max(1, Self.maxLives - mistakes) }
-    public init(game: Game = Game(), mode: PlayMode = .challenging, level: WorldLevel? = nil) {
-        schemaVersion = 3; self.game = game; self.mode = mode; self.level = level; mistakes = 0
+    public init(game: Game = Game(), difficulty: Difficulty? = nil) {
+        schemaVersion = 4; self.game = game; self.difficulty = difficulty; mistakes = 0
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, game, lives, mode, mistakes, level }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, game, lives, mistakes, difficulty }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.game) {
             let version = try c.decode(Int.self, forKey: .schemaVersion)
-            schemaVersion = 3
+            schemaVersion = 4
             game = try c.decode(Game.self, forKey: .game)
-            level = try c.decodeIfPresent(WorldLevel.self, forKey: .level)
+            difficulty = try? c.decodeIfPresent(Difficulty.self, forKey: .difficulty)
             switch version {
             case 2:
                 // v2 only had Desafiador-style lives.
                 let lives = try c.decode(Int.self, forKey: .lives)
                 guard (0...Self.maxLives).contains(lives) else { throw PuzzleError.invalidSession }
-                mode = .challenging; mistakes = Self.maxLives - lives
-            case 3:
-                mode = try c.decode(PlayMode.self, forKey: .mode)
+                mistakes = Self.maxLives - lives
+            case 3, 4:
                 mistakes = try c.decode(Int.self, forKey: .mistakes)
-                guard mistakes >= 0, !mode.hasLives || mistakes <= Self.maxLives else { throw PuzzleError.invalidSession }
+                guard mistakes >= 0 else { throw PuzzleError.invalidSession }
+                // v3 Tranquilo walks had no lives; keep them playable (or won) under the new rule.
+                if version == 3 { mistakes = min(mistakes, Self.maxLives - 1) }
+                guard mistakes <= Self.maxLives else { throw PuzzleError.invalidSession }
             default: throw PuzzleError.invalidSession
             }
             guard !(defeated && game.won) else { throw PuzzleError.invalidSession }
         } else {
             // Old PC-003 saved Game format had no lives.
-            schemaVersion = 3; game = try Game(from: decoder); mode = .challenging; mistakes = 0; level = nil
+            schemaVersion = 4; game = try Game(from: decoder); mistakes = 0; difficulty = nil
         }
     }
     public func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
         try c.encode(schemaVersion, forKey: .schemaVersion)
         try c.encode(game, forKey: .game)
-        try c.encode(mode, forKey: .mode)
         try c.encode(mistakes, forKey: .mistakes)
-        try c.encodeIfPresent(level, forKey: .level)
+        try c.encodeIfPresent(difficulty, forKey: .difficulty)
     }
 }
 

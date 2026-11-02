@@ -11,22 +11,19 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
     public var marking = false
     public var soundEnabled = true
     public var hapticsEnabled = true
-    /// Mode for the next normal walk; daily challenges are always Tranquilo.
-    public var playMode = PlayMode.relaxed
+    /// Size of the next walk; only Fácil shows the house.
+    public var difficulty = Difficulty.easy
     public var accessory: Accessory?
-    /// New progression walks hide the house until the route is complete.
-    public var hiddenHouse = false
     public init() {}
-    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, playMode, accessory, hiddenHouse }
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, difficulty, accessory }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
         marking = try c.decode(Bool.self, forKey: .marking)
         soundEnabled = try c.decode(Bool.self, forKey: .soundEnabled)
         hapticsEnabled = try c.decode(Bool.self, forKey: .hapticsEnabled)
-        playMode = try c.decodeIfPresent(PlayMode.self, forKey: .playMode) ?? .relaxed
+        difficulty = (try? c.decodeIfPresent(Difficulty.self, forKey: .difficulty)) ?? .easy
         accessory = try? c.decodeIfPresent(Accessory.self, forKey: .accessory)
-        hiddenHouse = try c.decodeIfPresent(Bool.self, forKey: .hiddenHouse) ?? false
     }
 }
 public struct PlayerSave: Codable, Sendable {
@@ -39,16 +36,14 @@ public struct PlayerSave: Codable, Sendable {
     public var parkedAttempts: [String: GameAttempt]
     /// Best paw score per completed puzzle (1–3).
     public var bestPaws: [String: Int]
-    /// Next level of the world progression.
-    public var progress: WorldLevel
     /// Finished walks for the album, newest last.
     public var walks: [WalkRecord]
     public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:], bestPaws: [String: Int] = [:],
-                progress: WorldLevel = .first, walks: [WalkRecord] = []) {
-        schemaVersion = 6; self.bestPaws = bestPaws; self.progress = progress; self.walks = walks; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
+                walks: [WalkRecord] = []) {
+        schemaVersion = 6; self.bestPaws = bestPaws; self.walks = walks; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
         self.tutorialStep = tutorialStep; self.completedPuzzleIDs = completedPuzzleIDs
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, progress, walks }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, walks }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.attempt) {
@@ -61,17 +56,16 @@ public struct PlayerSave: Codable, Sendable {
             completedPuzzleIDs = try c.decode(Set<String>.self, forKey: .completedPuzzleIDs)
             activeDailyID = version >= 4 ? try c.decodeIfPresent(String.self, forKey: .activeDailyID) : nil
             parkedAttempts = version >= 4 ? try c.decode([String: GameAttempt].self, forKey: .parkedAttempts) : [:]
-            guard parkedAttempts.allSatisfy({ $0.key == "normal" || ($0.key.hasPrefix("daily-v1-") && $0.value.game.puzzle.puzzleID == $0.key) }),
-                  activeDailyID == nil || (activeDailyID == attempt.game.puzzle.puzzleID && activeDailyID!.hasPrefix("daily-v1-") && parkedAttempts["normal"] != nil) else { throw PuzzleError.invalidSession }
+            guard parkedAttempts.allSatisfy({ $0.key == "normal" || (DailyChallenge.isDailyID($0.key) && $0.value.game.puzzle.puzzleID == $0.key) }),
+                  activeDailyID == nil || (activeDailyID == attempt.game.puzzle.puzzleID && DailyChallenge.isDailyID(activeDailyID!) && parkedAttempts["normal"] != nil) else { throw PuzzleError.invalidSession }
             // Walks finished before scores existed count as one paw.
             bestPaws = version >= 5 ? try c.decode([String: Int].self, forKey: .bestPaws)
                 : Dictionary(uniqueKeysWithValues: completedPuzzleIDs.map { ($0, 1) })
             guard tutorialStep >= 0, completedPuzzleIDs.allSatisfy({ !$0.isEmpty }),
                   bestPaws.values.allSatisfy((1...GameAttempt.maxLives).contains) else { throw PuzzleError.invalidSession }
-            progress = try c.decodeIfPresent(WorldLevel.self, forKey: .progress) ?? .first
-            walks = try c.decodeIfPresent([WalkRecord].self, forKey: .walks) ?? []
+            walks = (try? c.decodeIfPresent([WalkRecord].self, forKey: .walks)) ?? []
         } else {
-            schemaVersion = 6; bestPaws = [:]; progress = .first; walks = []; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
+            schemaVersion = 6; bestPaws = [:]; walks = []; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
             preferences = PlayerPreferences(); tutorialStep = 0; completedPuzzleIDs = []
         }
         if attempt.game.won {
@@ -126,9 +120,9 @@ public struct WalkRecord: Codable, Equatable, Sendable {
     public let path: [Cell]
     public let paws: Int
     public let date: Date
-    public let place: World?
-    public init(puzzle: Puzzle, path: [Cell], paws: Int, date: Date, place: World?) {
-        self.puzzle = puzzle; self.path = path; self.paws = paws; self.date = date; self.place = place
+    public let difficulty: Difficulty?
+    public init(puzzle: Puzzle, path: [Cell], paws: Int, date: Date, difficulty: Difficulty?) {
+        self.puzzle = puzzle; self.path = path; self.paws = paws; self.date = date; self.difficulty = difficulty
     }
     public static let albumLimit = 60
 }

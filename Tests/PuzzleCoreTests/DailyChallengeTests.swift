@@ -6,10 +6,10 @@ final class DailyChallengeTests: XCTestCase {
     func testDayTurnsOverAtLocalMidnight() {
         let brazil = TimeZone(identifier: "America/Sao_Paulo")!
         let evening = DailyChallenge(date: date("2026-10-22T21:00:00-03:00"), timeZone: brazil)
-        XCTAssertEqual(evening.id, "daily-v1-2026-10-22")
+        XCTAssertEqual(evening.id, "daily-v2-2026-10-22")
         XCTAssertEqual(evening, DailyChallenge(date: date("2026-10-22T23:59:59-03:00"), timeZone: brazil))
         let midnight = DailyChallenge(date: date("2026-10-23T00:00:00-03:00"), timeZone: brazil)
-        XCTAssertEqual(midnight.id, "daily-v1-2026-10-23")
+        XCTAssertEqual(midnight.id, "daily-v2-2026-10-23")
         XCTAssertEqual(midnight.seed, 20261023)
         XCTAssertEqual(DailyChallenge.nextReset(after: date("2026-10-22T21:00:00-03:00"), timeZone: brazil),
                        date("2026-10-23T00:00:00-03:00"))
@@ -21,16 +21,19 @@ final class DailyChallengeTests: XCTestCase {
         XCTAssertEqual(DailyChallenge.streak(completed: done, today: today, timeZone: brazil), 3, "Today still open keeps the streak")
         XCTAssertEqual(DailyChallenge.streak(completed: done.union(["daily-v1-2026-10-23"]), today: today, timeZone: brazil), 4)
         XCTAssertEqual(DailyChallenge.streak(completed: ["daily-v1-2026-10-20"], today: today, timeZone: brazil), 0)
+        XCTAssertEqual(DailyChallenge.streak(completed: done.union(["daily-v2-2026-10-23"]), today: today, timeZone: brazil), 4, "v1 and v2 days chain")
     }
-    @MainActor func testModeSwitchKeepsRouteAndResetsMistakes() async {
+    @MainActor func testDailyIsAMediumWalkWithHiddenHouseAndLives() async {
         let s = GameSession()
-        await s.select(Cell(1,0), marking: false)
-        await s.select(Cell(0,1), marking: false)
-        s.setPlayMode(.relaxed)
-        XCTAssertEqual(s.attempt.mode, .relaxed)
-        XCTAssertEqual(s.attempt.mistakes, 0)
-        XCTAssertEqual(s.attempt.game.path.count, 2)
-        XCTAssertEqual(s.preferences.playMode, .relaxed)
+        await s.openDaily(date: date("2026-10-23T12:00:00-03:00"))
+        let puzzle = s.attempt.game.puzzle
+        XCTAssertEqual(puzzle.puzzleID, "daily-v2-2026-10-23")
+        XCTAssertEqual(puzzle.rows.count, Difficulty.medium.size)
+        XCTAssertTrue(puzzle.hiddenGoal)
+        XCTAssertEqual(s.attempt.lives, 3)
+        let again = GameSession()
+        await again.openDaily(date: date("2026-10-23T18:00:00-03:00"))
+        XCTAssertEqual(again.attempt.game.puzzle, puzzle, "Same day, same walk")
     }
     @MainActor func testDailyAndNormalKeepIndependentProgressAcrossRelaunch() async throws {
         let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -74,7 +77,7 @@ final class DailyChallengeTests: XCTestCase {
     }
     @MainActor func testFailedDailyLeavesNormalUntouched() async {
         struct Failure: Error {}
-        let s = GameSession(generate: { _, _ in throw Failure() })
+        let s = GameSession(generateWalk: { _, _, _ in throw Failure() })
         let original = s.attempt.game.puzzle
         await s.openDaily(date: date("2026-10-23T12:00:00Z"))
         XCTAssertNil(s.activeDailyID)

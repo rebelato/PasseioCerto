@@ -93,8 +93,8 @@ struct GardenClue: View {
     private var symbol: String? { count > target ? "exclamationmark" : count == target ? "checkmark" : nil }
     var body: some View {
         VStack(spacing: 0) {
-            Text("\(target)").font(GardenTheme.heading).monospacedDigit()
-            if let symbol { Image(systemName: symbol).font(.caption2.bold()) }
+            Text("\(target)").font(GardenTheme.heading).monospacedDigit().lineLimit(1).minimumScaleFactor(0.35)
+            if let symbol { Image(systemName: symbol).font(.caption2.bold()).minimumScaleFactor(0.3) }
         }.foregroundStyle(count > target || blocked ? GardenTheme.error : GardenTheme.ink)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(count == target ? GardenTheme.sage : GardenTheme.surface,
@@ -127,14 +127,16 @@ struct GardenCell: View {
     var feature = CellFeature.none
     /// Beside a cat: tinted so the forbidden ring around it reads at a glance.
     var nearCat = false
+    /// Smaller cells get smaller corners, so a 20 × 20 board still reads as a grid.
+    var radius = GardenTheme.cellRadius
     private var fill: Color {
         obstacle ? GardenTheme.soil : occupied ? GardenTheme.trailTint : nearCat ? GardenTheme.catZone : GardenTheme.surface
     }
     var body: some View {
-        RoundedRectangle(cornerRadius: GardenTheme.cellRadius)
+        RoundedRectangle(cornerRadius: radius)
             .fill(fill)
-            .overlay(RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(highlighted ? GardenTheme.accent : GardenTheme.border, lineWidth: highlighted ? 3 : 1))
-            .overlay { if blocked { RoundedRectangle(cornerRadius: GardenTheme.cellRadius).fill(GardenTheme.error.opacity(0.35)).strokeBorder(GardenTheme.error, lineWidth: 3) } }
+            .overlay(RoundedRectangle(cornerRadius: radius).strokeBorder(highlighted ? GardenTheme.accent : GardenTheme.border, lineWidth: highlighted ? 3 : 1))
+            .overlay { if blocked { RoundedRectangle(cornerRadius: radius).fill(GardenTheme.error.opacity(0.35)).strokeBorder(GardenTheme.error, lineWidth: 3) } }
             .overlay {
                 switch feature == .none && obstacle ? .shrub : feature {
                 case .tree: TreeArt().padding(2)
@@ -150,9 +152,9 @@ struct GardenCell: View {
     }
 }
 
-/// Tranquilo / Desafiador, chosen before a walk starts.
-struct PlayModePicker: View {
-    @Binding var selection: PlayMode
+/// Fácil / Médio / Difícil / Especialista, chosen before a walk starts.
+struct DifficultyPicker: View {
+    @Binding var selection: Difficulty
     @Environment(\.dynamicTypeSize) private var textSize
     var body: some View {
         if textSize.isAccessibilitySize {
@@ -160,8 +162,8 @@ struct PlayModePicker: View {
         } else { picker.pickerStyle(.segmented) }
     }
     private var picker: some View {
-        Picker(String(localized: "Modo do passeio"), selection: $selection) {
-            ForEach(PlayMode.allCases, id: \.self) { Text($0.title).tag($0) }
+        Picker(String(localized: "Dificuldade"), selection: $selection) {
+            ForEach(Difficulty.allCases, id: \.self) { Text($0.title).tag($0) }
         }
     }
 }

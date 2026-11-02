@@ -76,7 +76,7 @@ public enum ExactSolver {
 public enum PuzzleSolution {
     /// The only route that solves a certified puzzle, or nil if it cannot be pinned down.
     public static func route(for puzzle: Puzzle) -> [Cell]? {
-        let logic = LogicEngine.analyze(puzzle: puzzle)
+        let logic = LogicEngine.analyze(puzzle: puzzle, maxTier: LogicEngine.fullTier)
         if logic.outcome == .solved { return logic.path }
         let exact = ExactSolver.solve(puzzle: puzzle, nodeLimit: 200_000)
         return exact.classification == .unique ? exact.solutions.first : nil

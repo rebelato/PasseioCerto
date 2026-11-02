@@ -16,6 +16,9 @@ struct GameScreen: View {
     @State private var wagging = false
     @State private var enteredHouse = false
     @State private var reset = false
+    @State private var zoomed = false
+    @State private var zoomReset = 0
+
     @State private var recovery = false
     @AccessibilityFocusState private var bubbleFocused: Bool
     private var game: Game { session.attempt.game }
@@ -24,7 +27,7 @@ struct GameScreen: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            GameTopBar(title: title, lives: session.attempt.mode.hasLives ? session.attempt.lives : nil,
+            GameTopBar(title: title, lives: session.attempt.lives,
                        onHome: onHome, onSettings: onSettings)
             MargotBubble(text: bubbleText, symbol: bubbleSymbol, pose: game.won ? .happy : .idle, accessory: session.preferences.accessory,
                          onClose: session.hint == nil ? nil : { session.dismissHint() })
@@ -32,7 +35,8 @@ struct GameScreen: View {
             GeometryReader { space in board(in: space.size) }
             if let error = session.storageError { storageRecovery(error) }
             if session.attempt.defeated {
-                Button(String(localized: "Tentar de novo"), systemImage: "arrow.clockwise") { Task { await session.replay() } }
+                // After losing, the same grid again: only a finished walk offers a new one.
+                Button(String(localized: "Tentar de novo"), systemImage: "arrow.clockwise") { session.restart() }
                     .buttonStyle(GardenButtonStyle(prominent: true))
             } else {
                 GameToolbar(canPlay: session.canInteract && !busy, isDaily: session.activeDailyID != nil,
@@ -42,11 +46,11 @@ struct GameScreen: View {
         .padding(.horizontal, GardenTheme.spacing).padding(.bottom, 8)
         .frame(maxWidth: 560).frame(maxWidth: .infinity)
         .background(GardenTheme.background).foregroundStyle(GardenTheme.ink).tint(GardenTheme.accent)
-        .confirmationDialog(session.activeDailyID != nil ? String(localized: "Reiniciar o desafio do dia?") : String(localized: "Trocar por outra fase deste lugar?"),
-                            isPresented: $reset, titleVisibility: .visible) {
-            Button(session.activeDailyID != nil ? String(localized: "Reiniciar") : String(localized: "Outra fase"), role: .destructive) {
+        .sheet(isPresented: $reset) {
+            ChangeWalkSheet(isDaily: session.activeDailyID != nil, onConfirm: {
+                reset = false
                 Task { await session.replay() }
-            }
+            }, onCancel: { reset = false })
         }
         .confirmationDialog(String(localized: "Salvar esta partida no lugar da anterior? O arquivo anterior será guardado separadamente."), isPresented: $recovery, titleVisibility: .visible) {
             Button(String(localized: "Preservar original e salvar esta partida")) { session.preserveOriginalAndSaveCurrent() }
@@ -55,7 +59,7 @@ struct GameScreen: View {
             VictorySheet(dogName: session.dogName, paws: session.attempt.paws,
                          best: session.bestPaws[game.puzzle.puzzleID] ?? session.attempt.paws,
                          isDaily: session.activeDailyID != nil, generating: session.generating,
-                         onNext: onNext, onReplay: { Task { await session.replay() } }, onHome: onHome)
+                         onNext: onNext, onReplay: { session.restart() }, onHome: onHome)
         }
         .task(id: session.celebrating) { await celebrate() }
         .onChange(of: game.won) { _, won in if !won { enteredHouse = false; wagging = false } }
@@ -72,12 +76,10 @@ struct GameScreen: View {
         if game.won { return String(localized: "Chegamos em casa!") }
         if session.attempt.defeated { return String(localized: "As vidas acabaram. Vamos tentar de novo?") }
         if let message = session.message { return message }
-        if game.puzzle.hiddenGoal && game.path.count == 1 && game.marks.isEmpty {
-            return String(localized: "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.")
-        }
-        // First walk of a new place: Margot introduces its rule.
-        if let level = session.attempt.level, level.level == 0, let rule = level.world.newRule, game.path.count == 1, game.marks.isEmpty {
-            return String(localized: "Novidade, \(rule.title.lowercased())! \(rule.explanation)")
+        if game.puzzle.hiddenGoal {
+            return game.path.count == 1 && game.marks.isEmpty
+                ? String(localized: "A casinha está escondida! Siga as pistas: ela aparece quando o caminho fecha.")
+                : String(localized: "Siga as pistas até achar a casinha")
         }
         return String(localized: "Leve \(session.dogName) até a casinha")
     }
@@ -98,22 +100,45 @@ struct GameScreen: View {
             highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
             highlightedColumn: session.hint?.column, violation: session.displayedViolation,
             onSelect: { cell in Task { await session.select(cell, marking: false) } },
-            onTap: { cell, held in Task { await session.tap(cell, held: held) } },
-            onStrokeStart: { session.begin(at: $0, marking: false) },
-            onStrokeMove: { session.move(to: $0) },
-            onStrokeEnd: { cancelled in
-                if cancelled { session.cancel() } else { Task { await session.finish() } }
-            })
+            onTap: tap, onStrokeStart: { session.begin(at: $0, marking: false) },
+            onStrokeMove: { session.move(to: $0) }, onStrokeEnd: endStroke)
             .allowsHitTesting(session.canInteract)
             .accessibilityHidden(session.attempt.defeated)
             .overlay { if session.generating { ProgressView().controlSize(.large) } }
         if textSize.isAccessibilitySize && fitted < accessibleCell {
             ScrollView([.horizontal, .vertical]) { content }
+        } else if fitted < GardenTheme.minTarget {
+            // Big grids fit whole on screen; pinch to zoom, two fingers to pan, one finger draws.
+            // Touches are handled in UIKit here (see ZoomableBoard), so the SwiftUI gesture is off.
+            ZoomableBoard(contentSize: CGSize(width: fitted * columns, height: fitted * rows), maximumZoom: max(1, 44 / fitted),
+                          zoomed: $zoomed, resetToken: zoomReset,
+                          touches: BoardTouchHandlers(cellSide: fitted, rows: game.rows.count, columns: game.columns.count,
+                                                      enabled: session.canInteract, onTap: tap,
+                                                      onStrokeStart: { session.begin(at: $0, marking: false) },
+                                                      onStrokeMove: { session.move(to: $0) }, onStrokeEnd: endStroke)) {
+                content.allowsHitTesting(false)
+            }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .overlay(alignment: .bottomTrailing) {
+                    if zoomed {
+                        Button { zoomReset += 1 } label: {
+                            Label(String(localized: "Ver a grade inteira"), systemImage: "arrow.down.right.and.arrow.up.left")
+                                .labelStyle(.iconOnly).font(.title3.weight(.semibold))
+                                .frame(width: GardenTheme.minTarget, height: GardenTheme.minTarget)
+                                .background(GardenTheme.surface, in: Circle())
+                                .overlay(Circle().strokeBorder(GardenTheme.border))
+                        }.foregroundStyle(GardenTheme.ink).padding(8)
+                    }
+                }
         } else {
             content.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
+    private func tap(_ cell: Cell, held: Bool) { Task { await session.tap(cell, held: held) } }
+    private func endStroke(_ cancelled: Bool) {
+        if cancelled { session.dropStroke() } else { Task { await session.finish() } }
+    }
     @ViewBuilder private func storageRecovery(_ error: String) -> some View {
         VStack(spacing: 8) {
             GardenNote(text: error, symbol: "exclamationmark.triangle")
@@ -246,10 +271,10 @@ struct VictorySheet: View {
                     Button(String(localized: "Voltar ao início"), systemImage: "house", action: onHome)
                         .buttonStyle(GardenButtonStyle(prominent: true))
                 } else {
-                    Button(String(localized: "Próximo passeio"), systemImage: "arrow.forward", action: onNext)
+                    Button(String(localized: "Nova fase"), systemImage: "sparkles", action: onNext)
                         .buttonStyle(GardenButtonStyle(prominent: true)).disabled(generating)
                 }
-                Button(String(localized: "Jogar de novo"), systemImage: "arrow.clockwise", action: onReplay)
+                Button(String(localized: "Jogar esta de novo"), systemImage: "arrow.clockwise", action: onReplay)
                     .buttonStyle(GardenButtonStyle()).disabled(generating)
                 if !isDaily {
                     Button(String(localized: "Início"), action: onHome).font(GardenTheme.heading).padding(.top, 2)
@@ -262,5 +287,30 @@ struct VictorySheet: View {
         .presentationDragIndicator(.hidden)
         .interactiveDismissDisabled()
         .onAppear { titleFocused = true }
+    }
+}
+
+/// Asks before trading the current walk for a new one, as a short sheet instead of an alert.
+struct ChangeWalkSheet: View {
+    let isDaily: Bool
+    let onConfirm: () -> Void
+    let onCancel: () -> Void
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: isDaily ? "arrow.clockwise" : "arrow.triangle.2.circlepath").font(.title).foregroundStyle(GardenTheme.accent)
+            Text(isDaily ? String(localized: "Recomeçar o desafio do dia?") : String(localized: "Trocar de fase?"))
+                .font(.title3.weight(.bold)).fontDesign(.serif)
+            Text(isDaily ? String(localized: "O caminho volta ao início. A grade de hoje é a mesma e as vidas voltam a 3.")
+                         : String(localized: "Você recebe uma grade nova do mesmo nível. O caminho desta fase se perde."))
+                .font(.subheadline).foregroundStyle(GardenTheme.secondary).multilineTextAlignment(.center)
+            Button(isDaily ? String(localized: "Recomeçar") : String(localized: "Trocar de fase"), action: onConfirm)
+                .buttonStyle(GardenButtonStyle(prominent: true))
+            Button(String(localized: "Continuar nesta"), action: onCancel)
+                .buttonStyle(GardenButtonStyle())
+        }.padding(24).frame(maxWidth: .infinity)
+            .foregroundStyle(GardenTheme.ink).tint(GardenTheme.ink)
+            .background(GardenTheme.background)
+            .presentationDetents([.height(330), .medium])
+            .presentationDragIndicator(.visible)
     }
 }

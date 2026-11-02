@@ -19,35 +19,45 @@ struct Report: Codable {
     let generatorVersion: Int
     let samples: [Sample]
 }
-if CommandLine.arguments.contains("reserves") {
-    // Two verified grids per world for FallbackCatalog.worlds, printed as JSON lines.
+if CommandLine.arguments.contains("walk-reserves") {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.sortedKeys]
-    let hidden = CommandLine.arguments.contains("hidden")
-    for world in World.allCases {
+    for difficulty in Difficulty.allCases {
         var found = 0
-        for attempt in UInt64(1)..<200 where found < 2 {
-            let r = WorldGenerator.generate(WorldLevel(world: world, level: 3), attempt: attempt, hiddenHouse: hidden)
-            guard r.outcome == .generated, var p = r.puzzle else { continue }
-            p = try p.renamed("reserve-world-v1\(hidden ? "h" : "")-\(world.rawValue)-\(found)", seed: nil)
-            print("\(world.rawValue)\t" + String(decoding: try encoder.encode(p), as: UTF8.self))
+        for variation in UInt64(1000)..<1100 where found < 3 {
+            let r = WalkGenerator.generate(difficulty, variation: variation, id: "reserve-walk-v1-\(difficulty.rawValue)-\(found)")
+            guard r.outcome == .generated, let p = r.puzzle else { continue }
+            print("\(difficulty.rawValue)\t" + String(decoding: try encoder.encode(p), as: UTF8.self))
             found += 1
         }
     }
     exit(0)
 }
-if CommandLine.arguments.contains("worlds") {
-    // Per-level generation cost and outcome for the world progression.
+if CommandLine.arguments.contains("sizes") {
+    // Generation time and revealed pieces per difficulty (10 variations each).
     let clock = ContinuousClock()
-    for world in World.allCases {
-        for level in 0..<World.levelsPerWorld {
-            let wl = WorldLevel(world: world, level: level)
+    for difficulty in Difficulty.allCases {
+        var times: [Double] = [], pieces: [Int] = [], candidates = 0, failed = 0, blocks = 0, linesSeen = 0, together = 0, multi = 0
+        for variation in UInt64(1)...10 {
             let start = clock.now
-            let r = WorldGenerator.generate(wl, hiddenHouse: CommandLine.arguments.contains("hidden"))
-            let ms = start.duration(to: clock.now).components
-            let tier = r.puzzle.flatMap(LogicEngine.requiredTier) ?? -1
-            print("\(world) \(level) outcome=\(r.outcome) ms=\(Double(ms.seconds)*1000 + Double(ms.attoseconds)/1e15) candidates=\(r.candidates) solver=\(r.rejectedBySolver) logic=\(r.rejectedByLogic) difficulty=\(r.rejectedByDifficulty) tier=\(tier)")
+            let r = WalkGenerator.generate(difficulty, variation: variation)
+            let t = start.duration(to: clock.now).components
+            times.append(Double(t.seconds)*1000 + Double(t.attoseconds)/1e15)
+            candidates += r.candidates
+            if let p = r.puzzle, let route = PuzzleSolution.route(for: p) {
+                pieces.append(p.givenEdges.count)
+                // Pieces per line: 1 means the line's route cells are all together.
+                var lines: [[Int]] = []
+                for r in 0..<p.rows.count { lines.append(route.filter { $0.row == r }.map(\.col).sorted()) }
+                for c in 0..<p.columns.count { lines.append(route.filter { $0.col == c }.map(\.row).sorted()) }
+                for line in lines {
+                    let gaps = zip(line, line.dropFirst()).filter { pair in pair.1 - pair.0 > 1 }.count
+                    blocks += 1 + gaps; linesSeen += 1
+                    if line.count > 1 { multi += 1; if gaps == 0 { together += 1 } }
+                }
+            } else { failed += 1 }
         }
+        print("\(difficulty) median=\(times.sorted()[5])ms max=\(times.max()!)ms candidates=\(candidates) failed=\(failed) pieces=\(pieces) blocksPerLine=\(Double(blocks)/Double(max(1, linesSeen))) linesTogether=\(together)/\(multi)")
     }
     exit(0)
 }

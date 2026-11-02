@@ -20,7 +20,7 @@ import Combine
         switch step {
         case 0: String(localized: "\(dogName) e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Toque na linha 1, coluna 2, ou arraste até ela a partir de \(dogName), para completá-la.")
         case 1: String(localized: "O caminho anda para os lados, para cima ou para baixo, nunca na diagonal. Continue na linha 2, coluna 2.")
-        case 2: String(localized: "A primeira linha já está completa. Toque na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho.")
+        case 2: String(localized: "A primeira linha já está completa. Toque e segure na linha 1, coluna 3 para marcá-la com ×: um lembrete de que ela fica fora do caminho. No jogo, tocar rápido numa casa fora do caminho custa uma vida.")
         case 3: String(localized: "Mudou de ideia? Toque de novo no × da linha 1, coluna 3 para limpá-lo. Já os passos do caminho são definitivos.")
         case 4: String(localized: "Uma dica explica uma dedução, sem jogar por você. Toque em Dica para experimentar.")
         case 5: String(localized: "Agora leve \(dogName) até a casa: linha 3, coluna 2, e depois linha 3, coluna 3. A casa já conta na última pista!")

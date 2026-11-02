@@ -23,11 +23,10 @@ import Combine
     @Published public private(set) var generating = false
     private var generationWorker: Task<GenerationReport, Error>?
     public typealias GenerationService = @Sendable (UInt64, PuzzleDifficulty) async throws -> GenerationReport
-    /// Level to generate, a fresh variation number, and whether the house is hidden.
-    public typealias LevelService = @Sendable (WorldLevel, UInt64, Bool) async throws -> GenerationReport
+    /// Difficulty, a fresh variation number, and an optional fixed id (the daily challenge).
+    public typealias WalkService = @Sendable (Difficulty, UInt64, String?) async throws -> GenerationReport
     private let generate: GenerationService
-    private let generateLevel: LevelService
-    @Published public private(set) var progress = WorldLevel.first
+    private let generateWalk: WalkService
     @Published public private(set) var walks: [WalkRecord] = []
     private var revision = 0
     private let saveURL: URL?
@@ -36,6 +35,10 @@ import Combine
     private var violationWorker: Task<Void, Never>?
     public var displayedViolation: StrokeViolation? { stroke?.violation ?? violation }
     @Published public private(set) var bestPaws: [String: Int] = [:]
+    /// Walks generated ahead of time, one per difficulty, so the next one starts instantly.
+    private let prefetches: Bool
+    private var prepared: [Difficulty: Puzzle] = [:]
+    private var prefetchWorkers: [Difficulty: Task<Void, Never>] = [:]
     public var dogName: String { PlayerPreferences.normalizedName(preferences.dogName) }
     public var completedWalkCount: Int { completedPuzzleIDs.count }
     public func renameDog(_ name: String) {
@@ -45,12 +48,14 @@ import Combine
     }
     public var displayedGame: Game { stroke?.preview ?? attempt.game }
     public var canInteract: Bool { !generating && !hintChecking && !attempt.defeated && !attempt.game.won }
-    public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil,
+    public init(attempt: GameAttempt = GameAttempt(), saveURL: URL? = nil, prefetches: Bool = false,
                 generate: @escaping GenerationService = { seed, difficulty in
                     await PuzzleGenerator.generateAsync(seed: seed, difficulty: difficulty)
                 },
-                generateLevel: @escaping LevelService = { await WorldGenerator.generateAsync($0, attempt: $1, hiddenHouse: $2) }) {
-        self.generate = generate; self.generateLevel = generateLevel
+                // The session already runs this off the main actor; nesting another detached task
+                // here crashed the debug test host, so the default generates in place.
+                generateWalk: @escaping WalkService = { WalkGenerator.generate($0, variation: $1, id: $2, isCancelled: { Task.isCancelled }) }) {
+        self.generate = generate; self.generateWalk = generateWalk; self.prefetches = prefetches
         self.attempt = attempt; self.saveURL = saveURL
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do { apply(try SaveStore(url: saveURL).load()) }
@@ -60,6 +65,7 @@ import Combine
                 storageError = String(localized: "Não foi possível recuperar a partida salva. O arquivo original foi preservado.")
             }
         }
+        prefetch(preferences.difficulty)
     }
     public func begin(at cell: Cell, marking: Bool) {
         guard canInteract, stroke == nil else { return }
@@ -104,15 +110,16 @@ import Combine
         case .penalty(let mistake):
             // The correct part of the stroke stays; only the wrong step is refused.
             attempt.game = draft.finish()
-            feedback = GameFeedback(.conflict)
-            attempt.mistakes += 1
-            show(mistake)
-            let cost = !attempt.mode.hasLives ? "" : attempt.defeated
-                ? String(localized: " As vidas acabaram.") : String(localized: " −1 vida.")
-            message = mistake.explanation + cost
-            save()
+            penalize(mistake)
         case .cancelled: cancel()
         }
+    }
+    private func penalize(_ mistake: StrokeViolation) {
+        feedback = GameFeedback(.conflict)
+        attempt.mistakes += 1
+        show(mistake)
+        message = mistake.explanation + (attempt.defeated ? String(localized: " As vidas acabaram.") : String(localized: " −1 vida."))
+        save()
     }
     /// The mistake stays highlighted for a moment so the player sees what went wrong.
     private func show(_ mistake: StrokeViolation) {
@@ -125,17 +132,29 @@ import Combine
         }
     }
     private func clearViolation() { violationWorker?.cancel(); violationWorker = nil; violation = nil }
-    /// A tap beside the tip is a step (and costs a life if it leaves the solution); anywhere
-    /// else it toggles ×. Holding always toggles ×, even beside the tip. Steps are never undone.
+    /// Every tap is an attempt: beside the tip it is a step, and anywhere off the solution it
+    /// costs a life. A tap on a solution cell that is not next yet does nothing. Holding toggles ×,
+    /// which is always free. Steps are never undone.
     public func tap(_ cell: Cell, held: Bool = false) async {
+        guard canInteract, stroke == nil else { return }
         let game = attempt.game
-        let continues = game.path.last.map { abs($0.row-cell.row) + abs($0.col-cell.col) == 1 } ?? false
-            && !game.path.contains(cell) && !game.marks.contains(cell) && !game.puzzle.blocked.contains(cell)
-        await select(cell, marking: held || !continues)
+        if held { await select(cell, marking: true); return }
+        guard game.puzzle.contains(cell), !game.path.contains(cell), !game.puzzle.blocked.contains(cell) else { return }
+        let besideTip = game.path.last.map { abs($0.row-cell.row) + abs($0.col-cell.col) == 1 } ?? false
+        if besideTip && !game.marks.contains(cell) { await select(cell, marking: false); return }
+        if let route = solution(for: game.puzzle), !route.contains(cell) {
+            hint = nil; clearViolation()
+            penalize(StrokeViolation(kind: .offRoute, cell: cell))
+        }
     }
     public func select(_ cell: Cell, marking: Bool) async {
         guard canInteract, stroke == nil else { return }
         begin(at: cell, marking: marking); await finish()
+    }
+    /// Drops a stroke in progress without judging it (a pinch started over the board).
+    public func dropStroke() {
+        guard stroke != nil else { return }
+        stroke = nil; clearViolation()
     }
     public func undo() {
         guard !generating, !hintChecking, stroke == nil, !attempt.defeated, !attempt.game.won, attempt.game.canUndo else { return }
@@ -143,16 +162,17 @@ import Combine
         attempt.game.undo(); feedback = GameFeedback(.action); message = nil; save()
     }
     public func restart() {
-        cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle), mode: attempt.mode, level: attempt.level)
+        cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle), difficulty: attempt.difficulty)
         message = nil; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); parkCurrent(); activeDailyID = nil
-        attempt = GameAttempt(game: Game(puzzle: puzzle), mode: preferences.playMode); save()
+        attempt = GameAttempt(game: Game(puzzle: puzzle)); save()
     }
     /// Keep the current attempt until a complete replacement is ready.
     public func newPuzzle(difficulty: PuzzleDifficulty, seed: UInt64 = UInt64.random(in: .min ... .max)) async {
-        await generatePuzzle(difficulty: difficulty, seed: seed, dailyID: nil)
+        let service = generate
+        await prepare(dailyID: nil, difficulty: nil) { try await service(seed, difficulty) }
     }
     public func continueNormal() {
         guard activeDailyID != nil, let normal = parkedAttempts["normal"] else { return }
@@ -167,44 +187,56 @@ import Combine
             message = nil; save()
             return
         }
-        await generatePuzzle(difficulty: .relaxed, seed: daily.seed, dailyID: daily.id)
+        let service = generateWalk
+        await prepare(dailyID: daily.id, difficulty: nil) { try await service(DailyChallenge.difficulty, daily.seed, daily.id) }
     }
     private func parkCurrent() { parkedAttempts[activeDailyID ?? "normal"] = attempt }
-    /// Jogar: resume the unfinished normal walk, or prepare the next level of the progression.
+    /// Jogar: resume the unfinished normal walk at the chosen difficulty, or start a new one.
     public func play() async {
         if activeDailyID != nil { continueNormal() }
-        guard activeDailyID == nil, attempt.game.won else { return }
-        await playNext()
+        guard activeDailyID == nil else { return }
+        let current = attempt.difficulty ?? (attempt.game.puzzle.rows.count == preferences.difficulty.size ? preferences.difficulty : nil)
+        if attempt.game.won || attempt.defeated || current != preferences.difficulty { await play(preferences.difficulty) }
     }
-    /// The next level after a finished walk (Próximo passeio): after a chosen level, the one
-    /// that follows it; otherwise the progression.
-    public func playNext() async {
-        let next = attempt.game.won ? attempt.level?.next : nil
-        await play(next ?? progress)
+    /// A brand-new grid at this difficulty; only the daily challenge ever repeats.
+    public func play(_ difficulty: Difficulty, variation: UInt64 = UInt64.random(in: 1 ... .max)) async {
+        if let ready = prepared.removeValue(forKey: difficulty) {
+            cancel(); parkCurrent(); activeDailyID = nil
+            attempt = GameAttempt(game: Game(puzzle: ready), difficulty: difficulty)
+            message = nil; save()
+            prefetch(difficulty)
+            return
+        }
+        let service = generateWalk
+        await prepare(dailyID: nil, difficulty: difficulty) { try await service(difficulty, variation, nil) }
     }
-    /// Any level, reached or not, using the current hidden-house preference.
-    /// Every call brings a brand-new grid; only the daily challenge repeats.
-    public func play(_ level: WorldLevel, variation: UInt64 = UInt64.random(in: 1 ... .max)) async {
-        let service = generateLevel
-        let hidden = preferences.hiddenHouse
-        await prepare(seed: level.seed, dailyID: nil, level: level) { try await service(level, variation, hidden) }
-    }
-    /// Jogar de novo / Tentar de novo / Outra fase: a new grid of the same level. The daily
-    /// challenge restarts instead, and older free walks get a new free walk.
+    /// Próximo passeio: another walk at the same difficulty.
+    public func playNext() async { await play(attempt.difficulty ?? preferences.difficulty) }
+    /// Outra fase / Tentar de novo / Jogar de novo: a new grid of the same difficulty. The daily
+    /// challenge restarts instead, and older free walks get a new walk at the chosen difficulty.
     public func replay() async {
         if activeDailyID != nil { restart() }
-        else if let level = attempt.level { await play(level) }
-        else { await newPuzzle(difficulty: .relaxed) }
+        else { await playNext() }
     }
-    public func setHiddenHouse(_ hidden: Bool) {
+    public func setDifficulty(_ difficulty: Difficulty) {
         guard !generating, !hintChecking, stroke == nil else { return }
-        preferences.hiddenHouse = hidden; save()
+        preferences.difficulty = difficulty; save()
+        prefetch(difficulty)
     }
-    private func generatePuzzle(difficulty: PuzzleDifficulty, seed: UInt64, dailyID: String?) async {
-        let service = generate
-        await prepare(seed: seed, dailyID: dailyID, level: nil) { try await service(seed, difficulty) }
+    /// Generates a walk in the background so the next play at this difficulty is instant.
+    private func prefetch(_ difficulty: Difficulty) {
+        guard prefetches, prepared[difficulty] == nil, prefetchWorkers[difficulty] == nil else { return }
+        let service = generateWalk
+        prefetchWorkers[difficulty] = Task { [weak self] in
+            let report = try? await Task.detached(priority: .utility) {
+                try await service(difficulty, UInt64.random(in: 1 ... .max), nil)
+            }.value
+            guard let self else { return }
+            self.prefetchWorkers[difficulty] = nil
+            if let puzzle = report?.puzzle { self.prepared[difficulty] = puzzle }
+        }
     }
-    private func prepare(seed: UInt64, dailyID: String?, level: WorldLevel?, _ work: @escaping @Sendable () async throws -> GenerationReport) async {
+    private func prepare(dailyID: String?, difficulty: Difficulty?, _ work: @escaping @Sendable () async throws -> GenerationReport) async {
         cancel()
         generating = true
         let token = revision
@@ -220,15 +252,12 @@ import Combine
             guard let puzzle = report.puzzle else {
                 message = String(localized: "Não foi possível preparar a fase. Sua partida foi mantida; tente novamente."); return
             }
-            let destination: Puzzle
-            if let dailyID {
-                destination = try puzzle.renamed(dailyID, seed: seed)
-            } else { destination = puzzle }
             parkCurrent(); activeDailyID = dailyID
             // Reserve puzzles are verified like generated ones; the player never needs to know.
-            attempt = GameAttempt(game: Game(puzzle: destination), mode: dailyID == nil ? preferences.playMode : .relaxed, level: level)
+            attempt = GameAttempt(game: Game(puzzle: puzzle), difficulty: difficulty)
             message = nil
             save()
+            if let difficulty { prefetch(difficulty) }
         } catch {
             guard token == revision else { return }
             generating = false; generationWorker = nil
@@ -268,18 +297,6 @@ import Combine
         let columns = zip(game.columnCounts, game.columns).filter { $0.0 == $0.1 }.count
         return rows + columns
     }
-    /// The mode you see is the mode you play: the unfinished normal walk switches too,
-    /// keeping its route and starting the mistake count fresh.
-    public func setPlayMode(_ mode: PlayMode) {
-        guard !generating, !hintChecking, stroke == nil else { return }
-        preferences.playMode = mode
-        func switched(_ current: GameAttempt) -> GameAttempt {
-            current.game.won || current.mode == mode ? current : GameAttempt(game: current.game, mode: mode, level: current.level)
-        }
-        if activeDailyID == nil { attempt = switched(attempt) }
-        else if let normal = parkedAttempts["normal"] { parkedAttempts["normal"] = switched(normal) }
-        save()
-    }
     public var totalPaws: Int { bestPaws.values.reduce(0, +) }
     public func dailyStreak(today: Date = Date()) -> Int {
         DailyChallenge.streak(completed: completedPuzzleIDs, today: today)
@@ -312,18 +329,16 @@ import Combine
     }
     private var snapshot: PlayerSave {
         PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts, bestPaws: bestPaws,
-                   progress: progress, walks: walks)
+                   walks: walks)
     }
-    /// A finished walk joins the album (replays replace the older photo) and moves the progression on.
+    /// A finished walk joins the album (replays replace the older photo).
     private func recordWalk() {
         let game = attempt.game
         walks.removeAll { $0.puzzle.puzzleID == game.puzzle.puzzleID }
-        walks.append(WalkRecord(puzzle: game.puzzle, path: game.path, paws: attempt.paws, date: Date(), place: attempt.level?.world))
+        walks.append(WalkRecord(puzzle: game.puzzle, path: game.path, paws: attempt.paws, date: Date(),
+                                difficulty: attempt.difficulty ?? (activeDailyID != nil ? DailyChallenge.difficulty : nil)))
         if walks.count > WalkRecord.albumLimit { walks.removeFirst(walks.count - WalkRecord.albumLimit) }
-        if attempt.level == progress { progress = progress.next }
     }
-    /// Worlds reached so far, for the album of places.
-    public var unlockedWorlds: [World] { World.allCases.filter { $0 <= progress.world } }
     public var unlockedAccessories: [Accessory] { Accessory.allCases.filter { $0.cost <= totalPaws } }
     public func wear(_ accessory: Accessory?) {
         guard accessory.map(unlockedAccessories.contains) ?? true else { return }
@@ -333,7 +348,7 @@ import Combine
         activeDailyID = saved.activeDailyID; parkedAttempts = saved.parkedAttempts
         attempt = saved.attempt; preferences = saved.preferences
         tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs; bestPaws = saved.bestPaws
-        progress = saved.progress; walks = saved.walks
+        walks = saved.walks
     }
     private func save() {
         if attempt.game.won {

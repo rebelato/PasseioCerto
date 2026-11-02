@@ -49,29 +49,7 @@ struct PuzzleBoard: View {
                     .offset(y: CGFloat(row+1)*cellSide)
                     .accessibilitySortPriority(Double((game.rows.count-row)*(game.columns.count+1)+1))
             }
-            ForEach(cells, id: \.self) { cell in
-                GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
-                               obstacle: game.puzzle.blocked.contains(cell), highlighted: highlighted.contains(cell),
-                               blocked: violation?.cell == cell, feature: feature(cell), nearCat: game.puzzle.catZone.contains(cell))
-                        .padding(2).contentShape(Rectangle())
-                    .frame(width: cellSide, height: cellSide)
-                    .highPriorityGesture(stroke(start: cell))
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityAddTraits(interactionsEnabled ? .isButton : [])
-                    .accessibilityAction { if interactionsEnabled { onSelect(cell) } }
-                    .accessibilityActions {
-                        if interactionsEnabled, !game.puzzle.blocked.contains(cell), let onSelectMode {
-                            Button(String(localized: "Desenhar caminho")) { onSelectMode(cell, false) }
-                            Button(String(localized: "Alternar marcação ×")) { onSelectMode(cell, true) }
-                        }
-                    }
-                    .accessibilitySortPriority(Double((game.rows.count-cell.row)*(game.columns.count+1)-cell.col))
-                    .offset(x: CGFloat(cell.col+1)*cellSide, y: CGFloat(cell.row+1)*cellSide)
-                    .accessibilityIdentifier("cell-\(cell.row)-\(cell.col)")
-                    .accessibilityLabel(BoardAccessibility.label(cell))
-                    .accessibilityValue(BoardAccessibility.value(game: game, cell: cell, dogName: dogName, highlighted: highlighted.contains(cell)))
-                    .accessibilityHint(!interactionsEnabled ? String(localized: "Tabuleiro somente para leitura") : game.puzzle.blocked.contains(cell) ? String(localized: "Não pode fazer parte do caminho") : marking ? String(localized: "Toque duas vezes para alternar a marcação xis") : String(localized: "Toque duas vezes para continuar ou recuar o caminho"))
-            }
+            ForEach(cells, id: \.self) { cell in cellView(cell) }
             Path { p in
                 for (index, cell) in game.path.enumerated() {
                     let center = CGPoint(x: (CGFloat(cell.col)+1.5)*cellSide, y: (CGFloat(cell.row)+1.5)*cellSide)
@@ -115,6 +93,32 @@ struct PuzzleBoard: View {
             }
             .onDisappear { if strokeStarted { strokeStarted = false; onStrokeEnd(true) } }
     }
+    private func cellView(_ cell: Cell) -> some View {
+            GardenCell(occupied: game.path.contains(cell), excluded: game.marks.contains(cell),
+                           obstacle: game.puzzle.blocked.contains(cell), highlighted: highlighted.contains(cell),
+                           blocked: violation?.cell == cell, feature: feature(cell), nearCat: game.puzzle.catZone.contains(cell),
+                           radius: cornerRadius)
+                    .padding(cellGap).contentShape(Rectangle())
+                .frame(width: cellSide, height: cellSide)
+                .highPriorityGesture(stroke(start: cell))
+                .accessibilityElement(children: .ignore)
+                .accessibilityAddTraits(interactionsEnabled ? .isButton : [])
+                .accessibilityAction { if interactionsEnabled { onSelect(cell) } }
+                .accessibilityActions {
+                    if interactionsEnabled, !game.puzzle.blocked.contains(cell), let onSelectMode {
+                        Button(String(localized: "Desenhar caminho")) { onSelectMode(cell, false) }
+                        Button(String(localized: "Alternar marcação ×")) { onSelectMode(cell, true) }
+                    }
+                }
+                .accessibilitySortPriority(Double((game.rows.count-cell.row)*(game.columns.count+1)-cell.col))
+                .offset(x: CGFloat(cell.col+1)*cellSide, y: CGFloat(cell.row+1)*cellSide)
+                .accessibilityIdentifier("cell-\(cell.row)-\(cell.col)")
+                .accessibilityLabel(BoardAccessibility.label(cell))
+                .accessibilityValue(BoardAccessibility.value(game: game, cell: cell, dogName: dogName, highlighted: highlighted.contains(cell)))
+                .accessibilityHint(!interactionsEnabled ? String(localized: "Tabuleiro somente para leitura") : game.puzzle.blocked.contains(cell) ? String(localized: "Não pode fazer parte do caminho") : marking ? String(localized: "Toque duas vezes para alternar a marcação xis") : String(localized: "Toque duas vezes para continuar ou recuar o caminho"))
+    }
+    private var cornerRadius: CGFloat { min(GardenTheme.cellRadius, cellSide * 0.2) }
+    private var cellGap: CGFloat { cellSide < 30 ? 1 : 2 }
     private func center(_ cell: Cell) -> CGPoint {
         CGPoint(x: (CGFloat(cell.col)+1.5)*cellSide, y: (CGFloat(cell.row)+1.5)*cellSide)
     }
