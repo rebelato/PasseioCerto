@@ -86,10 +86,14 @@ struct PuzzleBoard: View {
                 }
             }.stroke(GardenTheme.trail.opacity(0.75), style: StrokeStyle(lineWidth: max(4, cellSide*0.14), lineCap: .round, dash: [max(4, cellSide*0.18), max(3, cellSide*0.12)]))
                 .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
-            GardenHouse().padding(3)
-                .frame(width: cellSide-4, height: cellSide-4)
-                .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
-                .allowsHitTesting(false).accessibilityHidden(true)
+            // A hidden house appears only once the walk is complete.
+            if game.puzzle.knownGoal != nil || game.won {
+                GardenHouse().padding(3)
+                    .frame(width: cellSide-4, height: cellSide-4)
+                    .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
+                    .transition(.scale.combined(with: .opacity))
+                    .allowsHitTesting(false).accessibilityHidden(true)
+            }
             Puppy(pose: walking ? .walking : game.won ? .happy : .idle, accessory: accessory).padding(3).frame(width: cellSide-4, height: cellSide-4)
                 .rotationEffect(.degrees(wagging ? 12 : lean * 10))
                 .animation(wagging ? .easeInOut(duration: 0.12).repeatForever(autoreverses: true) : .spring(duration: 0.3), value: wagging)

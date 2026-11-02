@@ -23,7 +23,8 @@ import Combine
     @Published public private(set) var generating = false
     private var generationWorker: Task<GenerationReport, Error>?
     public typealias GenerationService = @Sendable (UInt64, PuzzleDifficulty) async throws -> GenerationReport
-    public typealias LevelService = @Sendable (WorldLevel) async throws -> GenerationReport
+    /// Level to generate, a fresh variation number, and whether the house is hidden.
+    public typealias LevelService = @Sendable (WorldLevel, UInt64, Bool) async throws -> GenerationReport
     private let generate: GenerationService
     private let generateLevel: LevelService
     @Published public private(set) var progress = WorldLevel.first
@@ -48,7 +49,7 @@ import Combine
                 generate: @escaping GenerationService = { seed, difficulty in
                     await PuzzleGenerator.generateAsync(seed: seed, difficulty: difficulty)
                 },
-                generateLevel: @escaping LevelService = { await WorldGenerator.generateAsync($0) }) {
+                generateLevel: @escaping LevelService = { await WorldGenerator.generateAsync($0, attempt: $1, hiddenHouse: $2) }) {
         self.generate = generate; self.generateLevel = generateLevel
         self.attempt = attempt; self.saveURL = saveURL
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
@@ -63,8 +64,16 @@ import Combine
     public func begin(at cell: Cell, marking: Bool) {
         guard canInteract, stroke == nil else { return }
         hint = nil; clearViolation()
-        stroke = GameStroke(game: attempt.game, marking: marking)
+        stroke = GameStroke(game: attempt.game, marking: marking, solution: solution(for: attempt.game.puzzle))
         stroke?.move(to: cell)
+    }
+    private var solutionCache: (id: String, route: [Cell]?)?
+    /// Computed once per grid; every step is checked against it.
+    private func solution(for puzzle: Puzzle) -> [Cell]? {
+        if let cached = solutionCache, cached.id == puzzle.puzzleID { return cached.route }
+        let route = PuzzleSolution.route(for: puzzle)
+        solutionCache = (puzzle.puzzleID, route)
+        return route
     }
     public func move(to cell: Cell?) {
         guard let before = stroke?.preview, stroke?.move(to: cell) == true, let after = stroke?.preview,
@@ -93,6 +102,8 @@ import Combine
             message = nil
             save()
         case .penalty(let mistake):
+            // The correct part of the stroke stays; only the wrong step is refused.
+            attempt.game = draft.finish()
             feedback = GameFeedback(.conflict)
             attempt.mistakes += 1
             show(mistake)
@@ -114,15 +125,13 @@ import Combine
         }
     }
     private func clearViolation() { violationWorker?.cancel(); violationWorker = nil; violation = nil }
-    /// A tap continues the route when it lands next to the tip (or steps back onto the previous
-    /// cell); anywhere else it toggles ×. Holding always toggles ×, even beside the tip.
+    /// A tap beside the tip is a step (and costs a life if it leaves the solution); anywhere
+    /// else it toggles ×. Holding always toggles ×, even beside the tip. Steps are never undone.
     public func tap(_ cell: Cell, held: Bool = false) async {
         let game = attempt.game
-        let path = game.path
-        let continues = path.last.map { abs($0.row-cell.row) + abs($0.col-cell.col) == 1 } ?? false
-            && !path.contains(cell) && !game.marks.contains(cell) && !game.puzzle.blocked.contains(cell)
-        let retracts = path.count > 1 && path[path.count-2] == cell
-        await select(cell, marking: held || !(continues || retracts))
+        let continues = game.path.last.map { abs($0.row-cell.row) + abs($0.col-cell.col) == 1 } ?? false
+            && !game.path.contains(cell) && !game.marks.contains(cell) && !game.puzzle.blocked.contains(cell)
+        await select(cell, marking: held || !continues)
     }
     public func select(_ cell: Cell, marking: Bool) async {
         guard canInteract, stroke == nil else { return }
@@ -167,11 +176,29 @@ import Combine
         guard activeDailyID == nil, attempt.game.won else { return }
         await playNext()
     }
-    /// The next level after a finished walk (Próximo passeio).
+    /// The next level after a finished walk (Próximo passeio): after a chosen level, the one
+    /// that follows it; otherwise the progression.
     public func playNext() async {
-        let level = progress
+        let next = attempt.game.won ? attempt.level?.next : nil
+        await play(next ?? progress)
+    }
+    /// Any level, reached or not, using the current hidden-house preference.
+    /// Every call brings a brand-new grid; only the daily challenge repeats.
+    public func play(_ level: WorldLevel, variation: UInt64 = UInt64.random(in: 1 ... .max)) async {
         let service = generateLevel
-        await prepare(seed: level.seed, dailyID: nil, level: level) { try await service(level) }
+        let hidden = preferences.hiddenHouse
+        await prepare(seed: level.seed, dailyID: nil, level: level) { try await service(level, variation, hidden) }
+    }
+    /// Jogar de novo / Tentar de novo / Outra fase: a new grid of the same level. The daily
+    /// challenge restarts instead, and older free walks get a new free walk.
+    public func replay() async {
+        if activeDailyID != nil { restart() }
+        else if let level = attempt.level { await play(level) }
+        else { await newPuzzle(difficulty: .relaxed) }
+    }
+    public func setHiddenHouse(_ hidden: Bool) {
+        guard !generating, !hintChecking, stroke == nil else { return }
+        preferences.hiddenHouse = hidden; save()
     }
     private func generatePuzzle(difficulty: PuzzleDifficulty, seed: UInt64, dailyID: String?) async {
         let service = generate

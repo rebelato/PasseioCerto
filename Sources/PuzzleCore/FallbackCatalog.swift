@@ -37,8 +37,31 @@ public enum FallbackCatalog {
         ],
     ]
     private static func reserve(_ json: String) -> Puzzle { try! JSONDecoder().decode(Puzzle.self, from: Data(json.utf8)) }
-    public static func puzzle(for level: WorldLevel) -> Puzzle {
-        let options = worlds[level.world] ?? []
+    /// Verified reserves with the house hidden, certified without knowing the end.
+    public static let hiddenWorlds: [World: [Puzzle]] = [
+        .flowerSquare: [
+            reserve(#"{"columns":[5,1,1,0,0],"generatorVersion":1,"goal":{"col":2,"row":0},"hiddenGoal":true,"obstacles":[{"col":2,"row":3}],"puzzleID":"reserve-world-v1h-0-0","rows":[3,1,1,1,1],"schemaVersion":2,"start":{"col":0,"row":4}}"#),
+            reserve(#"{"columns":[2,1,2,1,1],"generatorVersion":1,"goal":{"col":0,"row":0},"hiddenGoal":true,"obstacles":[{"col":0,"row":4}],"puzzleID":"reserve-world-v1h-0-1","rows":[4,3,0,0,0],"schemaVersion":2,"start":{"col":4,"row":0}}"#),
+        ],
+        .beach: [
+            reserve(#"{"bones":[{"col":5,"row":4},{"col":4,"row":5}],"columns":[3,1,1,1,2,3],"generatorVersion":1,"goal":{"col":0,"row":3},"hiddenGoal":true,"obstacles":[{"col":0,"row":2},{"col":3,"row":0},{"col":5,"row":0},{"col":1,"row":4}],"puzzleID":"reserve-world-v1h-1-0","rows":[0,0,0,3,2,6],"schemaVersion":2,"start":{"col":4,"row":3}}"#),
+            reserve(#"{"bones":[{"col":0,"row":3},{"col":0,"row":0}],"columns":[5,1,1,1,3,0],"generatorVersion":1,"goal":{"col":0,"row":4},"hiddenGoal":true,"obstacles":[{"col":3,"row":2},{"col":2,"row":1},{"col":5,"row":0},{"col":1,"row":1}],"puzzleID":"reserve-world-v1h-1-1","rows":[5,2,2,1,1,0],"schemaVersion":2,"start":{"col":4,"row":2}}"#),
+        ],
+        .market: [
+            reserve(#"{"bones":[{"col":0,"row":5}],"columns":[4,3,3,3,2,1,1,7],"generatorVersion":1,"givenEdges":[{"a":{"col":2,"row":4},"b":{"col":2,"row":3}},{"a":{"col":3,"row":5},"b":{"col":3,"row":4}},{"a":{"col":1,"row":3},"b":{"col":0,"row":3}},{"a":{"col":0,"row":4},"b":{"col":0,"row":5}}],"goal":{"col":7,"row":1},"hiddenGoal":true,"obstacles":[{"col":7,"row":0},{"col":1,"row":5},{"col":4,"row":3},{"col":5,"row":6},{"col":5,"row":2},{"col":2,"row":6}],"puzzleID":"reserve-world-v1h-2-0","rows":[0,1,1,4,4,4,3,7],"schemaVersion":2,"start":{"col":4,"row":5},"trees":[{"col":0,"row":7}]}"#),
+            reserve(#"{"bones":[{"col":5,"row":7}],"columns":[6,3,1,1,1,1,2,8],"generatorVersion":1,"givenEdges":[{"a":{"col":1,"row":3},"b":{"col":1,"row":2}},{"a":{"col":0,"row":5},"b":{"col":0,"row":6}}],"goal":{"col":6,"row":0},"hiddenGoal":true,"obstacles":[{"col":2,"row":4}],"puzzleID":"reserve-world-v1h-2-1","rows":[2,1,3,3,2,2,2,8],"schemaVersion":2,"start":{"col":1,"row":3},"trees":[{"col":6,"row":2},{"col":5,"row":0}]}"#),
+        ],
+        .park: [
+            reserve(#"{"bones":[{"col":0,"row":6}],"cats":[{"col":7,"row":7}],"columns":[10,2,2,2,2,2,2,2,2,7],"generatorVersion":1,"givenEdges":[{"a":{"col":7,"row":0},"b":{"col":8,"row":0}},{"a":{"col":0,"row":8},"b":{"col":0,"row":7}},{"a":{"col":3,"row":9},"b":{"col":2,"row":9}},{"a":{"col":0,"row":3},"b":{"col":0,"row":2}},{"a":{"col":0,"row":6},"b":{"col":0,"row":5}},{"a":{"col":0,"row":1},"b":{"col":0,"row":0}}],"goal":{"col":9,"row":5},"hiddenGoal":true,"obstacles":[{"col":9,"row":8},{"col":4,"row":2},{"col":5,"row":5},{"col":8,"row":6},{"col":5,"row":4},{"col":6,"row":5},{"col":2,"row":4},{"col":4,"row":4}],"puzzleID":"reserve-world-v1h-3-0","rows":[10,2,2,2,2,2,1,1,1,10],"schemaVersion":2,"start":{"col":9,"row":9}}"#),
+            reserve(#"{"cats":[{"col":6,"row":3}],"columns":[7,2,2,2,1,1,1,1,5,10],"generatorVersion":1,"givenEdges":[{"a":{"col":5,"row":9},"b":{"col":4,"row":9}},{"a":{"col":9,"row":0},"b":{"col":8,"row":0}},{"a":{"col":9,"row":2},"b":{"col":9,"row":1}},{"a":{"col":2,"row":9},"b":{"col":1,"row":9}},{"a":{"col":9,"row":1},"b":{"col":9,"row":0}}],"goal":{"col":3,"row":3},"hiddenGoal":true,"obstacles":[{"col":2,"row":2},{"col":3,"row":0},{"col":0,"row":0},{"col":0,"row":1},{"col":1,"row":6},{"col":0,"row":2}],"puzzleID":"reserve-world-v1h-3-1","rows":[2,2,2,6,2,2,2,2,2,10],"schemaVersion":2,"start":{"col":9,"row":2}}"#),
+        ],
+        .pond: [
+            reserve(#"{"bones":[{"col":8,"row":9}],"columns":[8,1,1,1,3,2,2,3,3,10],"generatorVersion":1,"givenEdges":[{"a":{"col":9,"row":8},"b":{"col":9,"row":7}},{"a":{"col":7,"row":9},"b":{"col":8,"row":9}},{"a":{"col":9,"row":0},"b":{"col":8,"row":0}},{"a":{"col":0,"row":3},"b":{"col":0,"row":4}},{"a":{"col":9,"row":7},"b":{"col":9,"row":6}},{"a":{"col":8,"row":0},"b":{"col":8,"row":1}},{"a":{"col":6,"row":9},"b":{"col":7,"row":9}}],"goal":{"col":0,"row":7},"hiddenGoal":true,"obstacles":[{"col":8,"row":7},{"col":0,"row":9},{"col":3,"row":5},{"col":2,"row":1},{"col":8,"row":5}],"puddles":[{"col":9,"row":1}],"puzzleID":"reserve-world-v1h-4-0","rows":[10,4,2,2,2,2,2,2,2,6],"schemaVersion":2,"start":{"col":4,"row":8}}"#),
+            reserve(#"{"bones":[{"col":9,"row":4}],"columns":[7,1,1,1,2,2,2,2,2,10],"generatorVersion":1,"givenEdges":[{"a":{"col":5,"row":9},"b":{"col":6,"row":9}},{"a":{"col":9,"row":9},"b":{"col":9,"row":8}},{"a":{"col":3,"row":9},"b":{"col":4,"row":9}},{"a":{"col":7,"row":0},"b":{"col":6,"row":0}},{"a":{"col":1,"row":9},"b":{"col":2,"row":9}},{"a":{"col":0,"row":9},"b":{"col":1,"row":9}},{"a":{"col":9,"row":8},"b":{"col":9,"row":7}}],"goal":{"col":4,"row":0},"hiddenGoal":true,"obstacles":[{"col":6,"row":1},{"col":4,"row":7},{"col":0,"row":0},{"col":3,"row":4},{"col":3,"row":3},{"col":4,"row":3},{"col":4,"row":1},{"col":1,"row":4},{"col":3,"row":5},{"col":6,"row":5}],"puddles":[{"col":0,"row":5},{"col":1,"row":9}],"puzzleID":"reserve-world-v1h-4-1","rows":[6,1,1,2,2,2,2,2,2,10],"schemaVersion":2,"start":{"col":0,"row":3},"trees":[{"col":8,"row":3}]}"#),
+        ],
+    ]
+    public static func puzzle(for level: WorldLevel, hiddenHouse: Bool = false) -> Puzzle {
+        let options = (hiddenHouse ? hiddenWorlds[level.world] : nil) ?? worlds[level.world] ?? []
         guard !options.isEmpty else { return puzzle(for: level.tiers.lowerBound >= 3 ? .challenging : .relaxed, seed: UInt64(level.level)) }
         return options[(level.level + level.round) % options.count]
     }

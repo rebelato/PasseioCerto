@@ -62,6 +62,44 @@ final class ThemedRulesTests: XCTestCase {
         XCTAssertEqual(LogicEngine.requiredTier(try puzzle()), 2, "Extending the route always needs continuation")
     }
 
+    func testHiddenHouseIsNotCountedNorRevealedUntilTheEnd() throws {
+        let p = try Puzzle(puzzleID: "hidden", schemaVersion: 2, rows: [3,0,0], columns: [1,1,1], start: Cell(0,0), goal: Cell(0,2), hiddenGoal: true)
+        var game = Game(puzzle: p)
+        XCTAssertEqual(game.rowCounts, [1,0,0], "Only the start counts before the house is found")
+        XCTAssertEqual(game.columnCounts, [1,0,0])
+        XCTAssertTrue(game.play(Cell(0,2), marking: true), "The hidden house can be marked like any cell")
+        game.play(Cell(0,2), marking: true)
+        game.play(Cell(0,1)); game.play(Cell(0,2))
+        XCTAssertTrue(game.won)
+        XCTAssertEqual(ExactSolver.solve(puzzle: p).classification, .unique)
+        XCTAssertEqual(LogicEngine.analyze(puzzle: p).outcome, .solved)
+    }
+    /// Brute force for a hidden house: any simple route from the start that meets every clue counts.
+    func testHiddenHouseSolverMatchesBruteForce() throws {
+        var state: UInt64 = 11
+        func random(_ bound: Int) -> Int { state = state &* 6364136223846793005 &+ 1442695040888963407; return Int((state >> 33) % UInt64(bound)) }
+        let n = 4
+        let cells = (0..<n).flatMap { r in (0..<n).map { Cell(r, $0) } }
+        for _ in 0..<30 {
+            let start = cells[random(cells.count)]
+            var routes: [[Cell]] = []
+            func enumerate(_ path: [Cell]) {
+                routes.append(path)
+                for next in Cell.neighbors(path.last!) where (0..<n).contains(next.row) && (0..<n).contains(next.col) && !path.contains(next) { enumerate(path + [next]) }
+            }
+            enumerate([start])
+            let witness = routes[random(routes.count)]
+            guard witness.count > 1 else { continue }
+            let rows = (0..<n).map { r in witness.filter { $0.row == r }.count }
+            let columns = (0..<n).map { c in witness.filter { $0.col == c }.count }
+            let p = try Puzzle(puzzleID: "hidden-brute", schemaVersion: 2, rows: rows, columns: columns, start: start, goal: witness.last!, hiddenGoal: true)
+            let valid = routes.filter { RouteValidator.evaluate(puzzle: p, path: $0) == .complete }
+            XCTAssertTrue(valid.contains(witness))
+            let result = ExactSolver.solve(puzzle: p, nodeLimit: 1_000_000)
+            XCTAssertEqual(result.classification, valid.count == 1 ? .unique : .multiple)
+            if LogicEngine.analyze(puzzle: p).outcome == .solved { XCTAssertEqual(valid.count, 1) }
+        }
+    }
     /// Exhaustive check: on small grids with random rules, the pruned solver agrees with brute force.
     func testSolverMatchesBruteForceWithRules() throws {
         var state: UInt64 = 7

@@ -14,8 +14,10 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
     /// Mode for the next normal walk; daily challenges are always Tranquilo.
     public var playMode = PlayMode.relaxed
     public var accessory: Accessory?
+    /// New progression walks hide the house until the route is complete.
+    public var hiddenHouse = false
     public init() {}
-    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, playMode, accessory }
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, playMode, accessory, hiddenHouse }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
@@ -24,6 +26,7 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
         hapticsEnabled = try c.decode(Bool.self, forKey: .hapticsEnabled)
         playMode = try c.decodeIfPresent(PlayMode.self, forKey: .playMode) ?? .relaxed
         accessory = try? c.decodeIfPresent(Accessory.self, forKey: .accessory)
+        hiddenHouse = try c.decodeIfPresent(Bool.self, forKey: .hiddenHouse) ?? false
     }
 }
 public struct PlayerSave: Codable, Sendable {

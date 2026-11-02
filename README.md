@@ -178,3 +178,21 @@ Formatos: puzzle schema 2 (campos opcionais `bones`, `trees`, `cats`, `puddles`,
 **Fora deste PR:** o desafio diário continua com a política v1 (5×5, Tranquilo, sem regras temáticas). Mudar isso exige uma política `daily-v2`, para não trocar a fase de um dia já gerado.
 
 Capturas: [Parque 10×10](docs/validation/design-review/park-10x10.png), [início com progressão](docs/validation/design-review/home-progress.png) e [Seu cantinho](docs/validation/design-review/corner.png). **Pendente no iPhone:** tempo de geração 10×10 no aparelho, gestos, álbum e VoiceOver das regras novas.
+
+### Escolher a fase e casinha escondida
+
+- **Qualquer fase, a qualquer hora:** em Seu cantinho, tocar num lugar abre as fases de 1 a 8, mesmo antes de chegar nele. A Lagoa 8/8 é a mais difícil. Jogar uma fase escolhida não muda o progresso; depois dela, "Próximo passeio" segue para a fase seguinte daquele lugar.
+- **Casinha escondida** (opção no início, sugestão da namorada do Lucas): a casinha só aparece quando o caminho fecha. Para não entregar a posição dela, as pistas contam apenas o caminho e a casa escondida pode ser marcada com × como qualquer outra. O passeio termina quando todas as pistas e regras são atendidas. O gerador certifica que só um caminho a partir da Margot faz isso, e que ele termina na casinha. Um teste compara com força bruta em grades 4×4.
+- **Calibração com a casinha escondida:** 38 de 40 fases saem do gerador; cada mundo tem 2 reservas escondidas certificadas. Para reproduzir: `swift run -c release Calibration worlds hidden`. O desafio diário continua com a casinha visível.
+
+Capturas: [Lagoa 8/8 com a casinha escondida](docs/validation/design-review/hidden-house-pond.png), [início](docs/validation/design-review/home-hidden-toggle.png) e [escolha de lugar](docs/validation/design-review/corner-choose-level.png). **Pendente:** o seletor de fases e o surgimento da casinha não foram tocados no simulador.
+
+### Passos definitivos, um único caminho certo e fases sempre novas
+
+Decisão do Lucas depois de jogar a Lagoa 8/8. Ela substitui a regra do design review de "punir só o que é visível".
+
+- **Passos só no caminho certo:** cada fase tem uma única solução certificada (`PuzzleSolution.route`). Um passo para fora dela é recusado e custa uma vida; no Tranquilo, conta só como erro para as patinhas. A parte certa do traço é mantida.
+- **Sem desfazer:** o botão sumiu e voltar uma casa é ignorado. Marcar ✕ continua livre, e o tutorial agora ensina a limpar o ✕ tocando de novo.
+- **Fases sempre novas:** cada vez que uma fase é jogada, a grade é gerada de novo com uma variação aleatória. "Outra fase" (no lugar de "Reiniciar"), "Tentar de novo" e "Jogar de novo" trazem outra grade do mesmo lugar. Por isso, reiniciar não devolve as vidas na mesma grade. O desafio do dia continua igual o dia todo, e reiniciá-lo recomeça a mesma grade.
+
+[Captura da barra sem Desfazer](docs/validation/design-review/toolbar-no-undo.png).

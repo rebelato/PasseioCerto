@@ -19,8 +19,8 @@ public enum RouteValidator {
         guard path.allSatisfy({ !puzzle.blocked.contains($0) }) else { return .obstacle }
         guard Set(path).count == path.count else { return .repeatedCell }
         guard zip(path, path.dropFirst()).allSatisfy({ $0.isAdjacent(to: $1) }) else { return .disconnected }
-        guard !path.dropLast().contains(puzzle.goal) else { return .continuedPastGoal }
-        guard marks.allSatisfy({ puzzle.contains($0) && !puzzle.blocked.contains($0) && $0 != puzzle.goal && !path.contains($0) }) else { return .invalidMark }
+        if let goal = puzzle.knownGoal, path.dropLast().contains(goal) { return .continuedPastGoal }
+        guard marks.allSatisfy({ puzzle.contains($0) && !puzzle.blocked.contains($0) && $0 != puzzle.knownGoal && !path.contains($0) }) else { return .invalidMark }
         return nil
     }
     /// Themed rules that a prefix can already break.
@@ -42,7 +42,8 @@ public enum RouteValidator {
     }
     public static func counts(puzzle: Puzzle, path: [Cell]) -> (rows: [Int], columns: [Int]) {
         var rows = Array(repeating: 0, count: puzzle.rows.count), columns = Array(repeating: 0, count: puzzle.columns.count)
-        for cell in Set(path).union([puzzle.start, puzzle.goal]) { rows[cell.row] += 1; columns[cell.col] += 1 }
+        // A hidden house is not counted in advance: that would point straight at it.
+        for cell in Set(path).union([puzzle.start]).union(puzzle.knownGoal.map { [$0] } ?? []) { rows[cell.row] += 1; columns[cell.col] += 1 }
         return (rows, columns)
     }
     /// Bones visited and every tree passed beside.
@@ -58,6 +59,11 @@ public enum RouteValidator {
         let counts = counts(puzzle: puzzle, path: path)
         for r in puzzle.rows.indices where counts.rows[r] > puzzle.rows[r] { return .contradiction(.rowExceeded(r)) }
         for c in puzzle.columns.indices where counts.columns[c] > puzzle.columns[c] { return .contradiction(.columnExceeded(c)) }
+        if puzzle.hiddenGoal {
+            // Every clue met can only happen at the house: the generator certifies that.
+            return counts.rows == puzzle.rows && counts.columns == puzzle.columns && stopsSatisfied(puzzle: puzzle, path: path)
+                ? .complete : .incomplete
+        }
         if path.last == puzzle.goal {
             return counts.rows == puzzle.rows && counts.columns == puzzle.columns && stopsSatisfied(puzzle: puzzle, path: path)
                 ? .complete : .contradiction(.arrivedBeforeClues)

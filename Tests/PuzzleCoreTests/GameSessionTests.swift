@@ -80,6 +80,23 @@ final class GameSessionTests: XCTestCase {
         XCTAssertEqual(s.attempt.paws, 1)
         XCTAssertEqual(s.bestPaws[s.attempt.game.puzzle.puzzleID], 3)
     }
+    @MainActor func testReplayBringsANewGridOfTheSameLevel() async {
+        let made = ManagedCounter()
+        let s = GameSession(generateLevel: { level, variation, _ in
+            await made.add()
+            let p = try Puzzle(puzzleID: "level-\(level.level)-\(variation)", rows: [2,0], columns: [1,1], start: Cell(0,0), goal: Cell(0,1))
+            return GenerationReport(outcome: .generated, puzzle: p, candidates: 1, rejectedBySolver: 0, rejectedByLogic: 0, rejectedByDifficulty: 0)
+        })
+        await s.play(.first)
+        let first = s.attempt.game.puzzle.puzzleID
+        await s.select(Cell(0,1), marking: false)
+        await s.replay()
+        XCTAssertEqual(s.attempt.level, .first)
+        XCTAssertNotEqual(s.attempt.game.puzzle.puzzleID, first)
+        XCTAssertFalse(s.attempt.game.won)
+        let calls = await made.value
+        XCTAssertEqual(calls, 2)
+    }
     @MainActor func testRestartDiscardsPendingResult() async {
         let s = GameSession()
         s.begin(at: Cell(1,0), marking: false)
@@ -136,8 +153,8 @@ final class GameSessionTests: XCTestCase {
         XCTAssertEqual(cross.violation?.kind, .crossedPath)
         var back = GameStroke(game: game, marking: false)
         back.move(to: Cell(1,1))
-        XCTAssertNil(back.violation, "Stepping back onto the previous cell erases")
-        XCTAssertEqual(back.preview.path.count, 3)
+        XCTAssertNil(back.violation, "Stepping back onto the previous cell is ignored")
+        XCTAssertEqual(back.preview.path.count, 4)
     }
     @MainActor func testCompleteGestureFreezesVictoryUntilReplay() async {
         let s = GameSession()
@@ -208,7 +225,16 @@ final class TapTests: XCTestCase {
         await s.tap(Cell(0,2), held: true)
         XCTAssertEqual(s.attempt.game.marks, [Cell(0,2)], "Holding marks even beside the tip")
         await s.tap(Cell(0,0))
-        XCTAssertEqual(s.attempt.game.path, [Cell(0,0)], "Tapping the previous cell steps back")
+        XCTAssertEqual(s.attempt.game.path, [Cell(0,0), Cell(0,1)], "Steps are never taken back")
         XCTAssertEqual(s.attempt.mistakes, 0)
+        await s.tap(Cell(1,1))
+        XCTAssertEqual(s.attempt.mistakes, 1, "A wrong step by tap is a mistake")
+        XCTAssertNotNil(s.violation)
+        XCTAssertEqual(s.attempt.game.path.count, 2)
     }
+}
+
+actor ManagedCounter {
+    private(set) var value = 0
+    func add() { value += 1 }
 }

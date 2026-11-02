@@ -49,7 +49,7 @@ public enum LogicEngine {
     /// `maxTier` limits which techniques may be used, to measure what a puzzle requires.
     public static func analyze(puzzle: Puzzle, prefix: [Cell]? = nil, marks: Set<Cell> = [], maxTier: Int = LogicEngine.maxTier) -> LogicResult {
         var path = prefix ?? [puzzle.start]
-        var required = Set(path).union([puzzle.start, puzzle.goal]).union(puzzle.bones)
+        var required = Set(path).union([puzzle.start]).union(puzzle.knownGoal.map { [$0] } ?? []).union(puzzle.bones)
         for edge in puzzle.givenEdges { required.formUnion([edge.a, edge.b]) }
         var excluded = marks.union(puzzle.blocked)
         var deductions: [Deduction] = []
@@ -101,7 +101,7 @@ public enum LogicEngine {
                 var reachable: Set<Cell> = [tip]
                 var pending = [tip]
                 while let cell = pending.popLast() {
-                    if cell == puzzle.goal { continue }
+                    if cell == puzzle.knownGoal { continue }
                     for next in puzzle.neighbors(cell) where !excluded.contains(next) && !used.contains(next) {
                         if reachable.insert(next).inserted { pending.append(next) }
                     }

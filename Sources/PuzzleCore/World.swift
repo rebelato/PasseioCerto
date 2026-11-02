@@ -110,9 +110,10 @@ public enum WorldGenerator {
     }
     /// Deterministic for a level and attempt: same inputs always give the same grid.
     /// `attempt` lets "Jogar de novo" on an exhausted world still vary; level progression uses 0.
-    public static func generate(_ level: WorldLevel, attempt: UInt64 = 0, candidateLimit: Int = 3_000, solverNodeLimit: Int = 60_000,
+    /// `hiddenHouse` certifies the grid without knowing where the walk ends.
+    public static func generate(_ level: WorldLevel, attempt: UInt64 = 0, hiddenHouse: Bool = false, candidateLimit: Int = 3_000, solverNodeLimit: Int = 60_000,
                                 isCancelled: () -> Bool = { false }) -> GenerationReport {
-        var rng = Random(state: level.seed &+ attempt &* 0x9E3779B97F4A7C15)
+        var rng = Random(state: level.seed &+ attempt &* 0x9E3779B97F4A7C15 &+ (hiddenHouse ? 0xC0FFEE : 0))
         var attempted = 0, solverRejected = 0, logicRejected = 0, difficultyRejected = 0
         func result(_ outcome: GenerationReport.Outcome, _ puzzle: Puzzle? = nil) -> GenerationReport {
             GenerationReport(outcome: outcome, puzzle: puzzle, candidates: attempted, rejectedBySolver: solverRejected, rejectedByLogic: logicRejected, rejectedByDifficulty: difficultyRejected)
@@ -122,7 +123,7 @@ public enum WorldGenerator {
         for index in 0..<min(5_000, max(0, candidateLimit)) {
             if isCancelled() { return result(.cancelled) }
             attempted += 1
-            guard let puzzle = candidate(level, id: "world-v\(version)-\(level.world.rawValue)-\(level.level)-r\(level.round)-\(attempt)-\(index)", rng: &rng) else { solverRejected += 1; continue }
+            guard let puzzle = candidate(level, id: "world-v\(version)\(hiddenHouse ? "h" : "")-\(level.world.rawValue)-\(level.level)-r\(level.round)-\(attempt)-\(index)", hidden: hiddenHouse, rng: &rng) else { solverRejected += 1; continue }
             let logical = LogicEngine.analyze(puzzle: puzzle)
             guard logical.outcome == .solved, let tier = LogicEngine.requiredTier(puzzle) else { logicRejected += 1; continue }
             if isCancelled() { return result(.cancelled) }
@@ -141,10 +142,10 @@ public enum WorldGenerator {
         }
         if isCancelled() { return result(.cancelled) }
         if let best { return result(.generated, best.puzzle) }
-        return result(.fallback, FallbackCatalog.puzzle(for: level))
+        return result(.fallback, FallbackCatalog.puzzle(for: level, hiddenHouse: hiddenHouse))
     }
 
-    private static func candidate(_ level: WorldLevel, id: String, rng: inout Random) -> Puzzle? {
+    private static func candidate(_ level: WorldLevel, id: String, hidden: Bool, rng: inout Random) -> Puzzle? {
         let n = level.world.size
         let inside = { (c: Cell) in (0..<n).contains(c.row) && (0..<n).contains(c.col) }
         // Self-avoiding random walk.
@@ -195,16 +196,16 @@ public enum WorldGenerator {
         let rows = (0..<n).map { r in route.filter { $0.row == r }.count }
         let columns = (0..<n).map { c in route.filter { $0.col == c }.count }
         let themed = !(bones.isEmpty && trees.isEmpty && cats.isEmpty && puddles.isEmpty && given.isEmpty)
-        return try? Puzzle(puzzleID: id, schemaVersion: themed ? 2 : 1, generatorVersion: version, seed: level.seed, rows: rows, columns: columns,
-                           start: route[0], goal: route.last!, obstacles: shrubs, bones: bones, trees: trees, cats: cats, puddles: puddles, givenEdges: given)
+        return try? Puzzle(puzzleID: id, schemaVersion: themed || hidden ? 2 : 1, generatorVersion: version, seed: level.seed, rows: rows, columns: columns,
+                           start: route[0], goal: route.last!, obstacles: shrubs, bones: bones, trees: trees, cats: cats, puddles: puddles, givenEdges: given, hiddenGoal: hidden)
     }
 }
 
 public extension WorldGenerator {
     /// Explicit worker task keeps generation off MainActor and forwards cancellation.
-    static func generateAsync(_ level: WorldLevel, attempt: UInt64 = 0) async -> GenerationReport {
+    static func generateAsync(_ level: WorldLevel, attempt: UInt64 = 0, hiddenHouse: Bool = false) async -> GenerationReport {
         let worker = Task.detached(priority: .userInitiated) {
-            generate(level, attempt: attempt, isCancelled: { Task.isCancelled })
+            generate(level, attempt: attempt, hiddenHouse: hiddenHouse, isCancelled: { Task.isCancelled })
         }
         return await withTaskCancellationHandler { await worker.value } onCancel: { worker.cancel() }
     }

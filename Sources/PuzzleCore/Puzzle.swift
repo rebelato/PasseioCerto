@@ -16,7 +16,9 @@ public struct GivenEdge: Hashable, Codable, Sendable {
 /// - trees: block their cell, and the route must pass beside each one;
 /// - cats: block their cell, and the route may not pass beside them;
 /// - puddles: the route may cross them, but only in a straight line;
-/// - givenEdges: pre-drawn route pieces.
+/// - givenEdges: pre-drawn route pieces;
+/// - hiddenGoal: the house is not shown, so the clues alone must fix where the walk ends.
+///   Clues then count only the route, and the house appears when the walk is complete.
 public struct Puzzle: Codable, Equatable, Sendable {
     public static let sizes = 2...10
     public let puzzleID: String
@@ -33,18 +35,22 @@ public struct Puzzle: Codable, Equatable, Sendable {
     public let cats: Set<Cell>
     public let puddles: Set<Cell>
     public let givenEdges: [GivenEdge]
+    public let hiddenGoal: Bool
+    /// The house as far as the player knows; nil while it is hidden.
+    public var knownGoal: Cell? { hiddenGoal ? nil : goal }
     /// Cells the route can never use: shrubs, trees and cats.
     public let blocked: Set<Cell>
     /// Free cells beside a cat; stepping there breaks the cat rule.
     public let catZone: Set<Cell>
 
     public init(puzzleID: String, schemaVersion: Int = 1, generatorVersion: Int = 1, seed: UInt64? = nil, rows: [Int], columns: [Int], start: Cell, goal: Cell, obstacles: Set<Cell> = [],
-                bones: Set<Cell> = [], trees: Set<Cell> = [], cats: Set<Cell> = [], puddles: Set<Cell> = [], givenEdges: [GivenEdge] = []) throws {
+                bones: Set<Cell> = [], trees: Set<Cell> = [], cats: Set<Cell> = [], puddles: Set<Cell> = [], givenEdges: [GivenEdge] = [], hiddenGoal: Bool = false) throws {
         self.puzzleID = puzzleID; self.schemaVersion = schemaVersion
         self.generatorVersion = generatorVersion; self.seed = seed
         self.rows = rows; self.columns = columns
         self.start = start; self.goal = goal; self.obstacles = obstacles
         self.bones = bones; self.trees = trees; self.cats = cats; self.puddles = puddles; self.givenEdges = givenEdges
+        self.hiddenGoal = hiddenGoal
         blocked = obstacles.union(trees).union(cats)
         let inside = { (c: Cell) in rows.indices.contains(c.row) && columns.indices.contains(c.col) }
         catZone = Set(cats.flatMap(Cell.neighbors).filter(inside)).subtracting(obstacles.union(trees).union(cats))
@@ -70,14 +76,15 @@ public struct Puzzle: Codable, Equatable, Sendable {
     public func contains(_ cell: Cell) -> Bool { rows.indices.contains(cell.row) && columns.indices.contains(cell.col) }
     public func neighbors(_ cell: Cell) -> [Cell] { Cell.neighbors(cell).filter(contains) }
     /// Any themed rule beyond clues and shrubs.
-    public var hasThemedRules: Bool { !(bones.isEmpty && trees.isEmpty && cats.isEmpty && puddles.isEmpty && givenEdges.isEmpty) }
-    private enum CodingKeys: String, CodingKey { case puzzleID, schemaVersion, generatorVersion, seed, rows, columns, start, goal, obstacles, bones, trees, cats, puddles, givenEdges }
+    public var hasThemedRules: Bool { !(bones.isEmpty && trees.isEmpty && cats.isEmpty && puddles.isEmpty && givenEdges.isEmpty) || hiddenGoal }
+    private enum CodingKeys: String, CodingKey { case puzzleID, schemaVersion, generatorVersion, seed, rows, columns, start, goal, obstacles, bones, trees, cats, puddles, givenEdges, hiddenGoal }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         try self.init(puzzleID: c.decode(String.self, forKey: .puzzleID), schemaVersion: c.decode(Int.self, forKey: .schemaVersion), generatorVersion: c.decode(Int.self, forKey: .generatorVersion), seed: c.decodeIfPresent(UInt64.self, forKey: .seed), rows: c.decode([Int].self, forKey: .rows), columns: c.decode([Int].self, forKey: .columns), start: c.decode(Cell.self, forKey: .start), goal: c.decode(Cell.self, forKey: .goal), obstacles: c.decode(Set<Cell>.self, forKey: .obstacles),
             bones: c.decodeIfPresent(Set<Cell>.self, forKey: .bones) ?? [], trees: c.decodeIfPresent(Set<Cell>.self, forKey: .trees) ?? [],
             cats: c.decodeIfPresent(Set<Cell>.self, forKey: .cats) ?? [], puddles: c.decodeIfPresent(Set<Cell>.self, forKey: .puddles) ?? [],
-            givenEdges: c.decodeIfPresent([GivenEdge].self, forKey: .givenEdges) ?? [])
+            givenEdges: c.decodeIfPresent([GivenEdge].self, forKey: .givenEdges) ?? [],
+            hiddenGoal: c.decodeIfPresent(Bool.self, forKey: .hiddenGoal) ?? false)
     }
     public func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
@@ -91,11 +98,12 @@ public struct Puzzle: Codable, Equatable, Sendable {
         if !cats.isEmpty { try c.encode(cats, forKey: .cats) }
         if !puddles.isEmpty { try c.encode(puddles, forKey: .puddles) }
         if !givenEdges.isEmpty { try c.encode(givenEdges, forKey: .givenEdges) }
+        if hiddenGoal { try c.encode(hiddenGoal, forKey: .hiddenGoal) }
     }
     /// Same grid under another identity (daily challenges reuse generated grids).
     public func renamed(_ id: String, seed: UInt64?) throws -> Puzzle {
         try Puzzle(puzzleID: id, schemaVersion: schemaVersion, generatorVersion: generatorVersion, seed: seed, rows: rows, columns: columns, start: start, goal: goal, obstacles: obstacles,
-                   bones: bones, trees: trees, cats: cats, puddles: puddles, givenEdges: givenEdges)
+                   bones: bones, trees: trees, cats: cats, puddles: puddles, givenEdges: givenEdges, hiddenGoal: hiddenGoal)
     }
 }
 
