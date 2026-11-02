@@ -47,9 +47,14 @@ if CommandLine.arguments.contains("sizes") {
             if let p = r.puzzle, let route = PuzzleSolution.route(for: p) {
                 pieces.append(p.givenEdges.count)
                 // Pieces per line: 1 means the line's route cells are all together.
-                let lines = (0..<p.rows.count).map { r in route.filter { $0.row == r }.map(\.col) } + (0..<p.columns.count).map { c in route.filter { $0.col == c }.map(\.row) }
-                for line in lines { let sorted = line.sorted(); blocks += 1 + zip(sorted, sorted.dropFirst()).filter { $1 - $0 > 1 }.count; linesSeen += 1
-                    if sorted.count > 1 && zip(sorted, sorted.dropFirst()).allSatisfy({ $1 - $0 == 1 }) { together += 1; multi += 1 } else if sorted.count > 1 { multi += 1 } }
+                var lines: [[Int]] = []
+                for r in 0..<p.rows.count { lines.append(route.filter { $0.row == r }.map(\.col).sorted()) }
+                for c in 0..<p.columns.count { lines.append(route.filter { $0.col == c }.map(\.row).sorted()) }
+                for line in lines {
+                    let gaps = zip(line, line.dropFirst()).filter { pair in pair.1 - pair.0 > 1 }.count
+                    blocks += 1 + gaps; linesSeen += 1
+                    if line.count > 1 { multi += 1; if gaps == 0 { together += 1 } }
+                }
             } else { failed += 1 }
         }
         print("\(difficulty) median=\(times.sorted()[5])ms max=\(times.max()!)ms candidates=\(candidates) failed=\(failed) pieces=\(pieces) blocksPerLine=\(Double(blocks)/Double(max(1, linesSeen))) linesTogether=\(together)/\(multi)")
