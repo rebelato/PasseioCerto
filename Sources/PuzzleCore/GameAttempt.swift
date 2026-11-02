@@ -14,20 +14,23 @@ public struct GameAttempt: Codable, Sendable {
     public internal(set) var game: Game
     public let mode: PlayMode
     public internal(set) var mistakes: Int
+    /// The progression level this walk belongs to; nil for daily and older free walks.
+    public let level: WorldLevel?
     public var lives: Int { max(0, Self.maxLives - mistakes) }
     public var defeated: Bool { mode.hasLives && lives == 0 }
     /// Score shown as paw prints: 3 for a clean walk, never below 1 once home.
     public var paws: Int { max(1, Self.maxLives - mistakes) }
-    public init(game: Game = Game(), mode: PlayMode = .challenging) {
-        schemaVersion = 3; self.game = game; self.mode = mode; mistakes = 0
+    public init(game: Game = Game(), mode: PlayMode = .challenging, level: WorldLevel? = nil) {
+        schemaVersion = 3; self.game = game; self.mode = mode; self.level = level; mistakes = 0
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, game, lives, mode, mistakes }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, game, lives, mode, mistakes, level }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.game) {
             let version = try c.decode(Int.self, forKey: .schemaVersion)
             schemaVersion = 3
             game = try c.decode(Game.self, forKey: .game)
+            level = try c.decodeIfPresent(WorldLevel.self, forKey: .level)
             switch version {
             case 2:
                 // v2 only had Desafiador-style lives.
@@ -43,7 +46,7 @@ public struct GameAttempt: Codable, Sendable {
             guard !(defeated && game.won) else { throw PuzzleError.invalidSession }
         } else {
             // Old PC-003 saved Game format had no lives.
-            schemaVersion = 3; game = try Game(from: decoder); mode = .challenging; mistakes = 0
+            schemaVersion = 3; game = try Game(from: decoder); mode = .challenging; mistakes = 0; level = nil
         }
     }
     public func encode(to encoder: Encoder) throws {
@@ -52,6 +55,7 @@ public struct GameAttempt: Codable, Sendable {
         try c.encode(game, forKey: .game)
         try c.encode(mode, forKey: .mode)
         try c.encode(mistakes, forKey: .mistakes)
+        try c.encodeIfPresent(level, forKey: .level)
     }
 }
 

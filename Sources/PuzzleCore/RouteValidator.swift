@@ -1,6 +1,7 @@
 public enum RuleViolation: Equatable, Sendable {
     case wrongStart, outOfBounds, obstacle, repeatedCell, disconnected, continuedPastGoal, invalidMark
     case rowExceeded(Int), columnExceeded(Int), arrivedBeforeClues
+    case nearCat, turnedOnPuddle, brokeGivenEdge
 }
 
 public enum RouteStatus: Equatable, Sendable {
@@ -15,25 +16,51 @@ public enum RouteValidator {
     public static func structuralViolation(puzzle: Puzzle, path: [Cell], marks: Set<Cell> = []) -> RuleViolation? {
         guard path.first == puzzle.start else { return .wrongStart }
         guard path.allSatisfy(puzzle.contains) else { return .outOfBounds }
-        guard path.allSatisfy({ !puzzle.obstacles.contains($0) }) else { return .obstacle }
+        guard path.allSatisfy({ !puzzle.blocked.contains($0) }) else { return .obstacle }
         guard Set(path).count == path.count else { return .repeatedCell }
-        guard zip(path, path.dropFirst()).allSatisfy({ abs($0.row-$1.row)+abs($0.col-$1.col) == 1 }) else { return .disconnected }
+        guard zip(path, path.dropFirst()).allSatisfy({ $0.isAdjacent(to: $1) }) else { return .disconnected }
         guard !path.dropLast().contains(puzzle.goal) else { return .continuedPastGoal }
-        guard marks.allSatisfy({ puzzle.contains($0) && !puzzle.obstacles.contains($0) && $0 != puzzle.goal && !path.contains($0) }) else { return .invalidMark }
+        guard marks.allSatisfy({ puzzle.contains($0) && !puzzle.blocked.contains($0) && $0 != puzzle.goal && !path.contains($0) }) else { return .invalidMark }
+        return nil
+    }
+    /// Themed rules that a prefix can already break.
+    public static func themedViolation(puzzle: Puzzle, path: [Cell]) -> RuleViolation? {
+        guard puzzle.hasThemedRules else { return nil }
+        if !puzzle.catZone.isEmpty, path.contains(where: puzzle.catZone.contains) { return .nearCat }
+        for index in path.indices.dropFirst().dropLast() where puzzle.puddles.contains(path[index]) {
+            let before = path[index-1], after = path[index+1]
+            if before.row != after.row && before.col != after.col { return .turnedOnPuddle }
+        }
+        for edge in puzzle.givenEdges {
+            for (cell, partner) in [(edge.a, edge.b), (edge.b, edge.a)] {
+                guard let index = path.firstIndex(of: cell), index < path.count-1 || path.contains(partner) else { continue }
+                let linked = (index > 0 && path[index-1] == partner) || (index+1 < path.count && path[index+1] == partner)
+                if !linked { return .brokeGivenEdge }
+            }
+        }
         return nil
     }
     public static func counts(puzzle: Puzzle, path: [Cell]) -> (rows: [Int], columns: [Int]) {
-        let occupied = Set(path).union([puzzle.start, puzzle.goal])
-        return (puzzle.rows.indices.map { r in occupied.filter { $0.row == r }.count },
-                puzzle.columns.indices.map { c in occupied.filter { $0.col == c }.count })
+        var rows = Array(repeating: 0, count: puzzle.rows.count), columns = Array(repeating: 0, count: puzzle.columns.count)
+        for cell in Set(path).union([puzzle.start, puzzle.goal]) { rows[cell.row] += 1; columns[cell.col] += 1 }
+        return (rows, columns)
+    }
+    /// Bones visited and every tree passed beside.
+    public static func stopsSatisfied(puzzle: Puzzle, path: [Cell]) -> Bool {
+        let visited = Set(path)
+        return puzzle.bones.isSubset(of: visited)
+            && puzzle.trees.allSatisfy { tree in Cell.neighbors(tree).contains(where: visited.contains) }
+            && puzzle.givenEdges.allSatisfy { visited.contains($0.a) && visited.contains($0.b) }
     }
     public static func evaluate(puzzle: Puzzle, path: [Cell], marks: Set<Cell> = []) -> RouteStatus {
         if let error = structuralViolation(puzzle: puzzle, path: path, marks: marks) { return .contradiction(error) }
+        if let error = themedViolation(puzzle: puzzle, path: path) { return .contradiction(error) }
         let counts = counts(puzzle: puzzle, path: path)
         for r in puzzle.rows.indices where counts.rows[r] > puzzle.rows[r] { return .contradiction(.rowExceeded(r)) }
         for c in puzzle.columns.indices where counts.columns[c] > puzzle.columns[c] { return .contradiction(.columnExceeded(c)) }
         if path.last == puzzle.goal {
-            return counts.rows == puzzle.rows && counts.columns == puzzle.columns ? .complete : .contradiction(.arrivedBeforeClues)
+            return counts.rows == puzzle.rows && counts.columns == puzzle.columns && stopsSatisfied(puzzle: puzzle, path: path)
+                ? .complete : .contradiction(.arrivedBeforeClues)
         }
         return .incomplete
     }

@@ -2,6 +2,9 @@ public struct Cell: Hashable, Codable, Sendable {
     public let row: Int
     public let col: Int
     public init(_ row: Int, _ col: Int) { self.row = row; self.col = col }
+    /// Up, right, down, left: fixed order keeps searches reproducible.
+    public static func neighbors(_ c: Cell) -> [Cell] { [Cell(c.row-1,c.col),Cell(c.row,c.col+1),Cell(c.row+1,c.col),Cell(c.row,c.col-1)] }
+    public func isAdjacent(to other: Cell) -> Bool { abs(row-other.row)+abs(col-other.col) == 1 }
 }
 public struct Game: Codable, Sendable {
     public let puzzle: Puzzle
@@ -22,7 +25,7 @@ public struct Game: Codable, Sendable {
     public var won: Bool { status == .complete }
     public var canUndo: Bool { !history.isEmpty }
     @discardableResult public mutating func play(_ cell: Cell, marking: Bool = false) -> Bool {
-        guard puzzle.contains(cell), !puzzle.obstacles.contains(cell), !won else { return false }
+        guard puzzle.contains(cell), !puzzle.blocked.contains(cell), !won else { return false }
         let previous = Snapshot(path: path, marks: marks)
         if marking {
             guard !occupied.contains(cell) else { return false }
@@ -32,7 +35,9 @@ public struct Game: Codable, Sendable {
             else {
                 guard let last = path.last, last != goal, !path.contains(cell), !marks.contains(cell), abs(last.row-cell.row)+abs(last.col-cell.col) == 1 else { return false }
                 path.append(cell)
-                if zip(rowCounts, rows).contains(where: { $0 > $1 }) || zip(columnCounts, columns).contains(where: { $0 > $1 }) { path = previous.path; return false }
+                if case .contradiction(let violation) = RouteValidator.evaluate(puzzle: puzzle, path: path), violation != .arrivedBeforeClues {
+                    path = previous.path; return false
+                }
             }
         }
         history.append(previous)

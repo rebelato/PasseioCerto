@@ -16,7 +16,7 @@ final class SerializationTests: XCTestCase {
     func testDecodedDefinitionRejectsUnsupportedVersionAndBounds() throws {
         let data = try JSONEncoder().encode(Game().puzzle)
         var json = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
-        json["schemaVersion"] = 2
+        json["schemaVersion"] = 3
         XCTAssertThrowsError(try JSONDecoder().decode(Puzzle.self, from: JSONSerialization.data(withJSONObject: json)))
         json["schemaVersion"] = 1
         json["goal"] = ["row": 50, "col": 0]

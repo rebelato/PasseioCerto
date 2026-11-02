@@ -154,3 +154,27 @@ Aplicação das prioridades 1–5 do design review.
 Formatos: tentativa v3 (`mode`, `mistakes`) e save v5 (`bestPaws`, `playMode`). Saves antigos migram: vidas v2 viram erros, e passeios já concluídos valem 1 patinha.
 
 Capturas no simulador (iPhone 17 Pro, iOS 26.5): [início](docs/validation/design-review/home.png), [partida](docs/validation/design-review/game.png), [escuro](docs/validation/design-review/game-dark.png), [vitória](docs/validation/design-review/victory.png). Para abrir a partida direto: `xcrun simctl launch <id> com.rebelato.PasseioCerto -PCOpenWalk YES`. **Pendente:** arrastar, tocar, a animação de vitória e os hápticos não foram exercitados de forma automatizada; conferir no iPhone.
+
+### Design review de 23/10/2026 · parte 2
+
+Prioridade 6 do design review: progressão, regras temáticas, meta de coleção e dicas.
+
+- **Mundos:** Praça das Flores 5×5 → Praia 6×6 + osso → Feira 8×8 + árvore → Parque 10×10 + gato → Lagoa 10×10 + poça, com 8 fases cada. Na primeira fase de cada lugar, a Margot apresenta a regra nova. Depois da última fase, a Lagoa recomeça com grades novas.
+- **Regras:**
+  - osso: o caminho passa por ele;
+  - árvore: o caminho passa ao lado de cada uma (na vitória, a Margot faz uma "paradinha estratégica");
+  - gato: o caminho não passa ao lado dele, e as casas vizinhas ficam rosadas;
+  - poça: só em linha reta;
+  - trechos pré-desenhados tracejados nas grades 8×8 e 10×10.
+
+  Entrar ao lado do gato, virar na poça ou desviar de um trecho desenhado contam como erros visíveis.
+- **Dificuldade como métrica:** o motor lógico rotula as técnicas por camada: 1 contagem, 2 continuação, 3 alcance e 4 regras temáticas. `LogicEngine.requiredTier` informa a camada mais simples que resolve a fase. Cada fase mira uma faixa de camadas (as primeiras 2, as do meio 2–3, as últimas 3–4); se nenhum candidato cair na faixa, o gerador usa o candidato verificado mais próximo. A ordem das deduções não mudou, então os desafios diários v1 continuam idênticos: conferido para os próximos 400 dias contra a `main`.
+- **Gerador por mundo** (`WorldGenerator`): determinístico por fase, exige solução única (`ExactSolver`) e resolução só por lógica. O solver agora poda por alcance e por limites das pistas, e um teste o compara com força bruta em grades 4×4 com regras. Cada mundo tem 2 reservas certificadas. Calibração em macOS (Release): 36 de 40 fases saem do gerador, com até cerca de 0,5 s nas 10×10; as outras usam a reserva do mundo. Para reproduzir: `swift run -c release Calibration worlds`.
+- **Dicas:** mostram primeiro um conflito nas marcações; se não houver, a dedução da camada mais simples, em frase curta (por exemplo: "Linha 2, coluna 3: a coluna 3 já está completa, então esta casa fica fora do caminho. Toque nela para marcar ×.").
+- **Seu cantinho:** lugares alcançados e seu progresso; acessórios liberados por patinhas (lacinho 10, bandana 25, chapéu 50, óculos 100); álbum de polaroids, uma por passeio concluído, desenhadas a partir da rota salva.
+
+Formatos: puzzle schema 2 (campos opcionais `bones`, `trees`, `cats`, `puddles`, `givenEdges`; grades até 10×10; os puzzles do schema 1 continuam iguais em disco) e save v6 (`progress`, `walks`, `accessory`).
+
+**Fora deste PR:** o desafio diário continua com a política v1 (5×5, Tranquilo, sem regras temáticas). Mudar isso exige uma política `daily-v2`, para não trocar a fase de um dia já gerado.
+
+Capturas: [Parque 10×10](docs/validation/design-review/park-10x10.png), [início com progressão](docs/validation/design-review/home-progress.png) e [Seu cantinho](docs/validation/design-review/corner.png). **Pendente no iPhone:** tempo de geração 10×10 no aparelho, gestos, álbum e VoiceOver das regras novas.

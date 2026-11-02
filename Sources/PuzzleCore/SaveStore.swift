@@ -13,8 +13,9 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
     public var hapticsEnabled = true
     /// Mode for the next normal walk; daily challenges are always Tranquilo.
     public var playMode = PlayMode.relaxed
+    public var accessory: Accessory?
     public init() {}
-    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, playMode }
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, playMode, accessory }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
@@ -22,6 +23,7 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
         soundEnabled = try c.decode(Bool.self, forKey: .soundEnabled)
         hapticsEnabled = try c.decode(Bool.self, forKey: .hapticsEnabled)
         playMode = try c.decodeIfPresent(PlayMode.self, forKey: .playMode) ?? .relaxed
+        accessory = try? c.decodeIfPresent(Accessory.self, forKey: .accessory)
     }
 }
 public struct PlayerSave: Codable, Sendable {
@@ -34,17 +36,22 @@ public struct PlayerSave: Codable, Sendable {
     public var parkedAttempts: [String: GameAttempt]
     /// Best paw score per completed puzzle (1–3).
     public var bestPaws: [String: Int]
-    public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:], bestPaws: [String: Int] = [:]) {
-        schemaVersion = 5; self.bestPaws = bestPaws; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
+    /// Next level of the world progression.
+    public var progress: WorldLevel
+    /// Finished walks for the album, newest last.
+    public var walks: [WalkRecord]
+    public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:], bestPaws: [String: Int] = [:],
+                progress: WorldLevel = .first, walks: [WalkRecord] = []) {
+        schemaVersion = 6; self.bestPaws = bestPaws; self.progress = progress; self.walks = walks; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
         self.tutorialStep = tutorialStep; self.completedPuzzleIDs = completedPuzzleIDs
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, progress, walks }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.attempt) {
             let version = try c.decode(Int.self, forKey: .schemaVersion)
-            schemaVersion = 5
-            guard (3...5).contains(version) else { throw PuzzleError.invalidSession }
+            schemaVersion = 6
+            guard (3...6).contains(version) else { throw PuzzleError.invalidSession }
             attempt = try c.decode(GameAttempt.self, forKey: .attempt)
             preferences = try c.decode(PlayerPreferences.self, forKey: .preferences)
             tutorialStep = try c.decode(Int.self, forKey: .tutorialStep)
@@ -54,12 +61,14 @@ public struct PlayerSave: Codable, Sendable {
             guard parkedAttempts.allSatisfy({ $0.key == "normal" || ($0.key.hasPrefix("daily-v1-") && $0.value.game.puzzle.puzzleID == $0.key) }),
                   activeDailyID == nil || (activeDailyID == attempt.game.puzzle.puzzleID && activeDailyID!.hasPrefix("daily-v1-") && parkedAttempts["normal"] != nil) else { throw PuzzleError.invalidSession }
             // Walks finished before scores existed count as one paw.
-            bestPaws = version == 5 ? try c.decode([String: Int].self, forKey: .bestPaws)
+            bestPaws = version >= 5 ? try c.decode([String: Int].self, forKey: .bestPaws)
                 : Dictionary(uniqueKeysWithValues: completedPuzzleIDs.map { ($0, 1) })
             guard tutorialStep >= 0, completedPuzzleIDs.allSatisfy({ !$0.isEmpty }),
                   bestPaws.values.allSatisfy((1...GameAttempt.maxLives).contains) else { throw PuzzleError.invalidSession }
+            progress = try c.decodeIfPresent(WorldLevel.self, forKey: .progress) ?? .first
+            walks = try c.decodeIfPresent([WalkRecord].self, forKey: .walks) ?? []
         } else {
-            schemaVersion = 5; bestPaws = [:]; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
+            schemaVersion = 6; bestPaws = [:]; progress = .first; walks = []; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
             preferences = PlayerPreferences(); tutorialStep = 0; completedPuzzleIDs = []
         }
         if attempt.game.won {
@@ -105,5 +114,39 @@ public struct SaveStore {
             try FileManager.default.copyItem(at: url, to: archive)
         }
         try write(data, url)
+    }
+}
+
+/// One finished walk, enough to redraw its polaroid.
+public struct WalkRecord: Codable, Equatable, Sendable {
+    public let puzzle: Puzzle
+    public let path: [Cell]
+    public let paws: Int
+    public let date: Date
+    public let place: World?
+    public init(puzzle: Puzzle, path: [Cell], paws: Int, date: Date, place: World?) {
+        self.puzzle = puzzle; self.path = path; self.paws = paws; self.date = date; self.place = place
+    }
+    public static let albumLimit = 60
+}
+
+/// Little things for Margot, unlocked by total paws.
+public enum Accessory: String, CaseIterable, Codable, Sendable {
+    case bow, bandana, hat, glasses
+    public var cost: Int {
+        switch self {
+        case .bow: 10
+        case .bandana: 25
+        case .hat: 50
+        case .glasses: 100
+        }
+    }
+    public var title: String {
+        switch self {
+        case .bow: String(localized: "Lacinho")
+        case .bandana: String(localized: "Bandana")
+        case .hat: String(localized: "Chapéu")
+        case .glasses: String(localized: "Óculos")
+        }
     }
 }

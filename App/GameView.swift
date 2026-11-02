@@ -9,6 +9,7 @@ struct GameView: View {
     @State private var tutorialRequested = false
     @State private var feedbackPlayer = GameFeedbackPlayer()
     @State private var nameDraft = ""
+    @State private var showingCorner = false
     var body: some View {
         Group {
             if showingHome {
@@ -17,7 +18,7 @@ struct GameView: View {
                 GameScreen(session: session, title: walkTitle,
                     onHome: { session.suspend(); showingHome = true },
                     onSettings: { session.suspend(); tutorialRequested = false; showingLearning = true },
-                    onNext: { Task { await session.newPuzzle(difficulty: .relaxed) } },
+                    onNext: { Task { await session.playNext() } },
                     onArrive: { feedbackPlayer.play(.victory, preferences: session.preferences) })
             }
         }
@@ -34,12 +35,14 @@ struct GameView: View {
         .onChange(of: scenePhase) { _, phase in if phase != .active { feedbackPlayer.stop(); session.suspend() } }
         .onDisappear { feedbackPlayer.stop(); session.suspend() }
         .task {
-            // Screenshot checks: `simctl launch … -PCOpenWalk YES` skips the home screen.
+            // Screenshot checks: `simctl launch … -PCOpenWalk YES` skips the home screen; -PCOpenCorner YES opens Seu cantinho.
             if UserDefaults.standard.bool(forKey: "PCOpenWalk") { showingHome = false }
+            if UserDefaults.standard.bool(forKey: "PCOpenCorner") { showingCorner = true }
             if session.tutorialStep < TutorialSession.completedStep {
                 tutorialRequested = true; showingLearning = true
             }
         }
+        .sheet(isPresented: $showingCorner) { CornerView(session: session) { showingCorner = false } }
         .sheet(isPresented: $showingLearning) {
             if tutorialRequested {
                 TutorialView(step: session.tutorialStep, dogName: session.dogName,
@@ -51,7 +54,7 @@ struct GameView: View {
         }
     }
     private var walkTitle: String {
-        session.activeDailyID != nil ? String(localized: "Desafio do dia") : String(localized: "Praça das Flores")
+        session.activeDailyID != nil ? String(localized: "Desafio do dia") : session.attempt.level?.title ?? String(localized: "Praça das Flores")
     }
 
     // MARK: Home
@@ -69,14 +72,18 @@ struct GameView: View {
                         }.frame(width: GardenTheme.minTarget, height: GardenTheme.minTarget)
                             .accessibilityLabel(String(localized: "Ajustes"))
                     }
-                    Puppy().frame(width: 110, height: 110)
+                    Puppy(accessory: session.preferences.accessory).frame(width: 110, height: 110)
                     VStack(spacing: 6) {
                         Text(String(localized: "Passeio Certo")).font(GardenTheme.title)
                         Text(String(localized: "Um passeio de cada vez, com \(session.dogName).")).multilineTextAlignment(.center)
                     }
                     VStack(spacing: 10) {
-                        Button(String(localized: "Jogar"), systemImage: "pawprint.fill") { Task { await play() } }
-                            .buttonStyle(GardenButtonStyle(prominent: true)).disabled(session.generating)
+                        Button { Task { await play() } } label: {
+                            VStack(spacing: 2) {
+                                Label(String(localized: "Jogar"), systemImage: "pawprint.fill")
+                                Text(nextWalkTitle).font(.footnote.weight(.medium)).opacity(0.85)
+                            }
+                        }.buttonStyle(GardenButtonStyle(prominent: true)).disabled(session.generating)
                         PlayModePicker(selection: Binding(get: { session.preferences.playMode }, set: { session.setPlayMode($0) }))
                         Text(session.preferences.playMode.hasLives ? String(localized: "3 vidas por passeio. Erros custam uma.") : String(localized: "Sem vidas e sem pressa."))
                             .font(.footnote).foregroundStyle(GardenTheme.secondary)
@@ -94,13 +101,15 @@ struct GameView: View {
             }.background(GardenTheme.background).foregroundStyle(GardenTheme.ink).tint(GardenTheme.ink)
         }
     }
-    /// Jogar always means the normal walk: resume it, or start the next one once it is finished.
+    /// Jogar always means the normal walk: resume it, or start the next level once it is finished.
     private func play() async {
-        if session.activeDailyID != nil { session.continueNormal() }
-        if session.attempt.game.won && session.activeDailyID == nil {
-            await session.newPuzzle(difficulty: .relaxed)
-        }
+        await session.play()
         if session.activeDailyID == nil && !session.generating { showingHome = false }
+    }
+    private var nextWalkTitle: String {
+        let normal = session.activeDailyID == nil ? session.attempt : session.parkedAttempts["normal"]
+        if let normal, !normal.game.won { return normal.level?.title ?? String(localized: "Continuar passeio") }
+        return session.progress.title
     }
     private func dailyCard(_ daily: DailyChallenge, now: Date) -> some View {
         let done = session.completedPuzzleIDs.contains(daily.id)
@@ -131,15 +140,20 @@ struct GameView: View {
         }.buttonStyle(.plain).disabled(session.generating)
     }
     private var cornerSummary: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(String(localized: "Seu cantinho")).font(GardenTheme.heading)
-            HStack(spacing: 16) {
-                Label(session.completedWalkCount == 1 ? String(localized: "1 passeio") : String(localized: "\(session.completedWalkCount) passeios"), systemImage: "map")
-                Label(String(localized: "\(session.totalPaws) patinhas"), systemImage: "pawprint.fill")
-            }.font(.subheadline)
-        }.padding(16).frame(maxWidth: .infinity, alignment: .leading)
-            .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
-            .accessibilityElement(children: .combine)
+        Button { showingCorner = true } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(String(localized: "Seu cantinho")).font(GardenTheme.heading)
+                    HStack(spacing: 16) {
+                        Label(session.completedWalkCount == 1 ? String(localized: "1 passeio") : String(localized: "\(session.completedWalkCount) passeios"), systemImage: "photo.on.rectangle")
+                        Label(String(localized: "\(session.totalPaws) patinhas"), systemImage: "pawprint.fill")
+                    }.font(.subheadline)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.forward").foregroundStyle(GardenTheme.secondary)
+            }.padding(16)
+                .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
+                .contentShape(RoundedRectangle(cornerRadius: GardenTheme.radius))
+        }.buttonStyle(.plain).accessibilityHint(String(localized: "Lugares, acessórios e álbum de passeios"))
     }
 
     // MARK: Settings
