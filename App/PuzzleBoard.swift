@@ -9,6 +9,8 @@ struct PuzzleBoard: View {
     var onSelectMode: ((Cell, Bool) -> Void)?
     var dogName = "Margot"
     var accessory: Accessory?
+    /// The house model Margot owns, drawn at the end of the walk.
+    var houseModel = "house.classic"
     var arrivalProgress: Double = 0
     var walking = false
     /// Victory beats after the walk: a tail wag, then a hop into the house.
@@ -66,7 +68,7 @@ struct PuzzleBoard: View {
                 .frame(width: width, height: height).allowsHitTesting(false).accessibilityHidden(true)
             // A hidden house appears only once the walk is complete.
             if game.puzzle.knownGoal != nil || game.won {
-                GardenHouse().padding(3)
+                HouseModelArt(id: houseModel).padding(3)
                     .frame(width: cellSide-4, height: cellSide-4)
                     .offset(x: CGFloat(game.goal.col+1)*cellSide+2, y: CGFloat(game.goal.row+1)*cellSide+2)
                     .transition(.scale.combined(with: .opacity))

@@ -58,7 +58,7 @@ struct GameScreen: View {
         .sheet(isPresented: .constant(game.won && !session.celebrating)) {
             VictorySheet(dogName: session.dogName, paws: session.attempt.paws,
                          best: session.bestPaws[game.puzzle.puzzleID] ?? session.attempt.paws,
-                         isDaily: session.activeDailyID != nil, generating: session.generating,
+                         isDaily: session.activeDailyID != nil, generating: session.generating, reward: session.lastReward,
                          onNext: onNext, onReplay: { session.restart() }, onHome: onHome)
         }
         .task(id: session.celebrating) { await celebrate() }
@@ -94,7 +94,7 @@ struct GameScreen: View {
         let content = PuzzleBoard(game: displayedGame, cellSide: textSize.isAccessibilitySize ? max(fitted, accessibleCell) : fitted,
             interactionsEnabled: session.canInteract,
             onSelectMode: { cell, marking in Task { await session.select(cell, marking: marking) } }, dogName: session.dogName,
-            accessory: session.preferences.accessory,
+            accessory: session.preferences.accessory, houseModel: session.pet.house,
             arrivalProgress: game.won ? (session.celebrating ? arrivalProgress : 1) : 0,
             walking: session.celebrating && !reduceMotion && !wagging, wagging: wagging, enteredHouse: enteredHouse,
             highlighted: session.hint?.cells ?? [], highlightedRow: session.hint?.row,
@@ -252,6 +252,7 @@ struct VictorySheet: View {
     let best: Int
     let isDaily: Bool
     let generating: Bool
+    let reward: WalkReward?
     let onNext: () -> Void
     let onReplay: () -> Void
     let onHome: () -> Void
@@ -263,6 +264,7 @@ struct VictorySheet: View {
                 Text(String(localized: "Passeio concluído!")).font(.title2.weight(.bold)).fontDesign(.serif)
                     .accessibilityFocused($titleFocused)
                 PawScore(paws: paws)
+                if let reward { RewardBadge(reward: reward) }
                 Text(paws == GameAttempt.maxLives ? String(localized: "\(dogName) adorou: passeio perfeito!")
                      : best > paws ? String(localized: "Seu recorde aqui é de \(best) patinhas.")
                      : String(localized: "Sem erros, o passeio vale 3 patinhas."))
@@ -312,5 +314,44 @@ struct ChangeWalkSheet: View {
             .background(GardenTheme.background)
             .presentationDetents([.height(330), .medium])
             .presentationDragIndicator(.visible)
+    }
+}
+
+/// Coins (counting up) and joy earned by the walk.
+struct RewardBadge: View {
+    let reward: WalkReward
+    @State private var shown = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        HStack(spacing: 18) {
+            Label { Text("+\(shown)").monospacedDigit().contentTransition(.numericText()) } icon: { CoinIcon() }
+            Label("+\(reward.joy)", systemImage: "heart.fill").foregroundStyle(GardenTheme.terracotta)
+        }.font(.title3.weight(.bold))
+            .padding(.horizontal, 16).padding(.vertical, 8)
+            .background(GardenTheme.sage, in: Capsule())
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(reward.coins == 0 ? String(localized: "Sem moedas novas: repetir só paga patinhas a mais. Alegria mais \(reward.joy).")
+                                : String(localized: "Mais \(reward.coins) moedas e \(reward.joy) de alegria"))
+            .task(id: reward) {
+                guard !reduceMotion, reward.coins > 0 else { shown = reward.coins; return }
+                shown = 0
+                let steps = min(30, reward.coins)
+                for step in 1...steps {
+                    try? await Task.sleep(for: .milliseconds(25))
+                    withAnimation(.snappy) { shown = reward.coins * step / steps }
+                }
+            }
+    }
+}
+
+/// The coin used for Margot's money everywhere.
+struct CoinIcon: View {
+    var size: CGFloat = 22
+    var body: some View {
+        ZStack {
+            Circle().fill(Color(red: 0.98, green: 0.80, blue: 0.25))
+            Circle().strokeBorder(Color(red: 0.85, green: 0.62, blue: 0.10), lineWidth: size * 0.1)
+            Image(systemName: "pawprint.fill").font(.system(size: size * 0.5, weight: .bold)).foregroundStyle(Color(red: 0.85, green: 0.62, blue: 0.10))
+        }.frame(width: size, height: size).accessibilityHidden(true)
     }
 }

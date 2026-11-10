@@ -9,7 +9,6 @@ struct GameView: View {
     @State private var tutorialRequested = false
     @State private var feedbackPlayer = GameFeedbackPlayer()
     @State private var nameDraft = ""
-    @State private var showingCorner = false
     var body: some View {
         Group {
             if showingHome {
@@ -32,18 +31,17 @@ struct GameView: View {
         .onChange(of: session.preferences.soundEnabled) { _, enabled in if !enabled { feedbackPlayer.stop() } }
         .onChange(of: showingLearning) { _, visible in if visible { feedbackPlayer.stop() } }
         .onChange(of: showingHome) { _, visible in if visible { feedbackPlayer.stop() } }
-        .onChange(of: scenePhase) { _, phase in if phase != .active { feedbackPlayer.stop(); session.suspend() } }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { feedbackPlayer.stop(); session.suspend() } else { session.refreshPet() }
+        }
         .onDisappear { feedbackPlayer.stop(); session.suspend() }
         .task {
-            // Screenshot checks: `simctl launch … -PCOpenWalk YES` skips the home screen; -PCOpenCorner YES opens Seu cantinho.
+            // Screenshot checks: `simctl launch … -PCOpenWalk YES` skips the home screen; -PCOpenShop YES opens the shop.
             if UserDefaults.standard.bool(forKey: "PCOpenWalk") { showingHome = false }
-            if UserDefaults.standard.bool(forKey: "PCOpenCorner") { showingCorner = true }
+            session.refreshPet()
             if session.tutorialStep < TutorialSession.completedStep {
                 tutorialRequested = true; showingLearning = true
             }
-        }
-        .sheet(isPresented: $showingCorner) {
-            CornerView(session: session) { showingCorner = false }
         }
         .sheet(isPresented: $showingLearning) {
             if tutorialRequested {
@@ -63,107 +61,22 @@ struct GameView: View {
 
     // MARK: Home
 
-    /// One filled call to action (Jogar) and one daily card; everything else is secondary.
+    /// Margot's room is the home screen.
     private var home: some View {
-        TimelineView(.periodic(from: .now, by: 60)) { timeline in
-            let daily = DailyChallenge(date: timeline.date)
-            ScrollView {
-                VStack(spacing: 20) {
-                    HStack {
-                        Spacer()
-                        Button { tutorialRequested = false; showingLearning = true } label: {
-                            Image(systemName: "gearshape").font(.title3)
-                        }.frame(width: GardenTheme.minTarget, height: GardenTheme.minTarget)
-                            .accessibilityLabel(String(localized: "Ajustes"))
-                    }
-                    Puppy(accessory: session.preferences.accessory).frame(width: 110, height: 110)
-                    VStack(spacing: 6) {
-                        Text(String(localized: "Passeio Certo")).font(GardenTheme.title)
-                        Text(String(localized: "Um passeio de cada vez, com \(session.dogName).")).multilineTextAlignment(.center)
-                    }
-                    VStack(spacing: 10) {
-                        Button { Task { await play() } } label: {
-                            VStack(spacing: 2) {
-                                Label(String(localized: "Jogar"), systemImage: "pawprint.fill")
-                                Text(nextWalkTitle).font(.footnote.weight(.medium)).opacity(0.85)
-                            }
-                        }.buttonStyle(GardenButtonStyle(prominent: true)).disabled(session.generating)
-                        DifficultyPicker(selection: Binding(get: { session.preferences.difficulty }, set: { session.setDifficulty($0) }))
-                        Text(difficultyNote(session.preferences.difficulty))
-                            .font(.footnote).foregroundStyle(GardenTheme.secondary).multilineTextAlignment(.center)
-                    }
-                    dailyCard(daily, now: timeline.date)
-                    cornerSummary
-                    if session.generating {
-                        ProgressView(String(localized: "Preparando passeio…"))
-                        Button(String(localized: "Cancelar")) { session.cancelGeneration() }.buttonStyle(GardenButtonStyle())
-                    }
-                    if let error = session.storageError {
-                        GardenNote(text: error + String(localized: " Abra Jogar para acessar a recuperação."), symbol: "exclamationmark.triangle")
-                    }
-                }.padding(.horizontal, 20).padding(.bottom, 20).frame(maxWidth: 420).frame(maxWidth: .infinity)
-            }.background(GardenTheme.background).foregroundStyle(GardenTheme.ink).tint(GardenTheme.ink)
-        }
+        PetHomeView(session: session, onPlay: { Task { await play() } },
+            onDaily: { now in
+                Task {
+                    await session.openDaily(date: now)
+                    if session.activeDailyID == DailyChallenge(date: now).id { showingHome = false }
+                }
+            },
+            onSettings: { tutorialRequested = false; showingLearning = true },
+            onFeedback: { feedbackPlayer.play($0, preferences: session.preferences) })
     }
-    /// Jogar always means the normal walk: resume it, or start the next level once it is finished.
+    /// Passear always means the normal walk: resume it, or start a new one.
     private func play() async {
         await session.play()
         if session.activeDailyID == nil && !session.generating { showingHome = false }
-    }
-    private var nextWalkTitle: String {
-        let chosen = session.preferences.difficulty
-        let normal = session.activeDailyID == nil ? session.attempt : session.parkedAttempts["normal"]
-        if let normal, !normal.game.won, !normal.defeated, normal.difficulty == chosen { return String(localized: "Continuar · \(chosen.title)") }
-        return "\(chosen.title) · \(chosen.size) × \(chosen.size)"
-    }
-    private func difficultyNote(_ difficulty: Difficulty) -> String {
-        difficulty.hiddenHouse
-            ? String(localized: "Grade \(difficulty.size) × \(difficulty.size), casinha escondida, 3 vidas.")
-            : String(localized: "Grade \(difficulty.size) × \(difficulty.size), casinha à vista, 3 vidas.")
-    }
-    private func dailyCard(_ daily: DailyChallenge, now: Date) -> some View {
-        let done = session.completedPuzzleIDs.contains(daily.id)
-        let streak = session.dailyStreak(today: now)
-        return Button {
-            Task {
-                await session.openDaily(date: now)
-                if session.activeDailyID == daily.id { showingHome = false }
-            }
-        } label: {
-            HStack(spacing: 14) {
-                Image(systemName: done ? "checkmark.seal.fill" : "calendar").font(.title)
-                    .foregroundStyle(done ? GardenTheme.accent : GardenTheme.terracotta)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "Desafio do dia")).font(GardenTheme.heading)
-                    Text(done ? String(localized: "Concluído! Novo desafio em \(DailyCountdown.text(from: now))")
-                              : String(localized: "Médio · termina em \(DailyCountdown.text(from: now))"))
-                        .font(.subheadline).foregroundStyle(GardenTheme.secondary)
-                    if streak > 0 {
-                        Label(streak == 1 ? String(localized: "1 dia seguido") : String(localized: "\(streak) dias seguidos"), systemImage: "flame.fill")
-                            .font(.subheadline.weight(.semibold)).foregroundStyle(GardenTheme.terracotta)
-                    }
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "chevron.forward").foregroundStyle(GardenTheme.secondary)
-            }.padding(16)
-                .background(GardenTheme.surface, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
-                .overlay(RoundedRectangle(cornerRadius: GardenTheme.radius).strokeBorder(GardenTheme.border.opacity(0.6)))
-        }.buttonStyle(.plain).disabled(session.generating)
-    }
-    private var cornerSummary: some View {
-        Button { showingCorner = true } label: {
-            HStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(String(localized: "Seu cantinho")).font(GardenTheme.heading)
-                    HStack(spacing: 16) {
-                        Label(session.completedWalkCount == 1 ? String(localized: "1 passeio") : String(localized: "\(session.completedWalkCount) passeios"), systemImage: "photo.on.rectangle")
-                        Label(String(localized: "\(session.totalPaws) patinhas"), systemImage: "pawprint.fill")
-                    }.font(.subheadline)
-                }.frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "chevron.forward").foregroundStyle(GardenTheme.secondary)
-            }.padding(16)
-                .background(GardenTheme.sage, in: RoundedRectangle(cornerRadius: GardenTheme.radius))
-                .contentShape(RoundedRectangle(cornerRadius: GardenTheme.radius))
-        }.buttonStyle(.plain).accessibilityHint(String(localized: "Lugares, acessórios e álbum de passeios"))
     }
 
     // MARK: Settings

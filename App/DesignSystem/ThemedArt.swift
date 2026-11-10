@@ -108,8 +108,9 @@ struct AccessoryArt: View {
                 // A yellow hood around the face.
                 Circle().trim(from: 0.5, to: 1).stroke(Color(red: 0.98, green: 0.82, blue: 0.20), style: StrokeStyle(lineWidth: 18, lineCap: .round))
                     .frame(width: 150, height: 150).offset(y: -6)
-                Path { p in p.move(to: CGPoint(x: 40, y: 170)); p.addLine(to: CGPoint(x: 160, y: 170)); p.addLine(to: CGPoint(x: 150, y: 198)); p.addLine(to: CGPoint(x: 50, y: 198)); p.closeSubpath() }
-                    .fill(Color(red: 0.98, green: 0.82, blue: 0.20))
+                ForEach([-1.0, 1.0], id: \.self) { side in
+                    Capsule().fill(Color(red: 0.98, green: 0.82, blue: 0.20)).frame(width: 16, height: 30).offset(x: side * 66, y: 40)
+                }
             }
         }
     }
