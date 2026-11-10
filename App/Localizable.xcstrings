@@ -22,6 +22,16 @@
         }
       }
     },
+    " Abra Passear para acessar a recuperação.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " Abra Passear para acessar a recuperação."
+          }
+        }
+      }
+    },
     " As vidas acabaram.": {
       "localizations": {
         "pt-BR": {
@@ -49,6 +59,26 @@
           "stringUnit": {
             "state": "translated",
             "value": " não consegue atender à pista com o caminho e as marcações atuais."
+          }
+        }
+      }
+    },
+    " · +%lld alegria": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · +%lld alegria"
+          }
+        }
+      }
+    },
+    " · tem %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · tem %lld"
           }
         }
       }
@@ -107,6 +137,16 @@
         }
       }
     },
+    "%@ comprado! Toque num espaço do quarto para colocar.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ comprado! Toque num espaço do quarto para colocar."
+          }
+        }
+      }
+    },
     "%@ e a casinha já contam nas pistas. A primeira linha pede 2 casas e já tem 1. Arraste de %@ até a linha 1, coluna 2 para completá-la.": {
       "localizations": {
         "pt-BR": {
@@ -138,12 +178,42 @@
         }
       }
     },
+    "%@ está com fominha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ está com fominha"
+          }
+        }
+      }
+    },
     "%@ fez uma paradinha estratégica na árvore… pronto, agora casa!": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "%@ fez uma paradinha estratégica na árvore… pronto, agora casa!"
+          }
+        }
+      }
+    },
+    "%@ já está em uso.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ já está em uso."
+          }
+        }
+      }
+    },
+    "%@ já está no quarto. Toque nele para brincar.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ já está no quarto. Toque nele para brincar."
           }
         }
       }
@@ -169,6 +239,16 @@
         }
       }
     },
+    "%@ · até %lld moedas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · até %lld moedas"
+          }
+        }
+      }
+    },
     "%@, início do caminho": {
       "extractionState": "stale",
       "localizations": {
@@ -186,6 +266,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@, libera com %lld patinhas"
+          }
+        }
+      }
+    },
+    "%@. Toque para fazer carinho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@. Toque para fazer carinho."
+          }
+        }
+      }
+    },
+    "%@: brincar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: brincar"
+          }
+        }
+      }
+    },
+    "%@: descansando": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: descansando"
           }
         }
       }
@@ -212,6 +322,16 @@
         }
       }
     },
+    "%lld de 100": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld de 100"
+          }
+        }
+      }
+    },
     "%lld de 3 vidas": {
       "extractionState": "stale",
       "localizations": {
@@ -229,6 +349,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld dias seguidos"
+          }
+        }
+      }
+    },
+    "%lld moedas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld moedas"
           }
         }
       }
@@ -301,6 +431,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld/%lld"
+          }
+        }
+      }
+    },
+    "+%lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld"
+          }
+        }
+      }
+    },
+    "+%lld fome": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld fome"
           }
         }
       }
@@ -448,6 +598,16 @@
         }
       }
     },
+    "A despensa está vazia.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A despensa está vazia."
+          }
+        }
+      }
+    },
     "A linha %lld": {
       "localizations": {
         "pt-BR": {
@@ -572,6 +732,16 @@
         }
       }
     },
+    "Acessórios": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acessórios"
+          }
+        }
+      }
+    },
     "Acessórios da %@": {
       "localizations": {
         "pt-BR": {
@@ -630,6 +800,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ajustes"
+          }
+        }
+      }
+    },
+    "Alegria": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alegria"
+          }
+        }
+      }
+    },
+    "Almofada": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almofada"
           }
         }
       }
@@ -727,6 +917,16 @@
         }
       }
     },
+    "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo. Toque e segure numa casa para marcar ×. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma das 3 vidas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo. Toque e segure numa casa para marcar ×. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma das 3 vidas."
+          }
+        }
+      }
+    },
     "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo: não dá para voltar. Toque e segure numa casa para marcar ×, e de novo para limpar. Dica explica uma dedução sem jogar por você.": {
       "localizations": {
         "pt-BR": {
@@ -810,12 +1010,72 @@
         }
       }
     },
+    "Avisar quando a %@ estiver com fome": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avisar quando a %@ estiver com fome"
+          }
+        }
+      }
+    },
     "Bandana": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Bandana"
+          }
+        }
+      }
+    },
+    "Bolinha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bolinha"
+          }
+        }
+      }
+    },
+    "Bolo de patinha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bolo de patinha"
+          }
+        }
+      }
+    },
+    "Bora passear? Tô entediada.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bora passear? Tô entediada."
+          }
+        }
+      }
+    },
+    "Brinquedos": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brinquedos"
+          }
+        }
+      }
+    },
+    "Bônus de %lld moedas · termina em %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bônus de %lld moedas · termina em %@"
           }
         }
       }
@@ -840,6 +1100,16 @@
         }
       }
     },
+    "Cada passeio concluído rende moedas: Fácil 10, Médio 25, Difícil 60 e Especialista 120 por patinha. Repetir uma fase só paga as patinhas a mais. O desafio do dia dá um bônus que cresce com a sequência de dias.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada passeio concluído rende moedas: Fácil 10, Médio 25, Difícil 60 e Especialista 120 por patinha. Repetir uma fase só paga as patinhas a mais. O desafio do dia dá um bônus que cresce com a sequência de dias."
+          }
+        }
+      }
+    },
     "Cada passeio concluído vira uma foto aqui.": {
       "localizations": {
         "pt-BR": {
@@ -857,6 +1127,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres."
+          }
+        }
+      }
+    },
+    "Caminha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caminha"
           }
         }
       }
@@ -894,6 +1174,36 @@
         }
       }
     },
+    "Capa de chuva": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capa de chuva"
+          }
+        }
+      }
+    },
+    "Casa": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casa"
+          }
+        }
+      }
+    },
+    "Casa da %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casa da %@"
+          }
+        }
+      }
+    },
     "Casa destacada pela orientação.": {
       "extractionState": "stale",
       "localizations": {
@@ -905,6 +1215,16 @@
         }
       }
     },
+    "Casinha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha"
+          }
+        }
+      }
+    },
     "Casinha ainda não conectada": {
       "extractionState": "stale",
       "localizations": {
@@ -912,6 +1232,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Casinha ainda não conectada"
+          }
+        }
+      }
+    },
+    "Casinha clássica": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinha clássica"
           }
         }
       }
@@ -948,6 +1278,26 @@
         }
       }
     },
+    "Castelinho": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Castelinho"
+          }
+        }
+      }
+    },
+    "Chalé": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chalé"
+          }
+        }
+      }
+    },
     "Chapéu": {
       "localizations": {
         "pt-BR": {
@@ -969,6 +1319,16 @@
         }
       }
     },
+    "Coleira": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coleira"
+          }
+        }
+      }
+    },
     "Coluna %lld": {
       "extractionState": "stale",
       "localizations": {
@@ -980,6 +1340,36 @@
         }
       }
     },
+    "Com as moedas, cuide da Margot: comida enche a fome, passeios, carinho e brinquedos trazem alegria. Ela nunca fica doente; com fome ou entediada, só fica tristinha e pede atenção.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Com as moedas, cuide da Margot: comida enche a fome, passeios, carinho e brinquedos trazem alegria. Ela nunca fica doente; com fome ou entediada, só fica tristinha e pede atenção."
+          }
+        }
+      }
+    },
+    "Comer": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comer"
+          }
+        }
+      }
+    },
+    "Comida": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comida"
+          }
+        }
+      }
+    },
     "Como jogar": {
       "extractionState": "stale",
       "localizations": {
@@ -987,6 +1377,56 @@
           "stringUnit": {
             "state": "translated",
             "value": "Como jogar"
+          }
+        }
+      }
+    },
+    "Comprado": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprado"
+          }
+        }
+      }
+    },
+    "Comprar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar"
+          }
+        }
+      }
+    },
+    "Comprar %@ por %lld moedas?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar %@ por %lld moedas?"
+          }
+        }
+      }
+    },
+    "Comprar comida": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar comida"
+          }
+        }
+      }
+    },
+    "Comprar por %lld moedas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar por %lld moedas"
           }
         }
       }
@@ -1075,6 +1515,26 @@
         }
       }
     },
+    "Cordinha": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cordinha"
+          }
+        }
+      }
+    },
+    "Creme": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creme"
+          }
+        }
+      }
+    },
     "Cópia anterior recuperada. O arquivo substituído foi preservado.": {
       "extractionState": "stale",
       "localizations": {
@@ -1092,6 +1552,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Daqui não dá para chegar a esta casa sem cruzar o caminho ou casas excluídas."
+          }
+        }
+      }
+    },
+    "Deixar vazio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deixar vazio"
           }
         }
       }
@@ -1246,12 +1716,32 @@
         }
       }
     },
+    "Em uso": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Em uso"
+          }
+        }
+      }
+    },
     "Escolher uma fase deste lugar": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Escolher uma fase deste lugar"
+          }
+        }
+      }
+    },
+    "Espaço vazio para decorar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Espaço vazio para decorar"
           }
         }
       }
@@ -1319,12 +1809,32 @@
         }
       }
     },
+    "Estante": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estante"
+          }
+        }
+      }
+    },
     "Este trecho já vem desenhado: o caminho segue por ele.": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Este trecho já vem desenhado: o caminho segue por ele."
+          }
+        }
+      }
+    },
+    "Faltam moedas. Passeios rendem mais nos níveis difíceis.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faltam moedas. Passeios rendem mais nos níveis difíceis."
           }
         }
       }
@@ -1403,6 +1913,16 @@
         }
       }
     },
+    "Fome": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fome"
+          }
+        }
+      }
+    },
     "Foto do passeio %@, %lld patinhas": {
       "localizations": {
         "pt-BR": {
@@ -1419,6 +1939,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Foto do passeio em %@, %lld patinhas"
+          }
+        }
+      }
+    },
+    "Frango": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frango"
           }
         }
       }
@@ -1556,6 +2086,16 @@
         }
       }
     },
+    "Gramado": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gramado"
+          }
+        }
+      }
+    },
     "Início": {
       "extractionState": "stale",
       "localizations": {
@@ -1641,6 +2181,16 @@
         }
       }
     },
+    "Já brinquei com isso! Volta em %lld min.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Já brinquei com isso! Volta em %lld min."
+          }
+        }
+      }
+    },
     "Lacinho": {
       "localizations": {
         "pt-BR": {
@@ -1651,12 +2201,32 @@
         }
       }
     },
+    "Ladrilho": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladrilho"
+          }
+        }
+      }
+    },
     "Lagoa": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "Lagoa"
+          }
+        }
+      }
+    },
+    "Lavanda": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lavanda"
           }
         }
       }
@@ -1747,6 +2317,16 @@
         }
       }
     },
+    "Loja": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loja"
+          }
+        }
+      }
+    },
     "Lugares": {
       "localizations": {
         "pt-BR": {
@@ -1763,6 +2343,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lugares, acessórios e álbum de passeios"
+          }
+        }
+      }
+    },
+    "Luminária": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luminária"
+          }
+        }
+      }
+    },
+    "Madeira": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Madeira"
+          }
+        }
+      }
+    },
+    "Mais %lld moedas e %lld de alegria": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mais %lld moedas e %lld de alegria"
           }
         }
       }
@@ -1796,6 +2406,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Margot"
+          }
+        }
+      }
+    },
+    "Menta": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menta"
           }
         }
       }
@@ -1840,6 +2460,16 @@
         }
       }
     },
+    "Móveis": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Móveis"
+          }
+        }
+      }
+    },
     "Na coluna %lld, todas as casas restantes são necessárias para completar a pista.": {
       "extractionState": "stale",
       "localizations": {
@@ -1858,6 +2488,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Na linha %lld, todas as casas restantes são necessárias para completar a pista."
+          }
+        }
+      }
+    },
+    "Na parede": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na parede"
           }
         }
       }
@@ -1882,12 +2522,42 @@
         }
       }
     },
+    "Nham! %@ é a melhor coisa do mundo.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nham! %@ é a melhor coisa do mundo."
+          }
+        }
+      }
+    },
     "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas.": {
       "localizations": {
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
             "value": "No Desafiador você tem 3 vidas. Passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma; o erro pisca e a jogada é desfeita. No Tranquilo não há vidas."
+          }
+        }
+      }
+    },
+    "No canto": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No canto"
+          }
+        }
+      }
+    },
+    "No chão, no meio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No chão, no meio"
           }
         }
       }
@@ -2200,6 +2870,16 @@
         }
       }
     },
+    "O que a %@ vai comer?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O que a %@ vai comer?"
+          }
+        }
+      }
+    },
     "Obstáculo": {
       "extractionState": "stale",
       "localizations": {
@@ -2227,6 +2907,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osso"
+          }
+        }
+      }
+    },
+    "Osso de brinquedo": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osso de brinquedo"
           }
         }
       }
@@ -2292,6 +2982,16 @@
         }
       }
     },
+    "Parede": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parede"
+          }
+        }
+      }
+    },
     "Parque": {
       "localizations": {
         "pt-BR": {
@@ -2320,6 +3020,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Partida restaurada. Continue de onde parou."
+          }
+        }
+      }
+    },
+    "Passear": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passear"
           }
         }
       }
@@ -2404,6 +3114,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pensando numa dica…"
+          }
+        }
+      }
+    },
+    "Petisco": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petisco"
+          }
+        }
+      }
+    },
+    "Piso": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Piso"
+          }
+        }
+      }
+    },
+    "Planta": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planta"
           }
         }
       }
@@ -2619,6 +3359,66 @@
         }
       }
     },
+    "Pêssego": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pêssego"
+          }
+        }
+      }
+    },
+    "Quadro da Margot": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadro da Margot"
+          }
+        }
+      }
+    },
+    "Que dia bom! Obrigada por cuidar de mim.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Que dia bom! Obrigada por cuidar de mim."
+          }
+        }
+      }
+    },
+    "Que tal um passeio?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Que tal um passeio?"
+          }
+        }
+      }
+    },
+    "Que tal um petisco e um passeio?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Que tal um petisco e um passeio?"
+          }
+        }
+      }
+    },
+    "Ração": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ração"
+          }
+        }
+      }
+    },
     "Recomeçar": {
       "localizations": {
         "pt-BR": {
@@ -2678,6 +3478,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reiniciar o desafio do dia?"
+          }
+        }
+      }
+    },
+    "Relógio": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Relógio"
           }
         }
       }
@@ -2758,6 +3568,16 @@
         }
       }
     },
+    "Sem moedas novas: repetir só paga patinhas a mais. Alegria mais %lld.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem moedas novas: repetir só paga patinhas a mais. Alegria mais %lld."
+          }
+        }
+      }
+    },
     "Sem vidas e sem pressa.": {
       "localizations": {
         "pt-BR": {
@@ -2785,6 +3605,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Seu recorde aqui é de %lld patinhas."
+          }
+        }
+      }
+    },
+    "Seção": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seção"
           }
         }
       }
@@ -2839,6 +3669,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tabuleiro somente para leitura"
+          }
+        }
+      }
+    },
+    "Tapete": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tapete"
           }
         }
       }
@@ -3010,6 +3850,26 @@
         }
       }
     },
+    "Tô com fominha… tem petisco?": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tô com fominha… tem petisco?"
+          }
+        }
+      }
+    },
+    "Uhuul! Mais uma vez!": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uhuul! Mais uma vez!"
+          }
+        }
+      }
+    },
     "Um passeio de cada vez, com %@.": {
       "extractionState": "stale",
       "localizations": {
@@ -3095,6 +3955,16 @@
         }
       }
     },
+    "Usar": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usar"
+          }
+        }
+      }
+    },
     "Use × como lembrete. Desfazer remove sua última ação; Dica explica uma dedução sem jogar por você.": {
       "extractionState": "stale",
       "localizations": {
@@ -3127,6 +3997,16 @@
         }
       }
     },
+    "Ver móveis na loja": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver móveis na loja"
+          }
+        }
+      }
+    },
     "Verificando jogada…": {
       "extractionState": "stale",
       "localizations": {
@@ -3134,6 +4014,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Verificando jogada…"
+          }
+        }
+      }
+    },
+    "Você ainda não tem nada para este espaço.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você ainda não tem nada para este espaço."
+          }
+        }
+      }
+    },
+    "Você aprendeu! Cada passeio tem 3 vidas e rende moedas. Com elas você compra comida, acessórios e coisas para a casa da %@.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você aprendeu! Cada passeio tem 3 vidas e rende moedas. Com elas você compra comida, acessórios e coisas para a casa da %@."
           }
         }
       }
@@ -3155,6 +4055,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Você aprendeu! No modo Desafiador são 3 vidas: passar do número de uma pista, pisar num arbusto ou cruzar o caminho custa uma. No Tranquilo, erre à vontade."
+          }
+        }
+      }
+    },
+    "Você já tem isso.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você já tem isso."
           }
         }
       }
@@ -3245,6 +4155,16 @@
         }
       }
     },
+    "Álbum": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Álbum"
+          }
+        }
+      }
+    },
     "Álbum de passeios": {
       "localizations": {
         "pt-BR": {
@@ -3281,6 +4201,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Óculos"
+          }
+        }
+      }
+    },
+    "× %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "× %lld"
           }
         }
       }

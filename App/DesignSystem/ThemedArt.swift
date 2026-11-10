@@ -101,6 +101,16 @@ struct AccessoryArt: View {
                     Circle().stroke(Color(red: 0.15, green: 0.18, blue: 0.20), lineWidth: 6).frame(width: 46, height: 46).offset(x: side*28, y: -10)
                 }
                 Capsule().fill(Color(red: 0.15, green: 0.18, blue: 0.20)).frame(width: 14, height: 5).offset(y: -12)
+            case .collar:
+                Capsule().fill(Color(red: 0.20, green: 0.45, blue: 0.70)).frame(width: 96, height: 14).offset(y: 70)
+                Circle().fill(Color(red: 0.95, green: 0.78, blue: 0.25)).frame(width: 18, height: 18).offset(y: 82)
+            case .raincoat:
+                // A yellow hood around the face.
+                Circle().trim(from: 0.5, to: 1).stroke(Color(red: 0.98, green: 0.82, blue: 0.20), style: StrokeStyle(lineWidth: 18, lineCap: .round))
+                    .frame(width: 150, height: 150).offset(y: -6)
+                ForEach([-1.0, 1.0], id: \.self) { side in
+                    Capsule().fill(Color(red: 0.98, green: 0.82, blue: 0.20)).frame(width: 16, height: 30).offset(x: side * 66, y: 40)
+                }
             }
         }
     }
