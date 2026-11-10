@@ -16,8 +16,10 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
     public var accessory: Accessory?
     /// A local notification when Margot gets hungry (off until the player turns it on).
     public var hungerReminder = false
+    /// The logic game chosen for the next outing.
+    public var mode = LogicMode.path
     public init() {}
-    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, difficulty, accessory, hungerReminder }
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, difficulty, accessory, hungerReminder, mode }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
@@ -27,6 +29,7 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
         difficulty = (try? c.decodeIfPresent(Difficulty.self, forKey: .difficulty)) ?? .easy
         accessory = try? c.decodeIfPresent(Accessory.self, forKey: .accessory)
         hungerReminder = try c.decodeIfPresent(Bool.self, forKey: .hungerReminder) ?? false
+        mode = (try? c.decodeIfPresent(LogicMode.self, forKey: .mode)) ?? .path
     }
 }
 public struct PlayerSave: Codable, Sendable {
@@ -43,18 +46,20 @@ public struct PlayerSave: Codable, Sendable {
     public var walks: [WalkRecord]
     /// Margot the virtual pet: needs, coins and everything bought.
     public var pet: PetState
+    /// The current game in one of the cell modes (Jardim, Canteiros, Casinhas, Sudoku, Patinhas).
+    public var cellAttempt: CellAttempt?
     public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:], bestPaws: [String: Int] = [:],
-                walks: [WalkRecord] = [], pet: PetState = PetState()) {
-        schemaVersion = 7; self.bestPaws = bestPaws; self.walks = walks; self.pet = pet; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
+                walks: [WalkRecord] = [], pet: PetState = PetState(), cellAttempt: CellAttempt? = nil) {
+        schemaVersion = 8; self.bestPaws = bestPaws; self.walks = walks; self.pet = pet; self.cellAttempt = cellAttempt; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
         self.tutorialStep = tutorialStep; self.completedPuzzleIDs = completedPuzzleIDs
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, walks, pet }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, walks, pet, cellAttempt }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.attempt) {
             let version = try c.decode(Int.self, forKey: .schemaVersion)
-            schemaVersion = 7
-            guard (3...7).contains(version) else { throw PuzzleError.invalidSession }
+            schemaVersion = 8
+            guard (3...8).contains(version) else { throw PuzzleError.invalidSession }
             attempt = try c.decode(GameAttempt.self, forKey: .attempt)
             preferences = try c.decode(PlayerPreferences.self, forKey: .preferences)
             tutorialStep = try c.decode(Int.self, forKey: .tutorialStep)
@@ -73,8 +78,10 @@ public struct PlayerSave: Codable, Sendable {
             let migratedPet = PetState.migrated(totalPaws: bestPaws.values.reduce(0, +))
             pet = version >= 7 ? try c.decode(PetState.self, forKey: .pet) : migratedPet
             if let worn = preferences.accessory, !pet.owns(ShopCatalog.item(for: worn).id) { preferences.accessory = nil }
+            // A cell game from a newer or broken save is simply dropped.
+            cellAttempt = try? c.decodeIfPresent(CellAttempt.self, forKey: .cellAttempt)
         } else {
-            schemaVersion = 7; bestPaws = [:]; walks = []; pet = PetState(); activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
+            schemaVersion = 8; bestPaws = [:]; walks = []; pet = PetState(); cellAttempt = nil; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
             preferences = PlayerPreferences(); tutorialStep = 0; completedPuzzleIDs = []
         }
         if attempt.game.won {
