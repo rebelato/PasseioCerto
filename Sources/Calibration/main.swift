@@ -19,6 +19,23 @@ struct Report: Codable {
     let generatorVersion: Int
     let samples: [Sample]
 }
+if CommandLine.arguments.contains("modes") {
+    // Generation time and failures for each cell mode and difficulty (5 variations each).
+    let clock = ContinuousClock()
+    for mode in LogicMode.allCases where mode != .path {
+        for difficulty in Difficulty.allCases {
+            var times: [Double] = [], failed = 0
+            for variation in UInt64(1)...5 {
+                let start = clock.now
+                if CellPuzzleGenerator.generate(mode, difficulty, variation: variation) == nil { failed += 1 }
+                let t = start.duration(to: clock.now).components
+                times.append(Double(t.seconds) * 1000 + Double(t.attoseconds) / 1e15)
+            }
+            print("\(mode) \(difficulty) size=\(mode.size(difficulty)) median=\(Int(times.sorted()[2]))ms max=\(Int(times.max()!))ms failed=\(failed)/5")
+        }
+    }
+    exit(0)
+}
 if CommandLine.arguments.contains("walk-reserves") {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.sortedKeys]

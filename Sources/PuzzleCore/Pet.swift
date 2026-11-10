@@ -85,6 +85,8 @@ public struct PetState: Codable, Equatable, Sendable {
         if item.isConsumable { inventory[id, default: 0] += 1 } else { owned.insert(id) }
     }
     public func owns(_ id: String) -> Bool { owned.contains(id) }
+    /// Pays for something that isn't an item (a hint). Never goes below zero.
+    public mutating func spend(_ amount: Int) { coins = max(0, coins - max(0, amount)) }
     public func portions(of id: String) -> Int { inventory[id] ?? 0 }
 
     // MARK: Care

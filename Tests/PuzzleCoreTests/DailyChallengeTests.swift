@@ -89,7 +89,7 @@ final class DailyChallengeTests: XCTestCase {
         json["schemaVersion"] = 3
         json.removeValue(forKey: "parkedAttempts")
         let migrated = try JSONDecoder().decode(PlayerSave.self, from: JSONSerialization.data(withJSONObject: json))
-        XCTAssertEqual(migrated.schemaVersion, 7)
+        XCTAssertEqual(migrated.schemaVersion, 8)
         XCTAssertNil(migrated.activeDailyID)
         XCTAssertTrue(migrated.parkedAttempts.isEmpty)
         let invalid = PlayerSave(activeDailyID: "daily-v1-2026-10-23")

@@ -32,6 +32,10 @@ import Combine
     @Published public private(set) var pet = PetState()
     /// What the last finished walk paid, for the victory sheet.
     @Published public private(set) var lastReward: WalkReward?
+    /// The current game in a cell mode, if any.
+    @Published public private(set) var cellAttempt: CellAttempt?
+    /// Cell puzzles generated ahead, by mode and difficulty.
+    private var preparedCells: [String: CellPuzzle] = [:]
     /// Injected so tests can move time forward.
     private let clock: @Sendable () -> Date
     private var revision = 0
@@ -338,7 +342,7 @@ import Combine
     }
     private var snapshot: PlayerSave {
         PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts, bestPaws: bestPaws,
-                   walks: walks, pet: pet)
+                   walks: walks, pet: pet, cellAttempt: cellAttempt)
     }
     /// The difficulty a walk pays as: its own, the daily's, or guessed from the grid size for older walks.
     private var rewardDifficulty: Difficulty {
@@ -361,6 +365,85 @@ import Combine
                                 difficulty: attempt.difficulty ?? (activeDailyID != nil ? DailyChallenge.difficulty : nil)))
         if walks.count > WalkRecord.albumLimit { walks.removeFirst(walks.count - WalkRecord.albumLimit) }
     }
+    // MARK: Cell modes
+
+    /// A new puzzle in a cell mode (instant when one was prepared ahead).
+    public func playCells(_ mode: LogicMode, _ difficulty: Difficulty) async {
+        let key = "\(mode.rawValue)-\(difficulty.rawValue)"
+        cancel()
+        let puzzle: CellPuzzle?
+        if let ready = preparedCells.removeValue(forKey: key) { puzzle = ready }
+        else {
+            generating = true
+            let variation = UInt64.random(in: 1 ... .max)
+            puzzle = await Task.detached(priority: .userInitiated) { CellPuzzleGenerator.generate(mode, difficulty, variation: variation) }.value
+            generating = false
+        }
+        guard let puzzle else { message = String(localized: "Não foi possível preparar a fase. Tente de novo."); return }
+        cellAttempt = CellAttempt(puzzle: puzzle, difficulty: difficulty)
+        lastReward = nil; message = nil; save()
+        prepareCells(mode, difficulty)
+    }
+    private func prepareCells(_ mode: LogicMode, _ difficulty: Difficulty) {
+        guard prefetches else { return }
+        let key = "\(mode.rawValue)-\(difficulty.rawValue)"
+        guard preparedCells[key] == nil else { return }
+        let variation = UInt64.random(in: 1 ... .max)
+        Task { [weak self] in
+            let puzzle = await Task.detached(priority: .utility) { CellPuzzleGenerator.generate(mode, difficulty, variation: variation) }.value
+            if let puzzle { self?.preparedCells[key] = puzzle }
+        }
+    }
+    /// Places a value; a wrong one costs a life (and says why), a finished puzzle pays like a walk.
+    public func placeCell(_ value: Int, at index: Int) {
+        guard var current = cellAttempt else { return }
+        switch current.place(value, at: index) {
+        case .ignored: return
+        case .mistake:
+            feedback = GameFeedback(.conflict)
+            message = String(localized: "Aí não!") + (current.defeated ? String(localized: " As vidas acabaram.") : String(localized: " −1 vida."))
+        case .placed:
+            feedback = GameFeedback(current.won ? .victory : .action)
+            message = nil
+        }
+        cellAttempt = current
+        if current.won { recordCells() }
+        save()
+    }
+    public func markCell(at index: Int) {
+        guard var current = cellAttempt else { return }
+        current.toggleMark(at: index); cellAttempt = current; save()
+    }
+    public static let cellHintPrice = 10
+    /// A paid hint: one correct cell for 10 coins. Returns false without coins or cells.
+    @discardableResult public func revealCell() -> Bool {
+        guard var current = cellAttempt, current.canPlay, pet.coins >= Self.cellHintPrice else { return false }
+        guard current.reveal() != nil else { return false }
+        pet.spend(Self.cellHintPrice)
+        cellAttempt = current
+        if current.won { recordCells() }
+        save(); return true
+    }
+    public func restartCells() {
+        guard var current = cellAttempt else { return }
+        current.restart(); cellAttempt = current; lastReward = nil; message = nil; save()
+    }
+    public func closeCells() { cellAttempt = nil; save() }
+    private func recordCells() {
+        guard let current = cellAttempt else { return }
+        let id = current.puzzle.id
+        let coins = Rewards.coins(difficulty: current.difficulty, paws: current.paws, previousBest: bestPaws[id] ?? 0)
+        pet.walked(coins: coins, now: clock())
+        lastReward = WalkReward(coins: coins, joy: Int(Rewards.walkJoy))
+        completedPuzzleIDs.insert(id)
+        bestPaws[id] = max(bestPaws[id] ?? 0, current.paws)
+    }
+    public func setMode(_ mode: LogicMode) {
+        guard !generating else { return }
+        preferences.mode = mode; save()
+        if mode != .path { prepareCells(mode, preferences.difficulty) }
+    }
+
     // MARK: Pet
 
     /// Brings hunger and joy up to date (on launch and whenever the app comes back).
@@ -386,7 +469,7 @@ import Combine
         activeDailyID = saved.activeDailyID; parkedAttempts = saved.parkedAttempts
         attempt = saved.attempt; preferences = saved.preferences
         tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs; bestPaws = saved.bestPaws
-        walks = saved.walks; pet = saved.pet
+        walks = saved.walks; pet = saved.pet; cellAttempt = saved.cellAttempt
     }
     private func save() {
         if attempt.game.won {

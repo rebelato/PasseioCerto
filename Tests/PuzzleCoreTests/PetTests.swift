@@ -128,7 +128,7 @@ final class PetTests: XCTestCase {
         preferences["accessory"] = "hat"
         json["preferences"] = preferences
         let save = try JSONDecoder().decode(PlayerSave.self, from: JSONSerialization.data(withJSONObject: json))
-        XCTAssertEqual(save.schemaVersion, 7)
+        XCTAssertEqual(save.schemaVersion, 8)
         XCTAssertEqual(save.pet.coins, 50 + 5 * 12)
         XCTAssertTrue(save.pet.owns("acc.bow"), "12 paws had unlocked the bow")
         XCTAssertFalse(save.pet.owns("acc.bandana"))
