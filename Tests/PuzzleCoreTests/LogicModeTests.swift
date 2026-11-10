@@ -22,7 +22,22 @@ final class LogicModeTests: XCTestCase {
             XCTAssertTrue(Queens.connected(p.regions, n))
             for a in dogs { for b in dogs where a < b { XCTAssertFalse(abs(a / n - b / n) <= 1 && abs(a % n - b % n) <= 1, "Dogs never touch") } }
             XCTAssertEqual(Queens.solve(n: n, regions: p.regions, limit: 2).count, 1)
+            let given = p.givens.indices.filter { p.givens[$0] == 1 }
+            XCTAssertGreaterThanOrEqual(given.count, 1, "One dog always starts in place")
+            XCTAssertTrue(given.allSatisfy { p.solution[$0] == 1 })
+            XCTAssertEqual(Queens.deduce(n: n, regions: p.regions, givens: p.givens), p.solution, "Solvable by deduction from the given dogs")
         }
+    }
+    func testQueensDeductionsOnASmallGrid() {
+        // 4×4 has no solution with dogs not touching; use 5×5 rows-as-regions puzzle shape.
+        let n = 5
+        let columns = [0, 2, 4, 1, 3]
+        let regions = (0..<n * n).map { cell in columns[cell / n] == cell % n ? cell / n : (cell / n + (cell % n == 0 ? 0 : 1)) % n }
+        if Queens.connected(regions, n), Queens.solve(n: n, regions: regions, limit: 2).count == 1 {
+            var givens = Array(repeating: 0, count: n * n); givens[0] = 1
+            XCTAssertNotNil(Queens.deduce(n: n, regions: regions, givens: givens))
+        }
+        XCTAssertNil(Queens.deduce(n: 5, regions: Array(repeating: 0, count: 25), givens: Array(repeating: 0, count: 25)), "A single region can't hold five dogs")
     }
     func testTentsFollowTheRulesAndAreUnique() throws {
         for p in try puzzles(.tents) {
@@ -80,7 +95,7 @@ final class LogicModeTests: XCTestCase {
         XCTAssertEqual(attempt.lives, 2)
         attempt.toggleMark(at: wrong)
         XCTAssertTrue(attempt.marks.contains(wrong), "× is free")
-        for cell in p.solution.indices where p.solution[cell] == 1 { XCTAssertEqual(attempt.place(1, at: cell), .placed) }
+        for cell in p.solution.indices where p.solution[cell] == 1 && p.givens[cell] == 0 { XCTAssertEqual(attempt.place(1, at: cell), .placed) }
         XCTAssertTrue(attempt.won)
         XCTAssertEqual(attempt.paws, 2)
         XCTAssertEqual(attempt.place(1, at: wrong), .ignored, "Nothing changes after winning")

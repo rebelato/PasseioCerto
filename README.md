@@ -289,12 +289,12 @@ Além do Passeio, a casa da Margot oferece mais cinco atividades, escolhidas aci
 | Modo | Regra | Grades (Fácil → Especialista) |
 |---|---|---|
 | **Jardim pintado** (Nonogram) | os números dizem os blocos pintados de cada linha e coluna; no fim aparece um desenho | 5, 8, 10, 12 |
-| **Canteiros** (Queens) | um cachorro por linha, coluna e canteiro, sem se encostarem | 6, 7, 8, 9 |
+| **Canteiros** (Queens) | um cachorro por linha, coluna e canteiro, sem se encostarem; um cachorro já começa no lugar | 6, 7, 8, 9 |
 | **Casinhas e árvores** (Tents) | uma casinha ao lado de cada árvore, com contagens por linha e coluna, sem se encostarem | 6, 8, 10, 12 |
 | **Sudoku de petiscos** | cada valor uma vez por linha, coluna e bloco | 4, 6, 9, 9 (menos pistas no Especialista) |
 | **Patinhas pareadas** (Takuzu) | claras e escuras, nunca três iguais seguidas, metade de cada por linha e coluna, sem linhas repetidas | 6, 8, 10, 12 |
 
-- **Solução única:** cada gerador certifica que a fase tem só uma solução. O Jardim usa só desenhos que a lógica linha a linha resolve inteiros; os outros usam um solucionador que conta soluções. Testes conferem as regras e a unicidade em todas as dificuldades. Para reproduzir os tempos: `swift run -c release Calibration modes`; o mais lento é o Patinhas 12×12, com cerca de 0,1 s de mediana.
+- **Solução única:** cada gerador certifica que a fase tem só uma solução. O Jardim usa só desenhos que a lógica linha a linha resolve inteiros; os outros usam um solucionador que conta soluções. O Canteiros vai além: começa com um cachorro no lugar (às vezes dois ou três no Especialista) e um solucionador com as deduções de uma pessoa (casa única na linha, coluna ou canteiro; canteiro preso numa linha; casa que deixaria um grupo sem lugar) certifica que dá para terminar sem chutar. Testes conferem as regras e a unicidade em todas as dificuldades. Para reproduzir os tempos: `swift run -c release Calibration modes`; o mais lento é o Patinhas 12×12, com cerca de 0,1 s de mediana.
 - **Regras de jogo iguais às do Passeio:** 3 vidas; colocar algo que a solução não tem custa uma vida e é recusado; tocar e segurar marca ×, de graça. O Sudoku e o Patinhas usam uma paleta para escolher o que colocar.
 - **Recompensa e dica:** cada fase concluída rende moedas e alegria como um passeio, com a mesma regra contra farm. A **Dica** revela uma casa certa por 10 moedas.
 - **Fase pronta antes:** a próxima fase do mesmo modo e nível é gerada em segundo plano.

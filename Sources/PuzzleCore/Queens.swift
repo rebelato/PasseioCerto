@@ -13,7 +13,13 @@ public enum Queens {
                 if solutions.count == 1 {
                     var solution = Array(repeating: 0, count: n * n)
                     for (r, c) in columns.enumerated() { solution[r * n + c] = 1 }
-                    return CellPuzzle(id: id, mode: .queens, size: n, solution: solution, regions: regions)
+                    // One dog always starts in place; more are given only where deduction would stall.
+                    let dogs = columns.enumerated().map { $0.offset * n + $0.element }.shuffled(using: &rng)
+                    var givens = Array(repeating: 0, count: n * n)
+                    givens[dogs[0]] = 1
+                    for dog in dogs.dropFirst() where deduce(n: n, regions: regions, givens: givens) == nil { givens[dog] = 1 }
+                    guard deduce(n: n, regions: regions, givens: givens) == solution else { break }
+                    return CellPuzzle(id: id, mode: .queens, size: n, solution: solution, givens: givens, regions: regions)
                 }
                 guard let other = solutions.first(where: { $0 != columns }) else { break }
                 // Hand a cell where the other solution puts a dog to a neighbouring region.
@@ -29,6 +35,64 @@ public enum Queens {
             }
         }
         return nil
+    }
+
+    /// Solves with the deductions a person makes, from the given dogs. Returns the dogs grid when
+    /// that finishes the puzzle, nil when deduction stalls (or the puzzle is broken).
+    ///  - a row, column or region with a single possible cell gets the dog;
+    ///  - a region whose possible cells all sit in one row (or column) empties the rest of that line,
+    ///    and a line whose possible cells all sit in one region empties the rest of that region;
+    ///  - a cell whose dog would leave some row, column or region with no possible cell is ruled out.
+    public static func deduce(n: Int, regions: [Int], givens: [Int]) -> [Int]? {
+        var state = Array(repeating: 0, count: n * n) // 0 open, 1 dog, -1 empty
+        func groups() -> [[Int]] {
+            (0..<n).map { r in (0..<n).map { r * n + $0 } } + (0..<n).map { c in (0..<n).map { $0 * n + c } }
+                + Set(regions).sorted().map { region in regions.indices.filter { regions[$0] == region } }
+        }
+        let all = groups()
+        func blocked(by dog: Int) -> [Int] {
+            let r = dog / n, c = dog % n
+            var cells = Set<Int>()
+            for i in 0..<n { cells.insert(r * n + i); cells.insert(i * n + c) }
+            for i in regions.indices where regions[i] == regions[dog] { cells.insert(i) }
+            for dr in -1...1 { for dc in -1...1 {
+                let rr = r + dr, cc = c + dc
+                if (0..<n).contains(rr) && (0..<n).contains(cc) { cells.insert(rr * n + cc) }
+            } }
+            cells.remove(dog)
+            return Array(cells)
+        }
+        func place(_ dog: Int) -> Bool {
+            guard state[dog] != -1 else { return false }
+            state[dog] = 1
+            for cell in blocked(by: dog) { if state[cell] == 1 { return false }; state[cell] = -1 }
+            return true
+        }
+        for cell in givens.indices where givens[cell] == 1 { guard place(cell) else { return nil } }
+        var progress = true
+        while progress {
+            progress = false
+            for group in all where !group.contains(where: { state[$0] == 1 }) {
+                let open = group.filter { state[$0] == 0 }
+                if open.isEmpty { return nil }
+                if open.count == 1 { guard place(open[0]) else { return nil }; progress = true; continue }
+                // Confined to one line or one region: clear the rest of it.
+                for line in all where line != group && open.allSatisfy(line.contains) {
+                    for cell in line where state[cell] == 0 && !group.contains(cell) { state[cell] = -1; progress = true }
+                }
+            }
+            if progress { continue }
+            for cell in state.indices where state[cell] == 0 {
+                let cleared = Set(blocked(by: cell)).union([cell])
+                let strands = all.contains { group in
+                    !group.contains(where: { state[$0] == 1 }) && !group.contains(cell)
+                        && group.allSatisfy { state[$0] != 0 || cleared.contains($0) }
+                }
+                if strands { state[cell] = -1; progress = true }
+            }
+        }
+        guard state.filter({ $0 == 1 }).count == n else { return nil }
+        return state.map { $0 == 1 ? 1 : 0 }
     }
 
     /// Solutions as the column of the dog in each row, up to `limit`.

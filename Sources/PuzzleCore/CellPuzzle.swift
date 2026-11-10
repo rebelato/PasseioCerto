@@ -28,7 +28,7 @@ public enum LogicMode: String, CaseIterable, Codable, Sendable {
         switch self {
         case .path: String(localized: "Desenhe o caminho da Margot até a casinha. Os números contam as casas do caminho em cada linha e coluna.")
         case .nonogram: String(localized: "Pinte as casas: os números dizem, em ordem, os blocos de casas pintadas de cada linha e coluna. No fim aparece um desenho.")
-        case .queens: String(localized: "Coloque um cachorro em cada linha, coluna e canteiro colorido. Dois cachorros nunca se encostam, nem na diagonal.")
+        case .queens: String(localized: "Um cachorro por linha, coluna e canteiro, sem se encostarem nem na diagonal. Comece pelo que já está no lugar: ele elimina a linha, a coluna, o canteiro e as casas em volta.")
         case .tents: String(localized: "Cada árvore ganha uma casinha ao lado (não na diagonal). Os números contam as casinhas de cada linha e coluna, e duas casinhas nunca se encostam.")
         case .sudoku: String(localized: "Cada petisco aparece uma vez em cada linha, coluna e bloco.")
         case .binary: String(localized: "Patinhas claras e escuras: nunca três iguais seguidas, metade de cada em toda linha e coluna, e nenhuma linha ou coluna repetida.")

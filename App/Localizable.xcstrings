@@ -4120,6 +4120,16 @@
         }
       }
     },
+    "Um cachorro por linha, coluna e canteiro, sem se encostarem nem na diagonal. Comece pelo que já está no lugar: ele elimina a linha, a coluna, o canteiro e as casas em volta.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um cachorro por linha, coluna e canteiro, sem se encostarem nem na diagonal. Comece pelo que já está no lugar: ele elimina a linha, a coluna, o canteiro e as casas em volta."
+          }
+        }
+      }
+    },
     "Um passeio de cada vez, com %@.": {
       "extractionState": "stale",
       "localizations": {
