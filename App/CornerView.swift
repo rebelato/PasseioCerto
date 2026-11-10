@@ -32,7 +32,7 @@ struct CornerView: View {
             Text(String(localized: "Acessórios da \(session.dogName)")).font(GardenTheme.heading)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 76), spacing: 12)], spacing: 12) {
                 ForEach(Accessory.allCases, id: \.self) { item in
-                    let unlocked = session.unlockedAccessories.contains(item)
+                    let unlocked = session.ownedAccessories.contains(item)
                     let worn = session.preferences.accessory == item
                     Button { session.wear(worn ? nil : item) } label: {
                         VStack(spacing: 6) {
@@ -40,12 +40,12 @@ struct CornerView: View {
                                 Puppy(accessory: item).opacity(unlocked ? 1 : 0.25)
                                 if !unlocked { Image(systemName: "lock.fill").foregroundStyle(GardenTheme.secondary) }
                             }.frame(width: 56, height: 56)
-                            Text(unlocked ? item.title : String(localized: "\(item.cost) 🐾")).font(.caption.weight(.semibold))
+                            Text(unlocked ? item.title : String(localized: "\(ShopCatalog.item(for: item).price) moedas")).font(.caption.weight(.semibold))
                         }.frame(maxWidth: .infinity).padding(10)
                             .background(worn ? GardenTheme.sage : GardenTheme.surface, in: RoundedRectangle(cornerRadius: GardenTheme.cellRadius))
                             .overlay(RoundedRectangle(cornerRadius: GardenTheme.cellRadius).strokeBorder(worn ? GardenTheme.accent : GardenTheme.border.opacity(0.5), lineWidth: worn ? 2 : 1))
                     }.buttonStyle(.plain).disabled(!unlocked)
-                        .accessibilityLabel(unlocked ? item.title : String(localized: "\(item.title), libera com \(item.cost) patinhas"))
+                        .accessibilityLabel(unlocked ? item.title : String(localized: "\(item.title), à venda na loja"))
                         .accessibilityAddTraits(worn ? .isSelected : [])
                 }
             }

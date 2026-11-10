@@ -38,18 +38,20 @@ public struct PlayerSave: Codable, Sendable {
     public var bestPaws: [String: Int]
     /// Finished walks for the album, newest last.
     public var walks: [WalkRecord]
+    /// Margot the virtual pet: needs, coins and everything bought.
+    public var pet: PetState
     public init(attempt: GameAttempt = GameAttempt(), preferences: PlayerPreferences = PlayerPreferences(), tutorialStep: Int = 0, completedPuzzleIDs: Set<String> = [], activeDailyID: String? = nil, parkedAttempts: [String: GameAttempt] = [:], bestPaws: [String: Int] = [:],
-                walks: [WalkRecord] = []) {
-        schemaVersion = 6; self.bestPaws = bestPaws; self.walks = walks; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
+                walks: [WalkRecord] = [], pet: PetState = PetState()) {
+        schemaVersion = 7; self.bestPaws = bestPaws; self.walks = walks; self.pet = pet; self.activeDailyID = activeDailyID; self.parkedAttempts = parkedAttempts; self.attempt = attempt; self.preferences = preferences
         self.tutorialStep = tutorialStep; self.completedPuzzleIDs = completedPuzzleIDs
     }
-    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, walks }
+    private enum CodingKeys: String, CodingKey { case schemaVersion, attempt, preferences, tutorialStep, completedPuzzleIDs, activeDailyID, parkedAttempts, bestPaws, walks, pet }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         if c.contains(.attempt) {
             let version = try c.decode(Int.self, forKey: .schemaVersion)
-            schemaVersion = 6
-            guard (3...6).contains(version) else { throw PuzzleError.invalidSession }
+            schemaVersion = 7
+            guard (3...7).contains(version) else { throw PuzzleError.invalidSession }
             attempt = try c.decode(GameAttempt.self, forKey: .attempt)
             preferences = try c.decode(PlayerPreferences.self, forKey: .preferences)
             tutorialStep = try c.decode(Int.self, forKey: .tutorialStep)
@@ -64,8 +66,12 @@ public struct PlayerSave: Codable, Sendable {
             guard tutorialStep >= 0, completedPuzzleIDs.allSatisfy({ !$0.isEmpty }),
                   bestPaws.values.allSatisfy((1...GameAttempt.maxLives).contains) else { throw PuzzleError.invalidSession }
             walks = (try? c.decodeIfPresent([WalkRecord].self, forKey: .walks)) ?? []
+            // Players from before the pet keep their accessories and get coins for past walks.
+            let migratedPet = PetState.migrated(totalPaws: bestPaws.values.reduce(0, +))
+            pet = version >= 7 ? try c.decode(PetState.self, forKey: .pet) : migratedPet
+            if let worn = preferences.accessory, !pet.owns(ShopCatalog.item(for: worn).id) { preferences.accessory = nil }
         } else {
-            schemaVersion = 6; bestPaws = [:]; walks = []; activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
+            schemaVersion = 7; bestPaws = [:]; walks = []; pet = PetState(); activeDailyID = nil; parkedAttempts = [:]; attempt = try GameAttempt(from: decoder)
             preferences = PlayerPreferences(); tutorialStep = 0; completedPuzzleIDs = []
         }
         if attempt.game.won {
@@ -128,14 +134,17 @@ public struct WalkRecord: Codable, Equatable, Sendable {
 }
 
 /// Little things for Margot, unlocked by total paws.
+/// Little things for Margot, bought in the shop (see ShopCatalog for prices).
 public enum Accessory: String, CaseIterable, Codable, Sendable {
-    case bow, bandana, hat, glasses
-    public var cost: Int {
+    case bow, bandana, hat, glasses, collar, raincoat
+    /// Paws that unlocked it before the shop existed; kept only to migrate older saves.
+    public var legacyPawCost: Int {
         switch self {
         case .bow: 10
         case .bandana: 25
         case .hat: 50
         case .glasses: 100
+        case .collar, .raincoat: .max
         }
     }
     public var title: String {
@@ -144,6 +153,8 @@ public enum Accessory: String, CaseIterable, Codable, Sendable {
         case .bandana: String(localized: "Bandana")
         case .hat: String(localized: "Chapéu")
         case .glasses: String(localized: "Óculos")
+        case .collar: String(localized: "Coleira")
+        case .raincoat: String(localized: "Capa de chuva")
         }
     }
 }

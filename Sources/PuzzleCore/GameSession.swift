@@ -28,6 +28,12 @@ import Combine
     private let generate: GenerationService
     private let generateWalk: WalkService
     @Published public private(set) var walks: [WalkRecord] = []
+    /// Margot the virtual pet: needs, coins, pantry, room.
+    @Published public private(set) var pet = PetState()
+    /// What the last finished walk paid, for the victory sheet.
+    @Published public private(set) var lastReward: WalkReward?
+    /// Injected so tests can move time forward.
+    private let clock: @Sendable () -> Date
     private var revision = 0
     private let saveURL: URL?
     /// The last visible mistake, shown briefly on the board after the move is undone.
@@ -54,8 +60,10 @@ import Combine
                 },
                 // The session already runs this off the main actor; nesting another detached task
                 // here crashed the debug test host, so the default generates in place.
-                generateWalk: @escaping WalkService = { WalkGenerator.generate($0, variation: $1, id: $2, isCancelled: { Task.isCancelled }) }) {
-        self.generate = generate; self.generateWalk = generateWalk; self.prefetches = prefetches
+                generateWalk: @escaping WalkService = { WalkGenerator.generate($0, variation: $1, id: $2, isCancelled: { Task.isCancelled }) },
+                clock: @escaping @Sendable () -> Date = { Date() }) {
+        self.generate = generate; self.generateWalk = generateWalk; self.prefetches = prefetches; self.clock = clock
+        pet = PetState(now: clock())
         self.attempt = attempt; self.saveURL = saveURL
         if let saveURL, FileManager.default.fileExists(atPath: saveURL.path) {
             do { apply(try SaveStore(url: saveURL).load()) }
@@ -65,6 +73,7 @@ import Combine
                 storageError = String(localized: "Não foi possível recuperar a partida salva. O arquivo original foi preservado.")
             }
         }
+        pet.advance(to: clock())
         prefetch(preferences.difficulty)
     }
     public func begin(at cell: Cell, marking: Bool) {
@@ -163,7 +172,7 @@ import Combine
     }
     public func restart() {
         cancel(); attempt = GameAttempt(game: Game(puzzle: attempt.game.puzzle), difficulty: attempt.difficulty)
-        message = nil; save()
+        message = nil; lastReward = nil; save()
     }
     public func replacePuzzle(_ puzzle: Puzzle) {
         cancel(); parkCurrent(); activeDailyID = nil
@@ -203,7 +212,7 @@ import Combine
         if let ready = prepared.removeValue(forKey: difficulty) {
             cancel(); parkCurrent(); activeDailyID = nil
             attempt = GameAttempt(game: Game(puzzle: ready), difficulty: difficulty)
-            message = nil; save()
+            message = nil; lastReward = nil; save()
             prefetch(difficulty)
             return
         }
@@ -255,7 +264,7 @@ import Combine
             parkCurrent(); activeDailyID = dailyID
             // Reserve puzzles are verified like generated ones; the player never needs to know.
             attempt = GameAttempt(game: Game(puzzle: puzzle), difficulty: difficulty)
-            message = nil
+            message = nil; lastReward = nil
             save()
             if let difficulty { prefetch(difficulty) }
         } catch {
@@ -329,26 +338,55 @@ import Combine
     }
     private var snapshot: PlayerSave {
         PlayerSave(attempt: attempt, preferences: preferences, tutorialStep: tutorialStep, completedPuzzleIDs: completedPuzzleIDs, activeDailyID: activeDailyID, parkedAttempts: parkedAttempts, bestPaws: bestPaws,
-                   walks: walks)
+                   walks: walks, pet: pet)
     }
-    /// A finished walk joins the album (replays replace the older photo).
+    /// The difficulty a walk pays as: its own, the daily's, or guessed from the grid size for older walks.
+    private var rewardDifficulty: Difficulty {
+        if let difficulty = attempt.difficulty { return difficulty }
+        if activeDailyID != nil { return DailyChallenge.difficulty }
+        let size = attempt.game.puzzle.rows.count
+        return Difficulty.allCases.last { $0.size <= size } ?? .easy
+    }
+    /// A finished walk pays coins, cheers Margot up, and joins the album (replays replace the older photo).
     private func recordWalk() {
         let game = attempt.game
+        let id = game.puzzle.puzzleID
+        let isDaily = activeDailyID != nil
+        let streak = isDaily ? DailyChallenge.streak(completed: completedPuzzleIDs.union([id]), today: clock()) : 0
+        let coins = Rewards.coins(difficulty: rewardDifficulty, paws: attempt.paws, previousBest: bestPaws[id] ?? 0, daily: isDaily, streak: streak)
+        pet.walked(coins: coins, now: clock())
+        lastReward = WalkReward(coins: coins, joy: Int(Rewards.walkJoy))
         walks.removeAll { $0.puzzle.puzzleID == game.puzzle.puzzleID }
         walks.append(WalkRecord(puzzle: game.puzzle, path: game.path, paws: attempt.paws, date: Date(),
                                 difficulty: attempt.difficulty ?? (activeDailyID != nil ? DailyChallenge.difficulty : nil)))
         if walks.count > WalkRecord.albumLimit { walks.removeFirst(walks.count - WalkRecord.albumLimit) }
     }
-    public var unlockedAccessories: [Accessory] { Accessory.allCases.filter { $0.cost <= totalPaws } }
+    // MARK: Pet
+
+    /// Brings hunger and joy up to date (on launch and whenever the app comes back).
+    public func refreshPet() { pet.advance(to: clock()); save() }
+    public var ownedAccessories: [Accessory] { Accessory.allCases.filter { pet.owns(ShopCatalog.item(for: $0).id) } }
     public func wear(_ accessory: Accessory?) {
-        guard accessory.map(unlockedAccessories.contains) ?? true else { return }
+        guard accessory.map(ownedAccessories.contains) ?? true else { return }
         preferences.accessory = accessory; save()
     }
+    /// Buys an item; a bought accessory is put on right away.
+    @discardableResult public func buy(_ id: String) -> PetState.PurchaseError? {
+        do { try pet.buy(id) } catch { return error }
+        if let accessory = ShopCatalog.item(id)?.accessory { preferences.accessory = accessory }
+        save(); return nil
+    }
+    @discardableResult public func feed(_ id: String) -> Bool { defer { save() }; return pet.feed(id, now: clock()) }
+    @discardableResult public func play(with toy: String) -> Bool { defer { save() }; return pet.play(with: toy, now: clock()) }
+    @discardableResult public func petMargot() -> Bool { defer { save() }; return pet.pet(now: clock()) }
+    @discardableResult public func place(_ id: String?, in slot: RoomSlot) -> Bool { defer { save() }; return pet.place(id, in: slot) }
+    @discardableResult public func use(_ id: String) -> Bool { defer { save() }; return pet.use(id) }
+    public func now() -> Date { clock() }
     private func apply(_ saved: PlayerSave) {
         activeDailyID = saved.activeDailyID; parkedAttempts = saved.parkedAttempts
         attempt = saved.attempt; preferences = saved.preferences
         tutorialStep = saved.tutorialStep; completedPuzzleIDs = saved.completedPuzzleIDs; bestPaws = saved.bestPaws
-        walks = saved.walks
+        walks = saved.walks; pet = saved.pet
     }
     private func save() {
         if attempt.game.won {
@@ -362,4 +400,10 @@ import Combine
             storageError = nil
         } catch { storageError = String(localized: "Não foi possível salvar. Você pode tentar novamente; a última gravação válida foi preservada.") }
     }
+}
+
+/// Coins and joy from the last finished walk.
+public struct WalkReward: Equatable, Sendable {
+    public let coins: Int
+    public let joy: Int
 }
