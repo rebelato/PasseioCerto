@@ -14,8 +14,10 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
     /// Size of the next walk; only Fácil shows the house.
     public var difficulty = Difficulty.easy
     public var accessory: Accessory?
+    /// A local notification when Margot gets hungry (off until the player turns it on).
+    public var hungerReminder = false
     public init() {}
-    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, difficulty, accessory }
+    private enum CodingKeys: String, CodingKey { case dogName, marking, soundEnabled, hapticsEnabled, difficulty, accessory, hungerReminder }
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         dogName = Self.normalizedName(try c.decodeIfPresent(String.self, forKey: .dogName) ?? "Margot")
@@ -24,6 +26,7 @@ public struct PlayerPreferences: Codable, Equatable, Sendable {
         hapticsEnabled = try c.decode(Bool.self, forKey: .hapticsEnabled)
         difficulty = (try? c.decodeIfPresent(Difficulty.self, forKey: .difficulty)) ?? .easy
         accessory = try? c.decodeIfPresent(Accessory.self, forKey: .accessory)
+        hungerReminder = try c.decodeIfPresent(Bool.self, forKey: .hungerReminder) ?? false
     }
 }
 public struct PlayerSave: Codable, Sendable {

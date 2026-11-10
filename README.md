@@ -257,3 +257,27 @@ Capturas: [início](docs/validation/design-review/home-difficulties.png) e [Espe
 | Especialista | 1,05 | ~0,09 s |
 
 O custo é que as pistas dessas grades ficam baixas (muitos 1 e 2), o que deixa o desafio mais parecido com o de achar o caminho numa grade grande e vazia. O Médio raramente revela um trecho.
+
+### Margot, bichinho virtual
+
+A tela inicial agora é a **Casa da Margot**. As fases rendem moedas, e as moedas cuidam dela.
+
+- **Necessidades:** fome e alegria caem devagar com o tempo real (cerca de 48 h e 36 h até zerar). Com fome ou entediada, ela fica tristinha e pede comida ou passeio pelo balão, mas nunca adoece, foge nem morre.
+- **Moedas por passeio:** base da dificuldade × patinhas.
+
+  | Fácil | Médio | Difícil | Especialista |
+  |---|---|---|---|
+  | 10 | 25 | 60 | 120 |
+
+  Repetir uma grade só paga as patinhas acima do melhor resultado. O desafio do dia soma 50 + 10 por dia de sequência (bônus máximo de 100). Cada passeio também dá +15 de alegria.
+- **Cuidar:** comida da despensa (ração, petisco, frango, bolo); carinho tocando nela (+2 de alegria, a cada 20 s); brinquedos no quarto (+10 de alegria, a cada 1 h).
+- **Loja:**
+  - Comida, Acessórios (lacinho, bandana, coleira, chapéu, óculos, capa de chuva), Casa e Brinquedos;
+  - em Casa: 8 móveis, 4 cores de parede, 3 pisos e 3 casinhas;
+  - a casinha escolhida também aparece no fim do caminho nas fases.
+- **Decorar:** cinco espaços no quarto (dois no chão, dois na parede e o tapete). Tocar num espaço escolhe o móvel.
+- **Lembrete:** opção nos Ajustes, desligada por padrão, que avisa por notificação quando a fome chega a 30.
+- **Save v7:** quem já jogava mantém os acessórios que tinha liberado e recebe 50 + 5 moedas por patinha conquistada.
+- **Seu cantinho:** virou o quarto mais o **Álbum**.
+
+Capturas no simulador: [quarto feliz](docs/validation/virtual-pet/room-happy.png), [com fome](docs/validation/virtual-pet/room-hungry.png), [loja: comida](docs/validation/virtual-pet/shop-food.png), [casa](docs/validation/virtual-pet/shop-home.png) e [acessórios](docs/validation/virtual-pet/shop-accessories.png). Flags de captura: `-PCOpenShop YES` e `-PCShopTab home|accessory|toy`.

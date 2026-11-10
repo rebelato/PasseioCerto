@@ -16,6 +16,12 @@ final class PetTests: XCTestCase {
         XCTAssertEqual(pet.hunger, 0); XCTAssertEqual(pet.joy, 0)
         XCTAssertEqual(pet.mood, .hungry, "Hungry and bored is just a sad face: nothing worse happens")
     }
+    func testTimeUntilHungry() {
+        let pet = PetState(hunger: 80, joy: 80, now: start)
+        XCTAssertEqual(pet.timeUntilHungry(from: start)!, 24 * 3600, accuracy: 1, "From 80 to 30 is half of the 48 hours")
+        XCTAssertEqual(pet.timeUntilHungry(from: hours(6))!, 18 * 3600, accuracy: 1)
+        XCTAssertNil(PetState(hunger: 20, joy: 80, now: start).timeUntilHungry(from: start))
+    }
     func testMoodFollowsNeeds() {
         XCTAssertEqual(PetState(hunger: 80, joy: 80).mood, .happy)
         XCTAssertEqual(PetState(hunger: 50, joy: 80).mood, .okay)

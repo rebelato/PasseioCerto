@@ -32,7 +32,10 @@ struct GameView: View {
         .onChange(of: showingLearning) { _, visible in if visible { feedbackPlayer.stop() } }
         .onChange(of: showingHome) { _, visible in if visible { feedbackPlayer.stop() } }
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active { feedbackPlayer.stop(); session.suspend() } else { session.refreshPet() }
+            if phase != .active {
+                feedbackPlayer.stop(); session.suspend()
+                HungerReminder.schedule(for: session.pet, dogName: session.dogName, enabled: session.preferences.hungerReminder)
+            } else { session.refreshPet(); HungerReminder.cancel() }
         }
         .onDisappear { feedbackPlayer.stop(); session.suspend() }
         .task {
@@ -96,16 +99,25 @@ struct GameView: View {
                 }
                 Toggle(String(localized: "Sons"), isOn: preferenceBinding(\.soundEnabled))
                 Toggle(String(localized: "Feedback tátil"), isOn: preferenceBinding(\.hapticsEnabled))
+                Toggle(String(localized: "Avisar quando a \(session.dogName) estiver com fome"), isOn: Binding(
+                    get: { session.preferences.hungerReminder },
+                    set: { on in
+                        Task {
+                            let allowed = on ? await HungerReminder.requestPermission() : false
+                            var preferences = session.preferences
+                            preferences.hungerReminder = on && allowed
+                            session.setPreferences(preferences)
+                        }
+                    }))
                 Text(String(localized: "Sons suaves e vibrações opcionais. As pistas e mensagens continuam disponíveis com tudo desligado."))
                     .font(.footnote).foregroundStyle(.secondary)
                 DisclosureGroup(String(localized: "Como jogar")) {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(String(localized: "Ligue a cachorrinha à casa por casas vizinhas, sem diagonais nem repetir casas."))
                         Text(String(localized: "As pistas contam as casas do caminho em cada linha e coluna, incluindo o início. No Fácil a casinha aparece e também conta; nos outros níveis ela fica escondida e só aparece quando o caminho fecha."))
-                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo: não dá para voltar. Toque e segure numa casa para marcar ×, e de novo para limpar. Dica explica uma dedução sem jogar por você."))
-                        Text(String(localized: "Cada fase tem um único caminho certo, e você tem 3 vidas em todos os níveis e no desafio do dia. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma vida."))
-                        Text(String(localized: "Ao perder, Tentar de novo recomeça a mesma grade. Ao completar, você escolhe jogar a mesma de novo ou uma nova fase. Outra fase troca por uma grade nova a qualquer momento."))
-                        Text(String(localized: "Ao chegar em casa, as vidas que sobraram viram patinhas: 3 para um passeio sem erros."))
+                        Text(String(localized: "Arraste, ou toque na casa vizinha à ponta, para andar. Cada passo é definitivo. Toque e segure numa casa para marcar ×. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma das 3 vidas."))
+                        Text(String(localized: "Cada passeio concluído rende moedas: Fácil 10, Médio 25, Difícil 60 e Especialista 120 por patinha. Repetir uma fase só paga as patinhas a mais. O desafio do dia dá um bônus que cresce com a sequência de dias."))
+                        Text(String(localized: "Com as moedas, cuide da Margot: comida enche a fome, passeios, carinho e brinquedos trazem alegria. Ela nunca fica doente; com fome ou entediada, só fica tristinha e pede atenção."))
                     }.fixedSize(horizontal: false, vertical: true).padding(.top, 8)
                 }
                 Button(session.tutorialStep < TutorialSession.completedStep ? String(localized: "Continuar tutorial") : String(localized: "Repetir tutorial")) {

@@ -53,6 +53,12 @@ public struct PetState: Codable, Equatable, Sendable {
         joy = max(0, joy - hours * 100 / Self.hoursToBored)
         lastUpdate = now
     }
+    /// Time until hunger falls to the "hungry" line (30), or nil if she is already hungry.
+    public func timeUntilHungry(from now: Date) -> TimeInterval? {
+        var current = self; current.advance(to: now)
+        guard current.hunger > 30 else { return nil }
+        return (current.hunger - 30) / 100 * Self.hoursToHungry * 3600
+    }
     public var mood: PetMood {
         if hunger < 30 { return .hungry }
         if joy < 30 { return .sad }
