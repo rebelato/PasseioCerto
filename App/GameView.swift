@@ -5,6 +5,8 @@ struct GameView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @State private var showingHome = true
+    /// Playing one of the cell modes instead of the walk.
+    @State private var playingCells = false
     @State private var showingLearning = false
     @State private var tutorialRequested = false
     @State private var feedbackPlayer = GameFeedbackPlayer()
@@ -13,6 +15,14 @@ struct GameView: View {
         Group {
             if showingHome {
                 home
+            } else if playingCells {
+                CellGameScreen(session: session,
+                    onHome: { session.suspend(); showingHome = true },
+                    onSettings: { session.suspend(); tutorialRequested = false; showingLearning = true },
+                    onNext: {
+                        guard let current = session.cellAttempt else { return }
+                        Task { await session.playCells(current.puzzle.mode, current.difficulty) }
+                    })
             } else {
                 GameScreen(session: session, title: walkTitle,
                     onHome: { session.suspend(); showingHome = true },
@@ -24,8 +34,8 @@ struct GameView: View {
         .background(GardenTheme.background)
         .onChange(of: session.feedback) { _, event in
             guard let event, scenePhase == .active, !showingHome, !showingLearning else { return }
-            // With motion on, the success haptic waits for Margot to reach the house.
-            if event.kind == .victory && !reduceMotion { return }
+            // With motion on, the walk's success haptic waits for Margot to reach the house.
+            if event.kind == .victory && !reduceMotion && !playingCells { return }
             feedbackPlayer.play(event.kind, preferences: session.preferences)
         }
         .onChange(of: session.preferences.soundEnabled) { _, enabled in if !enabled { feedbackPlayer.stop() } }
@@ -39,8 +49,10 @@ struct GameView: View {
         }
         .onDisappear { feedbackPlayer.stop(); session.suspend() }
         .task {
-            // Screenshot checks: `simctl launch … -PCOpenWalk YES` skips the home screen; -PCOpenShop YES opens the shop.
+            // Screenshot checks: `simctl launch … -PCOpenWalk YES` skips the home screen; -PCOpenMode queens plays a mode;
+            // -PCOpenShop YES opens the shop.
             if UserDefaults.standard.bool(forKey: "PCOpenWalk") { showingHome = false }
+            if let mode = UserDefaults.standard.string(forKey: "PCOpenMode").flatMap(LogicMode.init) { session.setMode(mode); await play() }
             session.refreshPet()
             if session.tutorialStep < TutorialSession.completedStep {
                 tutorialRequested = true; showingLearning = true
@@ -70,16 +82,24 @@ struct GameView: View {
             onDaily: { now in
                 Task {
                     await session.openDaily(date: now)
-                    if session.activeDailyID == DailyChallenge(date: now).id { showingHome = false }
+                    if session.activeDailyID == DailyChallenge(date: now).id { playingCells = false; showingHome = false }
                 }
             },
             onSettings: { tutorialRequested = false; showingLearning = true },
             onFeedback: { feedbackPlayer.play($0, preferences: session.preferences) })
     }
-    /// Passear always means the normal walk: resume it, or start a new one.
+    /// Passear plays the chosen activity at the chosen difficulty, resuming an unfinished game.
     private func play() async {
-        await session.play()
-        if session.activeDailyID == nil && !session.generating { showingHome = false }
+        let mode = session.preferences.mode, difficulty = session.preferences.difficulty
+        if mode == .path {
+            await session.play()
+            if session.activeDailyID == nil && !session.generating { playingCells = false; showingHome = false }
+            return
+        }
+        if let current = session.cellAttempt, current.puzzle.mode == mode, current.difficulty == difficulty, current.canPlay {} else {
+            await session.playCells(mode, difficulty)
+        }
+        if session.cellAttempt != nil { playingCells = true; showingHome = false }
     }
 
     // MARK: Settings

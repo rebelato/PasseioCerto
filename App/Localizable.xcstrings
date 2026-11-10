@@ -300,6 +300,16 @@
         }
       }
     },
+    "%@: grade %lld × %lld, 3 vidas.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: grade %lld × %lld, 3 vidas."
+          }
+        }
+      }
+    },
     "%lld": {
       "extractionState": "stale",
       "localizations": {
@@ -1020,6 +1030,16 @@
         }
       }
     },
+    "Aí não!": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aí não!"
+          }
+        }
+      }
+    },
     "Bandana": {
       "localizations": {
         "pt-BR": {
@@ -1080,6 +1100,16 @@
         }
       }
     },
+    "Cachorro": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cachorro"
+          }
+        }
+      }
+    },
     "Cada fase tem um único caminho certo, e você tem 3 vidas em todos os níveis e no desafio do dia. Tocar numa casa fora do caminho certo, ou andar para ela, custa uma vida.": {
       "localizations": {
         "pt-BR": {
@@ -1120,6 +1150,16 @@
         }
       }
     },
+    "Cada petisco aparece uma vez em cada linha, coluna e bloco.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada petisco aparece uma vez em cada linha, coluna e bloco."
+          }
+        }
+      }
+    },
     "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres.": {
       "extractionState": "stale",
       "localizations": {
@@ -1127,6 +1167,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cada tentativa tem 3 vidas. Um caminho impossível custa uma vida; × e desfazer são livres."
+          }
+        }
+      }
+    },
+    "Cada árvore ganha uma casinha ao lado (não na diagonal). Os números contam as casinhas de cada linha e coluna, e duas casinhas nunca se encostam.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada árvore ganha uma casinha ao lado (não na diagonal). Os números contam as casinhas de cada linha e coluna, e duas casinhas nunca se encostam."
           }
         }
       }
@@ -1170,6 +1220,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancelar geração"
+          }
+        }
+      }
+    },
+    "Canteiros": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canteiros"
           }
         }
       }
@@ -1278,6 +1338,16 @@
         }
       }
     },
+    "Casinhas e árvores": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casinhas e árvores"
+          }
+        }
+      }
+    },
     "Castelinho": {
       "localizations": {
         "pt-BR": {
@@ -1329,6 +1399,16 @@
         }
       }
     },
+    "Coloque um cachorro em cada linha, coluna e canteiro colorido. Dois cachorros nunca se encostam, nem na diagonal.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coloque um cachorro em cada linha, coluna e canteiro colorido. Dois cachorros nunca se encostam, nem na diagonal."
+          }
+        }
+      }
+    },
     "Coluna %lld": {
       "extractionState": "stale",
       "localizations": {
@@ -1336,6 +1416,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Coluna %lld"
+          }
+        }
+      }
+    },
+    "Coluna %lld: %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coluna %lld: %@"
           }
         }
       }
@@ -1643,6 +1733,16 @@
         }
       }
     },
+    "Desenhe o caminho da Margot até a casinha. Os números contam as casas do caminho em cada linha e coluna.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desenhe o caminho da Margot até a casinha. Os números contam as casas do caminho em cada linha e coluna."
+          }
+        }
+      }
+    },
     "Desfazer": {
       "extractionState": "stale",
       "localizations": {
@@ -1661,6 +1761,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dica"
+          }
+        }
+      }
+    },
+    "Dica · %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dica · %lld"
           }
         }
       }
@@ -1825,6 +1935,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Este trecho já vem desenhado: o caminho segue por ele."
+          }
+        }
+      }
+    },
+    "Faltam moedas para a dica.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faltam moedas para a dica."
           }
         }
       }
@@ -2129,6 +2249,16 @@
         }
       }
     },
+    "Jardim pintado": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jardim pintado"
+          }
+        }
+      }
+    },
     "Jogada cancelada sem perder vida.": {
       "extractionState": "stale",
       "localizations": {
@@ -2291,6 +2421,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Linha %lld, coluna %lld: %@ %@%@"
+          }
+        }
+      }
+    },
+    "Linha %lld: %@": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linha %lld: %@"
           }
         }
       }
@@ -2692,6 +2832,16 @@
         }
       }
     },
+    "Não foi possível preparar a fase. Tente de novo.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível preparar a fase. Tente de novo."
+          }
+        }
+      }
+    },
     "Não foi possível recuperar a cópia anterior. Os arquivos foram preservados.": {
       "extractionState": "stale",
       "localizations": {
@@ -2887,6 +3037,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Obstáculo"
+          }
+        }
+      }
+    },
+    "Olha uma casa certinha! (−%lld moedas)": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Olha uma casa certinha! (−%lld moedas)"
           }
         }
       }
@@ -3108,6 +3268,46 @@
         }
       }
     },
+    "Patinha clara": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patinha clara"
+          }
+        }
+      }
+    },
+    "Patinha escura": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patinha escura"
+          }
+        }
+      }
+    },
+    "Patinhas claras e escuras: nunca três iguais seguidas, metade de cada em toda linha e coluna, e nenhuma linha ou coluna repetida.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patinhas claras e escuras: nunca três iguais seguidas, metade de cada em toda linha e coluna, e nenhuma linha ou coluna repetida."
+          }
+        }
+      }
+    },
+    "Patinhas pareadas": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Patinhas pareadas"
+          }
+        }
+      }
+    },
     "Pensando numa dica…": {
       "localizations": {
         "pt-BR": {
@@ -3124,6 +3324,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Petisco"
+          }
+        }
+      }
+    },
+    "Petisco %lld": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petisco %lld"
+          }
+        }
+      }
+    },
+    "Pintada": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pintada"
+          }
+        }
+      }
+    },
+    "Pinte as casas: os números dizem, em ordem, os blocos de casas pintadas de cada linha e coluna. No fim aparece um desenho.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pinte as casas: os números dizem, em ordem, os blocos de casas pintadas de cada linha e coluna. No fim aparece um desenho."
           }
         }
       }
@@ -3302,6 +3532,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Primeiro passeio"
+          }
+        }
+      }
+    },
+    "Prontinho! Que cabeça boa.": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prontinho! Que cabeça boa."
           }
         }
       }
@@ -3662,6 +3902,16 @@
         }
       }
     },
+    "Sudoku de petiscos": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sudoku de petiscos"
+          }
+        }
+      }
+    },
     "Tabuleiro somente para leitura": {
       "extractionState": "stale",
       "localizations": {
@@ -3972,6 +4222,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Use × como lembrete. Desfazer remove sua última ação; Dica explica uma dedução sem jogar por você."
+          }
+        }
+      }
+    },
+    "Vazia": {
+      "localizations": {
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vazia"
           }
         }
       }

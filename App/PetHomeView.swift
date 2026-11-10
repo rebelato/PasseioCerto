@@ -151,19 +151,43 @@ struct PetHomeView: View {
             .overlay(RoundedRectangle(cornerRadius: GardenTheme.radius).strokeBorder(GardenTheme.border.opacity(0.5)))
     }
 
+    private var modePicker: some View {
+        ScrollViewReader { reader in
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(LogicMode.allCases, id: \.self) { mode in
+                    let chosen = session.preferences.mode == mode
+                    Button { session.setMode(mode) } label: {
+                        Label(mode.title, systemImage: mode.symbol).font(.subheadline.weight(.semibold))
+                            .padding(.horizontal, 12).padding(.vertical, 9)
+                            .foregroundStyle(chosen ? GardenTheme.background : GardenTheme.ink)
+                            .background(chosen ? GardenTheme.ink : GardenTheme.surface, in: Capsule())
+                            .overlay(Capsule().strokeBorder(GardenTheme.border.opacity(chosen ? 0 : 0.5)))
+                    }.buttonStyle(.plain).accessibilityAddTraits(chosen ? .isSelected : []).id(mode)
+                }
+            }.padding(.horizontal, 2)
+        }
+        .onAppear { reader.scrollTo(session.preferences.mode, anchor: .center) }
+        .onChange(of: session.preferences.mode) { _, mode in withAnimation { reader.scrollTo(mode, anchor: .center) } }
+        }
+    }
+
     private var walkButton: some View {
-        let chosen = session.preferences.difficulty
+        let chosen = session.preferences.difficulty, mode = session.preferences.mode
+        let size = mode.size(chosen)
         return VStack(spacing: 8) {
+            modePicker
             Button(action: onPlay) {
                 VStack(spacing: 2) {
-                    Label(String(localized: "Passear"), systemImage: "pawprint.fill")
+                    Label(mode == .path ? String(localized: "Passear") : String(localized: "Jogar"), systemImage: mode.symbol)
                     Text(String(localized: "\(chosen.title) · até \(Rewards.base(chosen) * GameAttempt.maxLives) moedas")).font(.footnote.weight(.medium)).opacity(0.85)
                 }
             }.buttonStyle(GardenButtonStyle(prominent: true)).disabled(session.generating)
             DifficultyPicker(selection: Binding(get: { session.preferences.difficulty }, set: { session.setDifficulty($0) }))
-            Text(chosen.hiddenHouse ? String(localized: "Grade \(chosen.size) × \(chosen.size), casinha escondida, 3 vidas.")
-                                    : String(localized: "Grade \(chosen.size) × \(chosen.size), casinha à vista, 3 vidas."))
-                .font(.footnote).foregroundStyle(GardenTheme.secondary)
+            Text(mode != .path ? String(localized: "\(mode.title): grade \(size) × \(size), 3 vidas.")
+                 : chosen.hiddenHouse ? String(localized: "Grade \(size) × \(size), casinha escondida, 3 vidas.")
+                 : String(localized: "Grade \(size) × \(size), casinha à vista, 3 vidas."))
+                .font(.footnote).foregroundStyle(GardenTheme.secondary).multilineTextAlignment(.center)
         }
     }
 
